@@ -1,0 +1,21 @@
+{
+    "description": "Extracts meta data from files into a neos/metadata data structure",
+    "type": "neos-package",
+    "name": "neos/metadata-extractor",
+    "require": {
+        "typo3/flow": "*",
+        "typo3/media": "*",
+        "neos/metadata": "*",
+        "intervention/image": "2.3.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Neos\\MetaData\\Extractor": "Classes/"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Neos.MetaData.Extractor"
+        }
+    }
+}

@@ -1,0 +1,5 @@
+Neos:
+  MetaData:
+    Extractor:
+      realtimeExtraction:
+        enabled: true
