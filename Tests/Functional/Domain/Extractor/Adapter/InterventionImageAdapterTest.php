@@ -60,8 +60,46 @@ class InterventionImageAdapterTest extends AbstractExtractorTest
             'XResolution' => 240,
             'YResolution' => 240
         ];
-        
-        $actualExifData = ObjectAccess::getProperty($exifDto, 'properties', true);
-        $this->assertEquals($expectedExifData, $actualExifData);
+
+        $this->assertDtoGettersReturnData($exifDto, $expectedExifData);
+    }
+
+
+    /**
+     * @test
+     */
+    public function extractIptcData() {
+        $metaDataCollection = new MetaDataCollection();
+        $this->interventionImageAdapter->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
+        $iptcDto = $metaDataCollection->get('iptc');
+
+        $this->assertInstanceOf(Dto\Iptc::class, $iptcDto);
+
+        $expectedIptcData = [
+            'AuthorByline' => 'Daniel Lienert',
+            'Caption' => 'Waipapa Point Lighthouse with the sea in the background and bush in the foreground.',
+            'Category' => 'Lig',
+            'City' => 'Otara',
+            'Country' => 'Newzealand',
+            'CreationDate' => \DateTime::createFromFormat('YmdHis', '20130918105911'),
+            'Keywords' => ['Beste', 'Leuchtturm', 'Neu Seeland', 'Neuseeland', 'New Zealand'],
+            'State' => 'Southland',
+            'SubCategories' => 'Nature',
+            'Title' => 'Waipapa Point Leuchtturm',
+            'SubLocation' => 'Waipapa Point Lighthouse',
+        ];
+
+        $this->assertDtoGettersReturnData($iptcDto, $expectedIptcData);
+    }
+
+    /**
+     * @param Dto\AbstractMetaDataDto $dto
+     * @param array $expectedDtoData
+     */
+    protected function assertDtoGettersReturnData(Dto\AbstractMetaDataDto $dto, array $expectedDtoData) {
+        foreach ($expectedDtoData as $key => $value) {
+            $getter = 'get' . $key;
+            $this->assertEquals($value, $dto->$getter());
+        }
     }
 }
