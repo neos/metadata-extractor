@@ -73,7 +73,7 @@ class InterventionImageAdapter extends AbstractExtractor
      */
     protected function buildExifDto($exifData)
     {
-        $exifData['FNumber'] = NumberConverter::convertRationalToFloat($exifData['FNumber']);
+        $exifData['Aperture'] = NumberConverter::convertRationalToFloat($exifData['FNumber']);
         $exifData['FocalLength'] = (int) NumberConverter::convertRationalToFloat($exifData['FocalLength']);
         $exifData['XResolution'] = (int) NumberConverter::convertRationalToFloat($exifData['XResolution']);
         $exifData['YResolution'] = (int) NumberConverter::convertRationalToFloat($exifData['YResolution']);
@@ -92,6 +92,7 @@ class InterventionImageAdapter extends AbstractExtractor
      */
     protected function buildIptcDto($iptcData) {
         $iptcData['Title'] = $iptcData['DocumentTitle'];
+        $iptcData['Description'] = $iptcData['Caption'];
         $iptcData['SubCategories'] = $iptcData['Subcategories'];
 
         $creationDateString = $iptcData['CreationDate'];

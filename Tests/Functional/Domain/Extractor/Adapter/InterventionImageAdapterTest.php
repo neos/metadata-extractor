@@ -49,7 +49,7 @@ class InterventionImageAdapterTest extends AbstractExtractorTest
             'ColorSpace' =>'sRGB',
             'Copyright' => '© Daniel Lienert',
             'ExposureTime' => '1/640',
-            'FNumber' => 8.0,
+            'Aperture' => 8.0,
             'GPSLatitude' => -46.659787000000001,
             'GPSLongitude' => 168.84702999999999,
             'ISOSpeedRatings' => 100,
@@ -77,7 +77,7 @@ class InterventionImageAdapterTest extends AbstractExtractorTest
 
         $expectedIptcData = [
             'AuthorByline' => 'Daniel Lienert',
-            'Caption' => 'Waipapa Point Lighthouse with the sea in the background and bush in the foreground.',
+            'Description' => 'Waipapa Point Lighthouse with the sea in the background and bush in the foreground.',
             'Category' => 'Lig',
             'City' => 'Otara',
             'Country' => 'Newzealand',
