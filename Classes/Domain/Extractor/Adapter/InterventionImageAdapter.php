@@ -48,6 +48,7 @@ class InterventionImageAdapter extends AbstractExtractor
         $image = $manager->make($resource->createTemporaryLocalCopy());
 
         $iptcData = $image->iptc();
+
         if(is_array($iptcData)) {
             $metaDataCollection->set('iptc', $this->buildIptcDto($iptcData));
         }
@@ -73,15 +74,18 @@ class InterventionImageAdapter extends AbstractExtractor
      */
     protected function buildExifDto($exifData)
     {
-        $exifData['Aperture'] = NumberConverter::convertRationalToFloat($exifData['FNumber']);
-        $exifData['FocalLength'] = (int) NumberConverter::convertRationalToFloat($exifData['FocalLength']);
-        $exifData['XResolution'] = (int) NumberConverter::convertRationalToFloat($exifData['XResolution']);
-        $exifData['YResolution'] = (int) NumberConverter::convertRationalToFloat($exifData['YResolution']);
 
-        $exifData['GPSLongitude'] = GpsConverter::convertRationalArrayAndReferenceToFloat($exifData['GPSLongitude'], $exifData['GPSLongitudeRef']);
-        $exifData['GPSLatitude'] = GpsConverter::convertRationalArrayAndReferenceToFloat($exifData['GPSLatitude'], $exifData['GPSLatitudeRef']);
+        $exifData['Aperture'] = isset($exifData['FNumber']) ? NumberConverter::convertRationalToFloat($exifData['FNumber']) : 0.0;
+        $exifData['FocalLength'] = isset($exifData['FocalLength']) ? (int) NumberConverter::convertRationalToFloat($exifData['FocalLength']) : 0;
+        $exifData['XResolution'] =  isset($exifData['XResolution']) ? (int) NumberConverter::convertRationalToFloat($exifData['XResolution']) : 0;
+        $exifData['YResolution'] =  isset($exifData['YResolution']) ? (int) NumberConverter::convertRationalToFloat($exifData['YResolution']) : 0;
+        $exifData['ColorSpace'] = isset($exifData['ColorSpace']) ? $this->colorSpaceUtility->translateColorSpaceId($exifData['ColorSpace']) : '';
+        $exifData['Description'] = isset($exifData['ImageDescription']) ? $exifData['ImageDescription'] : '';
 
-        $exifData['ColorSpace'] = $this->colorSpaceUtility->translateColorSpaceId($exifData['ColorSpace']);
+        if(isset($exifData['GPSLongitude']) && isset($exifData['GPSLongitudeRef']) && isset($exifData['GPSLatitude']) && isset($exifData['GPSLatitudeRef'])) {
+            $exifData['GPSLongitude'] = GpsConverter::convertRationalArrayAndReferenceToFloat($exifData['GPSLongitude'], $exifData['GPSLongitudeRef']);
+            $exifData['GPSLatitude'] = GpsConverter::convertRationalArrayAndReferenceToFloat($exifData['GPSLatitude'], $exifData['GPSLatitudeRef']);
+        }
 
         return new Dto\Exif($exifData);
     }
@@ -91,13 +95,15 @@ class InterventionImageAdapter extends AbstractExtractor
      * @return Dto\Iptc
      */
     protected function buildIptcDto($iptcData) {
-        $iptcData['Title'] = $iptcData['DocumentTitle'];
-        $iptcData['Description'] = $iptcData['Caption'];
-        $iptcData['SubCategories'] = $iptcData['Subcategories'];
+        $iptcData['Title'] = isset($iptcData['DocumentTitle']) ? $iptcData['DocumentTitle'] : '';
+        $iptcData['Description'] =  isset($iptcData['Caption']) ? $iptcData['Caption'] : '';
+        $iptcData['SubCategories'] =  isset($iptcData['Subcategories']) ? $iptcData['Subcategories'] : '';
 
-        $creationDateString = $iptcData['CreationDate'];
-        $creationDateString .= isset($iptcData['CreationTime']) ? $iptcData['CreationTime'] : '000000';
-        $iptcData['CreationDate'] = \DateTime::createFromFormat('YmdHis', $creationDateString);
+        if(isset($iptcData['CreationDate'])) {
+            $creationDateString =  $iptcData['CreationDate'];
+            $creationDateString .= isset($iptcData['CreationTime']) ? $iptcData['CreationTime'] : '000000';
+            $iptcData['CreationDate'] = \DateTime::createFromFormat('YmdHis', $creationDateString);
+        }
 
         return new Dto\Iptc($iptcData);
     }

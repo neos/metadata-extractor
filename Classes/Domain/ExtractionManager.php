@@ -101,11 +101,20 @@ class ExtractionManager
      * @param MetaDataCollection $metaDataCollection
      */
     protected function buildAssetMetaData(Asset $asset, MetaDataCollection $metaDataCollection) {
+
+        $tags = [];
+        /** @var \TYPO3\Media\Domain\Model\Tag $tagObject */
+        foreach ($asset->getTags() as $tagObject) {
+            $tags[] = $tagObject->getLabel();
+        }
+
         $assetDto = new Dto\Asset([
-            'caption' => $asset->getCaption(),
-            'identifier' => $asset->getIdentifier(),
-            'title' => $asset->getTitle(),
-            'fileName' => $asset->getResource()->getFilename()
+            'Caption' => $asset->getCaption(),
+            'Identifier' => $asset->getIdentifier(),
+            'Title' => $asset->getTitle(),
+            'FileName' => $asset->getResource()->getFilename(),
+            'Collections' => $asset->getAssetCollections()->getValues(),
+            'Tags' => $tags
         ]);
         $metaDataCollection->set('asset', $assetDto);
     }

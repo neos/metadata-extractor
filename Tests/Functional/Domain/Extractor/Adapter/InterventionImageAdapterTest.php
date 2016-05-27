@@ -53,7 +53,7 @@ class InterventionImageAdapterTest extends AbstractExtractorTest
             'GPSLatitude' => -46.659787000000001,
             'GPSLongitude' => 168.84702999999999,
             'ISOSpeedRatings' => 100,
-            'ImageDescription' => 'Waipapa Point Lighthouse with the sea in the background and bush in the foreground.',
+            'Description' => 'Waipapa Point Lighthouse with the sea in the background and bush in the foreground.',
             'Make' => 'Canon',
             'Model' => 'Canon EOS 5D Mark II',
             'FocalLength' => 24,

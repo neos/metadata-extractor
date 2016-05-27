@@ -9,8 +9,8 @@
         "intervention/image": "2.3.*"
     },
     "autoload": {
-        "psr-0": {
-            "Neos\\MetaData\\Extractor": "Classes/"
+        "psr-4": {
+            "Neos\\MetaData\\Extractor\\": "Classes"
         }
     },
     "extra": {
