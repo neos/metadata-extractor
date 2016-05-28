@@ -27,13 +27,7 @@ class MetaDataCommandController extends \TYPO3\Flow\Cli\CommandController
      */
     protected $extractionManager;
 
-    /**
-     * @Flow\Inject
-     * @var \Neos\MetaData\MetaDataManager
-     */
-    protected $metaDataManager;
-
-
+    
     public function extractCommand()
     {
         $iterator = $this->assetRepository->findAllIterator();
@@ -44,8 +38,7 @@ class MetaDataCommandController extends \TYPO3\Flow\Cli\CommandController
             /** @var \TYPO3\Media\Domain\Model\Document $asset */
 
             try {
-                $metaDataCollection = $this->extractionManager->extractMetaData($asset);
-                $this->metaDataManager->updateMetaDataForAsset($asset, $metaDataCollection);
+                $this->extractionManager->extractMetaData($asset);
             } catch (NoExtractorAvailableException $exception) {
                 $this->output->outputLine($exception->getMessage());
             }

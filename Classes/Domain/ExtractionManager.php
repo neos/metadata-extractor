@@ -37,6 +37,12 @@ class ExtractionManager
     protected $reflectionService;
 
     /**
+     * @Flow\Inject
+     * @var \Neos\MetaData\MetaDataManager
+     */
+    protected $metaDataManager;
+
+    /**
      * @param Asset $asset
      * @return MetaDataCollection
      * @throws NoExtractorAvailableException
@@ -59,6 +65,8 @@ class ExtractionManager
             $suitableAdapter->extractMetaData($flowResource, $metaDataCollection);
         }
 
+        $this->metaDataManager->updateMetaDataForAsset($asset, $metaDataCollection);
+        
         return $metaDataCollection;
     }
 
@@ -109,7 +117,7 @@ class ExtractionManager
         }
 
         $collections = [];
-        /** @var \TYPO3\Media\Domain\Model\Tag $tagObject */
+        /** @var \TYPO3\Media\Domain\Model\AssetCollection $collectionObject */
         foreach ($asset->getAssetCollections() as $collectionObject) {
             $collections[] = $collectionObject->getTitle();
         }
