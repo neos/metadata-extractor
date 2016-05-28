@@ -1,0 +1,6 @@
+preset: psr2
+
+finder:
+  path:
+    - "Neos.MetaData.Extractor/Classes"
+    - "Neos.MetaData.Extractor/Tests"
