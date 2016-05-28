@@ -108,13 +108,20 @@ class ExtractionManager
             $tags[] = $tagObject->getLabel();
         }
 
+        $collections = [];
+        /** @var \TYPO3\Media\Domain\Model\Tag $tagObject */
+        foreach ($asset->getAssetCollections() as $collectionObject) {
+            $collections[] = $collectionObject->getTitle();
+        }
+
         $assetDto = new Dto\Asset([
             'Caption' => $asset->getCaption(),
             'Identifier' => $asset->getIdentifier(),
             'Title' => $asset->getTitle(),
             'FileName' => $asset->getResource()->getFilename(),
-            'Collections' => $asset->getAssetCollections()->getValues(),
-            'Tags' => $tags
+            'Collections' => $collections,
+            'Tags' => $tags,
+            'AssetObject' => $asset
         ]);
         $metaDataCollection->set('asset', $assetDto);
     }
