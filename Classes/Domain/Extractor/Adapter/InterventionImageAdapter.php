@@ -46,12 +46,6 @@ class InterventionImageAdapter extends AbstractExtractor
         $manager = new ImageManager(['driver' => 'gd']);
         $image = $manager->make($resource->createTemporaryLocalCopy());
 
-        $iptcData = $image->iptc();
-
-        if (is_array($iptcData)) {
-            $metaDataCollection->set('iptc', $this->buildIptcDto($iptcData));
-        }
-
         $exifData = $image->exif();
         if (is_array($exifData)) {
             $metaDataCollection->set('exif', $this->buildExifDto($exifData));
@@ -88,24 +82,5 @@ class InterventionImageAdapter extends AbstractExtractor
         }
 
         return new Dto\Exif($exifData);
-    }
-
-    /**
-     * @param $iptcData
-     * @return Dto\Iptc
-     */
-    protected function buildIptcDto($iptcData)
-    {
-        $iptcData['Title'] = isset($iptcData['DocumentTitle']) ? $iptcData['DocumentTitle'] : '';
-        $iptcData['Description'] =  isset($iptcData['Caption']) ? $iptcData['Caption'] : '';
-        $iptcData['SubCategories'] =  isset($iptcData['Subcategories']) ? $iptcData['Subcategories'] : '';
-
-        if(isset($iptcData['CreationDate'])) {
-            $creationDateString =  $iptcData['CreationDate'];
-            $creationDateString .= isset($iptcData['CreationTime']) ? $iptcData['CreationTime'] : '000000';
-            $iptcData['CreationDate'] = \DateTime::createFromFormat('YmdHis', $creationDateString);
-        }
-
-        return new Dto\Iptc($iptcData);
     }
 }
