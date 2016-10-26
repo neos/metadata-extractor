@@ -1,10 +1,9 @@
 {
+    "name": "neos/metadata-extractor",
     "description": "Extracts meta data from files into a neos/metadata data structure",
     "type": "neos-package",
-    "name": "neos/metadata-extractor",
+    "license": "MIT",
     "require": {
-        "typo3/flow": "*",
-        "typo3/media": "*",
         "neos/metadata": "*",
         "intervention/image": "2.3.*"
     },

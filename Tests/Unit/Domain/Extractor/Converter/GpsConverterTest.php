@@ -14,21 +14,35 @@ namespace Neos\MetaData\Extractor\Tests\Unit\Converter;
 use Neos\MetaData\Extractor\Converter\GpsConverter;
 use TYPO3\Flow\Tests\UnitTestCase;
 
+/**
+ * GpsConverter Test
+ */
 class GpsConverterTest extends UnitTestCase
 {
-
-
-    public function setUp()
-    {
-    }
-
     /**
      * @return array
      */
-    public function gpsDataProvider() {
+    public function gpsDataProvider()
+    {
         return [
-            'latitude' => ['gpsRationalArray' => ['46/1', '395872/10000', '0/1'], 'gpsReference' => 'S', 'expected' => -46.659787000000001],
-            'longitude' => ['gpsRationalArray' => ['168/1', '508218/10000', '0/1'], 'gpsReference' => 'E', 'expected' => 168.84702999999999],
+            'latitude' => [
+                'gpsRationalArray' => [
+                    '46/1',
+                    '395872/10000',
+                    '0/1'
+                ],
+                'gpsReference' => 'S',
+                'expected' => -46.659787000000001
+            ],
+            'longitude' => [
+                'gpsRationalArray' => [
+                    '168/1',
+                    '508218/10000',
+                    '0/1'
+                ],
+                'gpsReference' => 'E',
+                'expected' => 168.84702999999999
+            ],
         ];
     }
 
@@ -36,11 +50,11 @@ class GpsConverterTest extends UnitTestCase
      * @test
      * @dataProvider gpsDataProvider
      *
-     * @param $gpsRationalArray
-     * @param $gpsReference
-     * @param $expected
+     * @param array $gpsRationalArray
+     * @param string $gpsReference
+     * @param float $expected
      */
-    public function convertRationalToFloat($gpsRationalArray, $gpsReference, $expected)
+    public function convertRationalArrayAndReferenceToFloat($gpsRationalArray, $gpsReference, $expected)
     {
         $actual = GpsConverter::convertRationalArrayAndReferenceToFloat($gpsRationalArray, $gpsReference);
         $this->assertEquals($expected, $actual);

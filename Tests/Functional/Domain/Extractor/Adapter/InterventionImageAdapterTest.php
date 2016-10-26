@@ -15,18 +15,20 @@ use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Domain\Extractor\Adapter\InterventionImageAdapter;
 use Neos\MetaData\Extractor\Tests\Functional\AbstractExtractorTest;
-use TYPO3\Flow\Reflection\ObjectAccess;
 
-
+/**
+ * InterventionImageAdapter Test
+ */
 class InterventionImageAdapterTest extends AbstractExtractorTest
 {
-
     /**
      * @var InterventionImageAdapter
      */
     protected $interventionImageAdapter;
 
-
+    /**
+     * {@inheritDoc}
+     */
     public function setUp()
     {
         parent::setUp();
@@ -37,7 +39,8 @@ class InterventionImageAdapterTest extends AbstractExtractorTest
     /**
      * @test
      */
-    public function extractExifData() {
+    public function extractExifData()
+    {
         $metaDataCollection = new MetaDataCollection();
         $this->interventionImageAdapter->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
         $exifDto = $metaDataCollection->get('exif');
@@ -46,7 +49,7 @@ class InterventionImageAdapterTest extends AbstractExtractorTest
 
         $expectedExifData = [
             'Artist' => 'Daniel Lienert',
-            'ColorSpace' =>'sRGB',
+            'ColorSpace' => 'sRGB',
             'Copyright' => '© Daniel Lienert',
             'ExposureTime' => '1/640',
             'Aperture' => 8.0,
@@ -68,7 +71,8 @@ class InterventionImageAdapterTest extends AbstractExtractorTest
     /**
      * @test
      */
-    public function extractIptcData() {
+    public function extractIptcData()
+    {
         $metaDataCollection = new MetaDataCollection();
         $this->interventionImageAdapter->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
         $iptcDto = $metaDataCollection->get('iptc');
@@ -90,16 +94,5 @@ class InterventionImageAdapterTest extends AbstractExtractorTest
         ];
 
         $this->assertDtoGettersReturnData($iptcDto, $expectedIptcData);
-    }
-
-    /**
-     * @param Dto\AbstractMetaDataDto $dto
-     * @param array $expectedDtoData
-     */
-    protected function assertDtoGettersReturnData(Dto\AbstractMetaDataDto $dto, array $expectedDtoData) {
-        foreach ($expectedDtoData as $key => $value) {
-            $getter = 'get' . $key;
-            $this->assertEquals($value, $dto->$getter());
-        }
     }
 }

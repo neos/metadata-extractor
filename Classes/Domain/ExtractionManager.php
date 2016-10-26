@@ -12,21 +12,26 @@ namespace Neos\MetaData\Extractor\Domain;
  */
 
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use Neos\MetaData\Extractor\Exception\NoExtractorAvailableException;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Object\Exception\UnknownObjectException;
-use TYPO3\Flow\Reflection\ReflectionService;
-use TYPO3\Flow\Resource\Resource as FlowResource;
 use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Domain\Extractor\ExtractorInterface;
+use Neos\MetaData\Extractor\Exception\NoExtractorAvailableException;
+use Neos\MetaData\MetaDataManager;
+use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Object\ObjectManager;
+use TYPO3\Flow\Reflection\ReflectionService;
+use TYPO3\Flow\Resource\Resource as FlowResource;
 use TYPO3\Media\Domain\Model\Asset;
+use TYPO3\Media\Domain\Model\AssetCollection;
+use TYPO3\Media\Domain\Model\Tag;
 
+/**
+ * ExtractionManager
+ */
 class ExtractionManager
 {
-
     /**
      * @Flow\Inject
-     * @var \TYPO3\Flow\Object\ObjectManager
+     * @var ObjectManager
      */
     protected $objectManager;
 
@@ -38,87 +43,72 @@ class ExtractionManager
 
     /**
      * @Flow\Inject
-     * @var \Neos\MetaData\MetaDataManager
+     * @var MetaDataManager
      */
     protected $metaDataManager;
 
     /**
      * @param Asset $asset
+     *
      * @return MetaDataCollection
      * @throws NoExtractorAvailableException
-     * @throws UnknownObjectException
      */
-    public function extractMetaData(Asset $asset) {
+    public function extractMetaData(Asset $asset)
+    {
         $flowResource = $asset->getResource();
         $suitableAdapterClasses = $this->findSuitableExtractorAdaptersForResource($flowResource);
 
-        if(count($suitableAdapterClasses) == 0) {
+        if (count($suitableAdapterClasses) === 0) {
             throw new NoExtractorAvailableException('No Extractor available for media type ' . $flowResource->getMediaType(), 1461433352);
         }
 
         $metaDataCollection = new MetaDataCollection();
         $this->buildAssetMetaData($asset, $metaDataCollection);
 
-        foreach($suitableAdapterClasses as $suitableAdapterClass) {
+        foreach ($suitableAdapterClasses as $suitableAdapterClass) {
             /** @var ExtractorInterface $suitableAdapter */
             $suitableAdapter = $this->objectManager->get($suitableAdapterClass);
             $suitableAdapter->extractMetaData($flowResource, $metaDataCollection);
         }
 
         $this->metaDataManager->updateMetaDataForAsset($asset, $metaDataCollection);
-        
+
         return $metaDataCollection;
     }
 
     /**
      * @param FlowResource $flowResource
+     *
      * @return array
      */
-    protected function findSuitableExtractorAdaptersForResource(FlowResource $flowResource) {
-        $extractorAdapters = $this->getExtractorAdapters();
+    protected function findSuitableExtractorAdaptersForResource(FlowResource $flowResource)
+    {
+        $extractorAdapters = $this->reflectionService->getAllImplementationClassNamesForInterface(ExtractorInterface::class);
         $mediaType = $flowResource->getMediaType();
-        $suitableAdapterClasses = [];
 
-        foreach($extractorAdapters as $extractorAdapterClass => $compatibleMediaTypes) {
-            if(in_array($mediaType, $compatibleMediaTypes)) {
-                $suitableAdapterClasses[] = $extractorAdapterClass;
-            }
-        }
+        $suitableAdapterClasses = array_filter($extractorAdapters, function ($extractorAdapterClass) use ($mediaType) {
+            /** @var ExtractorInterface $extractorAdapterClass */
+            return $extractorAdapterClass::isSuitableFor($mediaType);
+        });
 
         return $suitableAdapterClasses;
-    }
-
-    /**
-     * @return array
-     * @throws UnknownObjectException
-     */
-    protected function getExtractorAdapters() {
-        $extractorAdapterClassNames = $this->reflectionService->getAllImplementationClassNamesForInterface(ExtractorInterface::class);
-        $extractorAdapters = [];
-
-        /** @var ExtractorInterface $className */
-        foreach($extractorAdapterClassNames as $className) {
-            $extractorAdapters[$className] = $className::getCompatibleMediaTypes();
-        }
-
-        return $extractorAdapters;
     }
 
     /**
      * @param Asset $asset
      * @param MetaDataCollection $metaDataCollection
      */
-    protected function buildAssetMetaData(Asset $asset, MetaDataCollection $metaDataCollection) {
-
+    protected function buildAssetMetaData(Asset $asset, MetaDataCollection $metaDataCollection)
+    {
         $tags = [];
-        /** @var \TYPO3\Media\Domain\Model\Tag $tagObject */
         foreach ($asset->getTags() as $tagObject) {
+            /** @var Tag $tagObject */
             $tags[] = $tagObject->getLabel();
         }
 
         $collections = [];
-        /** @var \TYPO3\Media\Domain\Model\AssetCollection $collectionObject */
         foreach ($asset->getAssetCollections() as $collectionObject) {
+            /** @var AssetCollection $collectionObject */
             $collections[] = $collectionObject->getTitle();
         }
 

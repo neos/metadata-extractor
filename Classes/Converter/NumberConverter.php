@@ -11,17 +11,20 @@ namespace Neos\MetaData\Extractor\Converter;
  * source code.
  */
 
+/**
+ * Number Converter
+ */
 class NumberConverter
 {
-
     /**
-     * Converts a rational string like EXIF / RATIONAL
-     * into a float number.
+     * Converts a rational string like EXIF / RATIONAL into a float number.
      *
      * @param string $rationalString
+     *
      * @return float
      */
-    public static function convertRationalToFloat($rationalString) {
+    public static function convertRationalToFloat($rationalString)
+    {
         if (preg_match('#^(\d+)/(\d+)$#', $rationalString, $matches)) {
             return (int)$matches[1] / (float)$matches[2];
         }

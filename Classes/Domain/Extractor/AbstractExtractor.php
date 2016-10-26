@@ -11,9 +11,11 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
+/**
+ * Abstract Extractor
+ */
 abstract class AbstractExtractor implements ExtractorInterface
 {
-
     /**
      * The media types this adapter can handle
      *
@@ -21,17 +23,15 @@ abstract class AbstractExtractor implements ExtractorInterface
      */
     protected static $compatibleMediaTypes = [];
 
-
     /**
-     * @return array
-     * @throws \TYPO3\Neos\Exception
+     * @inheritDoc
      */
-    public static function getCompatibleMediaTypes()
+    public static function isSuitableFor($mediaType)
     {
-        if (!is_array(static::$compatibleMediaTypes)) {
-            throw new \TYPO3\Neos\Exception('Identifier in class ' . __CLASS__ . ' is empty.', 1461246431);
-        }
+        $mainMediaType = substr($mediaType, 0, strpos($mediaType, '/'));
 
-        return static::$compatibleMediaTypes;
+        return in_array('*', static::$compatibleMediaTypes, false)
+            || in_array($mainMediaType . '/*', static::$compatibleMediaTypes, false)
+            || in_array($mediaType, static::$compatibleMediaTypes, false);
     }
 }

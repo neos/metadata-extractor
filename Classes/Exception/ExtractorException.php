@@ -6,8 +6,8 @@ namespace Neos\MetaData\Extractor\Exception;
  */
 
 /**
- * No Extractor Available Exception
+ * Extractor Exception
  */
-class NoExtractorAvailableException extends \Exception
+class ExtractorException extends \Exception
 {
 }

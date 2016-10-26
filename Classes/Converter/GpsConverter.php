@@ -11,18 +11,19 @@ namespace Neos\MetaData\Extractor\Converter;
  * source code.
  */
 
-/*
- * For data type definitions see http://www.cipa.jp/std/documents/e/DC-008-2012_E.pdf
+/**
+ * GPS Converter
+ *
+ * @see http://www.cipa.jp/std/documents/e/DC-008-2012_E.pdf data type definitions
  */
 class GpsConverter
 {
-
     /**
-     * Converts the GPS-3-rational data and reference
-     * into a WGS84 float number.
+     * Converts the GPS-3-rational data and reference into a WGS84 float number.
      *
      * @param array $gpsRationalArray
      * @param string $gpsReference
+     *
      * @return float
      */
     public static function convertRationalArrayAndReferenceToFloat(array $gpsRationalArray, $gpsReference)
@@ -31,7 +32,7 @@ class GpsConverter
         $minutes = isset($gpsRationalArray[1]) ? NumberConverter::convertRationalToFloat($gpsRationalArray[1]) : 0.0;
         $seconds = isset($gpsRationalArray[2]) ? NumberConverter::convertRationalToFloat($gpsRationalArray[2]) : 0.0;
 
-        $flip = ($gpsReference == 'W' or $gpsReference == 'S') ? -1 : 1;
+        $flip = ($gpsReference === 'W' || $gpsReference === 'S') ? -1 : 1;
 
         return round($flip * ($degrees + $minutes / 60 + $seconds / 3600), 6);
     }
