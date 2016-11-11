@@ -11,7 +11,7 @@ namespace Neos\MetaData\Extractor\Domain\Extractor\Adapter;
  * source code.
  */
 
-use ElementareTeilchen\MetaData\Iptc\Iim;
+use ElementareTeilchen\MetaData\Iptc;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Domain\Extractor\AbstractExtractor;
@@ -60,22 +60,22 @@ class IptcIimAdapter extends AbstractExtractor
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {
-        $iim = new Iim($this->iimData);
+        $iim = new Iptc\Iim($this->iimData);
 
         $iptcData = [];
-        $iptcData['IntellectualGenres'] = $iim->getProperty(Iim::OBJECT_ATTRIBUTE_REFERENCE);
-        $iptcData['Title'] = $iim->getProperty(Iim::OBJECT_NAME);
-        $iptcData['SubjectCodes'] = $iim->getProperty(Iim::SUBJECT_REFERENCE);
+        $iptcData['IntellectualGenres'] = $iim->getProperty(Iptc\Iim::OBJECT_ATTRIBUTE_REFERENCE);
+        $iptcData['Title'] = $iim->getProperty(Iptc\Iim::OBJECT_NAME);
+        $iptcData['SubjectCodes'] = $iim->getProperty(Iptc\Iim::SUBJECT_REFERENCE);
 
         //caring for deprecated (supplemental) category
         /** @var array $categories */
-        $categories = $iim->getProperty(Iim::SUPPLEMENTAL_CATEGORY);
-        $categories[] = $iim->getProperty(Iim::CATEGORY);
+        $categories = $iim->getProperty(Iptc\Iim::SUPPLEMENTAL_CATEGORY);
+        $categories[] = $iim->getProperty(Iptc\Iim::CATEGORY);
         $subjectCodesFromCategories = [];
         $deprecatedCategories = [];
         foreach ($categories as $category) {
             if ($category !== '') {
-                $subjectCode = Iim::convertCategoryToSubjectCode($category);
+                $subjectCode = Iptc\Iim::convertCategoryToSubjectCode($category);
                 if ($subjectCode !== false) {
                     $subjectCodesFromCategories[] = $subjectCode;
                 } else {
@@ -94,35 +94,35 @@ class IptcIimAdapter extends AbstractExtractor
             $iptcData['DeprecatedCategories'] = $deprecatedCategories;
         }
 
-        $iptcData['Keywords'] = $iim->getProperty(Iim::KEYWORDS);
-        $iptcData['Instructions'] = $iim->getProperty(Iim::SPECIAL_INSTRUCTIONS);
+        $iptcData['Keywords'] = $iim->getProperty(Iptc\Iim::KEYWORDS);
+        $iptcData['Instructions'] = $iim->getProperty(Iptc\Iim::SPECIAL_INSTRUCTIONS);
 
-        $creationDateString = $iim->getProperty(Iim::DATE_CREATED);
+        $creationDateString = $iim->getProperty(Iptc\Iim::DATE_CREATED);
         if (!empty($creationDateString)) {
-            $creationTimeString = $iim->getProperty(Iim::TIME_CREATED);
+            $creationTimeString = $iim->getProperty(Iptc\Iim::TIME_CREATED);
             $creationDateString .= empty($creationTimeString) ? '000000+0000' : $creationTimeString;
             $iptcData['CreationDate'] = \DateTime::createFromFormat('YmdHisO', $creationDateString);
         }
-        $iptcData['Creator'] = $iim->getProperty(Iim::BYLINE);
-        $iptcData['CreatorTitle'] = $iim->getProperty(Iim::BYLINE_TITLE);
-        $iptcData['City'] = $iim->getProperty(Iim::CITY);
-        $iptcData['Sublocation'] = $iim->getProperty(Iim::SUBLOCATION);
-        $iptcData['State'] = $iim->getProperty(Iim::PROVINCE_STATE);
-        $iptcData['CountryCode'] = $iim->getProperty(Iim::COUNTRY_PRIMARY_LOCATION_CODE);
-        $iptcData['Country'] = $iim->getProperty(Iim::COUNTRY_PRIMARY_LOCATION_NAME);
-        $iptcData['JobId'] = $iim->getProperty(Iim::ORIGINAL_TRANSMISSION_REFERENCE);
-        $iptcData['Headline'] = $iim->getProperty(Iim::HEADLINE);
-        $iptcData['CreditLine'] = $iim->getProperty(Iim::CREDIT);
-        $iptcData['Source'] = $iim->getProperty(Iim::SOURCE);
-        $iptcData['CopyrightNotice'] = $iim->getProperty(Iim::COPYRIGHT_NOTICE);
-        $iptcData['Contact'] = $iim->getProperty(Iim::CONTACT);
-        $iptcData['Description'] = $iim->getProperty(Iim::CAPTION_ABSTRACT);
-        $iptcData['DescriptionWriter'] = $iim->getProperty(Iim::WRITER_EDITOR);
+        $iptcData['Creator'] = $iim->getProperty(Iptc\Iim::BYLINE);
+        $iptcData['CreatorTitle'] = $iim->getProperty(Iptc\Iim::BYLINE_TITLE);
+        $iptcData['City'] = $iim->getProperty(Iptc\Iim::CITY);
+        $iptcData['Sublocation'] = $iim->getProperty(Iptc\Iim::SUBLOCATION);
+        $iptcData['State'] = $iim->getProperty(Iptc\Iim::PROVINCE_STATE);
+        $iptcData['CountryCode'] = $iim->getProperty(Iptc\Iim::COUNTRY_PRIMARY_LOCATION_CODE);
+        $iptcData['Country'] = $iim->getProperty(Iptc\Iim::COUNTRY_PRIMARY_LOCATION_NAME);
+        $iptcData['JobId'] = $iim->getProperty(Iptc\Iim::ORIGINAL_TRANSMISSION_REFERENCE);
+        $iptcData['Headline'] = $iim->getProperty(Iptc\Iim::HEADLINE);
+        $iptcData['CreditLine'] = $iim->getProperty(Iptc\Iim::CREDIT);
+        $iptcData['Source'] = $iim->getProperty(Iptc\Iim::SOURCE);
+        $iptcData['CopyrightNotice'] = $iim->getProperty(Iptc\Iim::COPYRIGHT_NOTICE);
+        $iptcData['Contact'] = $iim->getProperty(Iptc\Iim::CONTACT);
+        $iptcData['Description'] = $iim->getProperty(Iptc\Iim::CAPTION_ABSTRACT);
+        $iptcData['DescriptionWriter'] = $iim->getProperty(Iptc\Iim::WRITER_EDITOR);
 
         // sometimes used but not really specified in IPTC MetaData
-        $digitalCreationDateString = $iim->getProperty(Iim::DIGITAL_CREATION_DATE);
+        $digitalCreationDateString = $iim->getProperty(Iptc\Iim::DIGITAL_CREATION_DATE);
         if (!empty($digitalCreationDateString)) {
-            $digitalCreationTimeString = $iim->getProperty(Iim::DIGITAL_CREATION_TIME);
+            $digitalCreationTimeString = $iim->getProperty(Iptc\Iim::DIGITAL_CREATION_TIME);
             $digitalCreationDateString .= empty($digitalCreationTimeString) ? '000000+0000' : $digitalCreationTimeString;
             $iptcData['DigitalCreationDate'] = \DateTime::createFromFormat('YmdHisO', $digitalCreationDateString);
         }

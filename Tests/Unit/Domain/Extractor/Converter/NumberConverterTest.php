@@ -29,6 +29,10 @@ class NumberConverterTest extends UnitTestCase
                 'rational' => '24/1',
                 'expected' => 24.0
             ],
+            'negativeRational' => [
+                'rational' => '-24/10',
+                'expected' => -2.4
+            ],
             'nonRational' => [
                 'rational' => 'twenty-four',
                 'expected' => 0.0

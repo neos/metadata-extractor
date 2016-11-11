@@ -17,7 +17,7 @@ namespace Neos\MetaData\Extractor\Converter;
 class NumberConverter
 {
     /**
-     * Converts a rational string like EXIF / RATIONAL into a float number.
+     * Converts a rational string like EXIF / (S)RATIONAL into a float number.
      *
      * @param string $rationalString
      *
@@ -25,8 +25,11 @@ class NumberConverter
      */
     public static function convertRationalToFloat($rationalString)
     {
-        if (preg_match('#^(\d+)/(\d+)$#', $rationalString, $matches)) {
-            return (int)$matches[1] / (float)$matches[2];
+        if (preg_match('#^(-?\d+)/(\d+)$#', $rationalString, $matches)) {
+            $divisor = (float)$matches[2];
+            if ($divisor !== 0.0) {
+                return (int)$matches[1] / $divisor;
+            }
         }
 
         return 0.0;

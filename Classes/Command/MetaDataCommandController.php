@@ -7,7 +7,6 @@ namespace Neos\MetaData\Extractor\Command;
 
 use Neos\MetaData\Extractor\Domain\ExtractionManager;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
-use Neos\MetaData\Extractor\Exception\NoExtractorAvailableException;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Cli\CommandController;
 use TYPO3\Media\Domain\Model\Asset;
@@ -43,8 +42,6 @@ class MetaDataCommandController extends CommandController
             /** @var Asset $asset */
             try {
                 $this->extractionManager->extractMetaData($asset);
-            } catch (NoExtractorAvailableException $exception) {
-                $this->output->outputLine(' ' . $exception->getMessage());
             } catch (ExtractorException $exception) {
                 $this->output->outputLine(' ' . $exception->getMessage());
             }

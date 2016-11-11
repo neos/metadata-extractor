@@ -14,7 +14,7 @@ namespace Neos\MetaData\Extractor\Domain;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Domain\Extractor\ExtractorInterface;
-use Neos\MetaData\Extractor\Exception\NoExtractorAvailableException;
+use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\MetaDataManager;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Object\ObjectManager;
@@ -51,24 +51,25 @@ class ExtractionManager
      * @param Asset $asset
      *
      * @return MetaDataCollection
-     * @throws NoExtractorAvailableException
+     * @throws ExtractorException
      */
     public function extractMetaData(Asset $asset)
     {
         $flowResource = $asset->getResource();
-        $suitableAdapterClasses = $this->findSuitableExtractorAdaptersForResource($flowResource);
-
-        if (count($suitableAdapterClasses) === 0) {
-            throw new NoExtractorAvailableException('No Extractor available for media type ' . $flowResource->getMediaType(), 1461433352);
+        if ($flowResource === null) {
+            throw new ExtractorException('Resource of Asset "' . $asset->getTitle() . '"" not found.', 201611111954);
         }
 
         $metaDataCollection = new MetaDataCollection();
         $this->buildAssetMetaData($asset, $metaDataCollection);
 
+        $suitableAdapterClasses = $this->findSuitableExtractorAdaptersForResource($flowResource);
         foreach ($suitableAdapterClasses as $suitableAdapterClass) {
             /** @var ExtractorInterface $suitableAdapter */
             $suitableAdapter = $this->objectManager->get($suitableAdapterClass);
-            $suitableAdapter->extractMetaData($flowResource, $metaDataCollection);
+            if ($suitableAdapter->canHandleExtraction($flowResource)) {
+                $suitableAdapter->extractMetaData($flowResource, $metaDataCollection);
+            }
         }
 
         $this->metaDataManager->updateMetaDataForAsset($asset, $metaDataCollection);

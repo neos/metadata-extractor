@@ -8,11 +8,12 @@ The package provides the `ExtractorInterface`. Implementing classes provide the 
 ## Adapters
 The `ExtractionManager` itself generates the `Asset` DTO for every valid Asset. 
 
-### `InterventionImageAdapter` ([Intervention/Image](https://github.com/intervention/image))
+### `ExifAdapter` ([EXIF](http://www.exif.org/))
 
 #### Supported Media Types
 * image/jpeg
 * video/jpeg
+* image/tiff
 
 #### Generated DTOs
 * EXIF
