@@ -74,10 +74,11 @@ class ExifAdapter extends AbstractExtractor
             'UndefinedTag:0xA434' => 'LensModel',
             'UndefinedTag:0xA435' => 'LensSerialNumber'
         ];
-        foreach ($deprecatedOrUnmappedProperties as $deprecatedOrWrongProperty => $newProperty) {
-            if (isset($convertedExifData[$deprecatedOrWrongProperty])) {
-                $convertedExifData[$newProperty] = $convertedExifData[$deprecatedOrWrongProperty];
-                unset($convertedExifData[$deprecatedOrWrongProperty]);
+
+        foreach ($deprecatedOrUnmappedProperties as $deprecatedOrUnmappedProperty => $newProperty) {
+            if (isset($convertedExifData[$deprecatedOrUnmappedProperty])) {
+                $convertedExifData[$newProperty] = $convertedExifData[$deprecatedOrUnmappedProperty];
+                unset($convertedExifData[$deprecatedOrUnmappedProperty]);
             }
         }
 

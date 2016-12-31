@@ -8,9 +8,6 @@ namespace Neos\MetaData\Extractor\ResourceManagement;
 use Neos\MetaData\Extractor\Domain\ExtractionManager;
 use TYPO3\Flow\Annotations as Flow;
 
-/**
- * Resource Persisted Slot
- */
 class ResourcePersistedSlot
 {
     /**
@@ -25,6 +22,5 @@ class ResourcePersistedSlot
      */
     public function extractOnPersistedResource($object, $objectState)
     {
-
     }
 }

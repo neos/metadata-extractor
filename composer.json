@@ -4,8 +4,7 @@
     "type": "neos-package",
     "license": "MIT",
     "require": {
-        "neos/metadata": "*",
-        "elementareteilchen/metadata": "^1.0.0"
+        "neos/metadata": "*"
     },
     "autoload": {
         "psr-4": {

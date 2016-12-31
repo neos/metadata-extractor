@@ -24,9 +24,6 @@ use TYPO3\Media\Domain\Model\Asset;
 use TYPO3\Media\Domain\Model\AssetCollection;
 use TYPO3\Media\Domain\Model\Tag;
 
-/**
- * ExtractionManager
- */
 class ExtractionManager
 {
     /**
@@ -57,7 +54,7 @@ class ExtractionManager
     {
         $flowResource = $asset->getResource();
         if ($flowResource === null) {
-            throw new ExtractorException('Resource of Asset "' . $asset->getTitle() . '"" not found.', 201611111954);
+            throw new ExtractorException('Resource of Asset "' . $asset->getTitle() . '"" not found.', 1483196725);
         }
 
         $metaDataCollection = new MetaDataCollection();
