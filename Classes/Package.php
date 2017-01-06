@@ -17,8 +17,8 @@ use Neos\Flow\Core\Booting\Sequence;
 use Neos\Flow\Core\Booting\Step;
 use Neos\Flow\Core\Bootstrap;
 use Neos\Flow\Package\Package as BasePackage;
-use TYPO3\Media\Domain\Model\Asset;
-use TYPO3\Media\Domain\Repository\AssetRepository;
+use Neos\Media\Domain\Model\Asset;
+use Neos\Media\Domain\Repository\AssetRepository;
 
 /**
  * {@inheritDoc}
