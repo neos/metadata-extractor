@@ -139,7 +139,10 @@ class ExifExtractor extends AbstractExtractor
             }
         }
 
-        $convertedExifData['GPSVersionID'] = NumberConverter::convertBinaryToVersion($convertedExifData['GPSVersionID']);
+        if (isset($convertedExifData['GPSVersionID'])) {
+            $convertedExifData['GPSVersionID'] = NumberConverter::convertBinaryToVersion($convertedExifData['GPSVersionID']);
+        }
+
         if (isset($convertedExifData['GPSAltitudeRef'], $convertedExifData['GPSAltitude'])) {
             if ($convertedExifData['GPSAltitudeRef'] === 1) {
                 $convertedExifData['GPSAltitude'] = -$convertedExifData['GPSAltitude'];
