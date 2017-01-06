@@ -14,8 +14,8 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
 use Neos\MetaData\Extractor\Specifications\Iptc;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\ResourceManagement\PersistentResource as FlowResource;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
 
 /**
  * @see https://www.iptc.org/std/IIM/4.2/specification/IIMV4.2.pdf

@@ -12,7 +12,7 @@ namespace Neos\MetaData\Extractor\Tests\Unit\Converter;
  */
 
 use Neos\MetaData\Extractor\Converter\TimeStampConverter;
-use TYPO3\Flow\Tests\UnitTestCase;
+use Neos\Flow\Tests\UnitTestCase;
 
 class TimeStampConverterTest extends UnitTestCase
 {

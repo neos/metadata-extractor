@@ -17,9 +17,9 @@ use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
 use Neos\MetaData\Extractor\Converter\NumberConverter;
 use Neos\MetaData\Extractor\Converter\TimeStampConverter;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\ResourceManagement\Exception as ResourceException;
-use TYPO3\Flow\ResourceManagement\PersistentResource as FlowResource;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\ResourceManagement\Exception as ResourceException;
+use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
 
 /**
  * @see http://www.cipa.jp/std/documents/e/DC-008-Translation-2016-E.pdf Official standard
