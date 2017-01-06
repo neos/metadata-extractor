@@ -14,9 +14,6 @@ namespace Neos\MetaData\Extractor\Tests\Functional\Domain\Extractor;
 use Neos\MetaData\Extractor\Domain\ExtractionManager;
 use Neos\MetaData\Extractor\Tests\Functional\AbstractExtractorTest;
 
-/**
- * ExtractionManager Test
- */
 class ExtractionManagerTest extends AbstractExtractorTest
 {
     /**
@@ -32,5 +29,12 @@ class ExtractionManagerTest extends AbstractExtractorTest
         parent::setUp();
 
         $this->extractionManager = $this->objectManager->get(ExtractionManager::class);
+    }
+
+    /**
+     * @test
+     */
+    public function instanceCreated() {
+        $this->assertInstanceOf(ExtractionManager::class, $this->extractionManager);
     }
 }

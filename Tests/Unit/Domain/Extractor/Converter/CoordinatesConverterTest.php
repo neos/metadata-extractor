@@ -14,9 +14,6 @@ namespace Neos\MetaData\Extractor\Tests\Unit\Converter;
 use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
 use TYPO3\Flow\Tests\UnitTestCase;
 
-/**
- * CoordinatesConverter Test
- */
 class CoordinatesConverterTest extends UnitTestCase
 {
     /**

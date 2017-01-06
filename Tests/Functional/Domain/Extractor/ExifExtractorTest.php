@@ -1,5 +1,5 @@
 <?php
-namespace Neos\MetaData\Extractor\Tests\Functional\Domain\Extractor\Adapter;
+namespace Neos\MetaData\Extractor\Tests\Functional\Domain\Extractor;
 
 /*
  * This file is part of the Neos.MetaData.Extractor package.
@@ -13,18 +13,15 @@ namespace Neos\MetaData\Extractor\Tests\Functional\Domain\Extractor\Adapter;
 
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
-use Neos\MetaData\Extractor\Domain\Extractor\Adapter\ExifAdapter;
+use Neos\MetaData\Extractor\Domain\Extractor\ExifExtractor;
 use Neos\MetaData\Extractor\Tests\Functional\AbstractExtractorTest;
 
-/**
- * ExifAdapter Test
- */
-class ExifAdapterTest extends AbstractExtractorTest
+class ExifExtractorTest extends AbstractExtractorTest
 {
     /**
-     * @var ExifAdapter
+     * @var ExifExtractor
      */
-    protected $exifAdapter;
+    protected $exifExtractor;
 
     /**
      * {@inheritDoc}
@@ -33,7 +30,7 @@ class ExifAdapterTest extends AbstractExtractorTest
     {
         parent::setUp();
 
-        $this->exifAdapter = new ExifAdapter();
+        $this->exifExtractor = new ExifExtractor();
     }
 
     /**
@@ -42,7 +39,10 @@ class ExifAdapterTest extends AbstractExtractorTest
     public function extractMetaData()
     {
         $metaDataCollection = new MetaDataCollection();
-        $this->exifAdapter->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
+
+
+        $this->exifExtractor->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
+
         $exifDto = $metaDataCollection->get('exif');
 
         $this->assertInstanceOf(Dto\Exif::class, $exifDto);
@@ -73,7 +73,6 @@ class ExifAdapterTest extends AbstractExtractorTest
             'GPSImgDirection' => 180.0,
             'GPSLatitude' => -46.659787,
             'GPSLongitude' => 168.84703,
-            'ISOSpeedRatings' => 100,
             'ImageDescription' => 'Waipapa Point Lighthouse with the sea in the background and bush in the foreground.',
             'LensModel' => 'EF24-105mm f/4L IS USM',
             'LensSpecification' => [24.0, 105.0, 0.0, 0.0],
@@ -90,8 +89,7 @@ class ExifAdapterTest extends AbstractExtractorTest
             'WhiteBalance' => 'Auto white balance',
             'XResolution' => 240,
             'YResolution' => 240,
-            // actually this should read "2.3.0.0"
-            'GPSVersionID'  => '',
+            'GPSVersionID'  => '2.2.0.0',
             // no data present for the following
             'ImageWidth' => 0,
             'ImageLength' => 0,
@@ -126,7 +124,6 @@ class ExifAdapterTest extends AbstractExtractorTest
             'SensitivityType' => '',
             'StandardOutputSensitivity' => 0,
             'RecommendedExposureIndex' => 0,
-            'ISOSpeed' => 0,
             'ISOSpeedLatitudeyyy' => 0,
             'ISOSpeedLatitudezzz' => 0,
             'BrightnessValue' => 0.0,

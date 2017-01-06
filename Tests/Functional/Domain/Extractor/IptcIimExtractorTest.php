@@ -1,5 +1,5 @@
 <?php
-namespace Neos\MetaData\Extractor\Tests\Functional\Domain\Extractor\Adapter;
+namespace Neos\MetaData\Extractor\Tests\Functional\Domain\Extractor;
 
 /*
  * This file is part of the Neos.MetaData.Extractor package.
@@ -13,18 +13,15 @@ namespace Neos\MetaData\Extractor\Tests\Functional\Domain\Extractor\Adapter;
 
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
-use Neos\MetaData\Extractor\Domain\Extractor\Adapter\IptcIimAdapter;
+use Neos\MetaData\Extractor\Domain\Extractor\IptcIimExtractor;
 use Neos\MetaData\Extractor\Tests\Functional\AbstractExtractorTest;
 
-/**
- * IptcIimAdapter Test
- */
-class IptcIimAdapterTest extends AbstractExtractorTest
+class IptcIimExtractorTest extends AbstractExtractorTest
 {
     /**
-     * @var IptcIimAdapter
+     * @var IptcIimExtractor
      */
-    protected $iptcIimAdapter;
+    protected $iptcIimExtractor;
 
     /**
      * {@inheritDoc}
@@ -33,7 +30,7 @@ class IptcIimAdapterTest extends AbstractExtractorTest
     {
         parent::setUp();
 
-        $this->iptcIimAdapter = new IptcIimAdapter();
+        $this->iptcIimExtractor = new IptcIimExtractor();
     }
 
     /**
@@ -42,7 +39,7 @@ class IptcIimAdapterTest extends AbstractExtractorTest
     public function extractMetaData()
     {
         $metaDataCollection = new MetaDataCollection();
-        $this->iptcIimAdapter->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
+        $this->iptcIimExtractor->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
         $iptcDto = $metaDataCollection->get('iptc');
 
         $this->assertInstanceOf(Dto\Iptc::class, $iptcDto);

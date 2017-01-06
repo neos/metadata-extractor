@@ -8,7 +8,7 @@ The package provides the `ExtractorInterface`. Implementing classes provide the 
 ## Adapters
 The `ExtractionManager` itself generates the `Asset` DTO for every valid Asset. 
 
-### `ExifAdapter` ([EXIF](http://www.exif.org/))
+### `ExifExtacrtor` ([EXIF](http://www.exif.org/))
 
 #### Supported Media Types
 * image/jpeg
@@ -18,7 +18,7 @@ The `ExtractionManager` itself generates the `Asset` DTO for every valid Asset.
 #### Generated DTOs
 * EXIF
 
-### `IptcIimAdapter` ([IPTC IIM](https://iptc.org/standards/iim/))
+### `IptcIimExtractor` ([IPTC IIM](https://iptc.org/standards/iim/))
 
 #### Supported Media Types
 * image/gif

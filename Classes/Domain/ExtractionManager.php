@@ -11,6 +11,7 @@ namespace Neos\MetaData\Extractor\Domain;
  * source code.
  */
 
+use Neos\Media\Domain\Model\ImageVariant;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Domain\Extractor\ExtractorInterface;
@@ -55,6 +56,10 @@ class ExtractionManager
      */
     public function extractMetaData(Asset $asset)
     {
+        if ($asset instanceof ImageVariant) {
+            $asset = $asset->getOriginalAsset();
+        }
+
         $flowResource = $asset->getResource();
         if ($flowResource === null) {
             throw new ExtractorException('Resource of Asset "' . $asset->getTitle() . '"" not found.', 201611111954);
