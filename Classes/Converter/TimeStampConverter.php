@@ -11,9 +11,6 @@ namespace Neos\MetaData\Extractor\Converter;
  * source code.
  */
 
-/**
- * TimeStamp Converter
- */
 class TimeStampConverter
 {
     /**

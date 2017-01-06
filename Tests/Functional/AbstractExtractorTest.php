@@ -17,10 +17,7 @@ use TYPO3\Flow\Utility\Files;
 use TYPO3\Media\Domain\Model\Asset;
 use TYPO3\Media\Tests\Functional\AbstractTest;
 
-/**
- * AbstractExtractor Test
- */
-class AbstractExtractorTest extends AbstractTest
+abstract class AbstractExtractorTest extends AbstractTest
 {
     /**
      * @var ResourceManager
@@ -32,6 +29,8 @@ class AbstractExtractorTest extends AbstractTest
      */
     protected $testAsset;
 
+    protected static $testablePersistenceEnabled = true;
+
     /**
      * {@inheritDoc}
      */
@@ -40,18 +39,17 @@ class AbstractExtractorTest extends AbstractTest
         parent::setUp();
 
         $this->resourceManager = $this->objectManager->get(ResourceManager::class);
-        $this->testAsset = $this->buildTestResource();
+        $this->testAsset = $this->buildTestAsset();
     }
 
     /**
      * @return Asset
      */
-    protected function buildTestResource()
+    protected function buildTestAsset()
     {
-        $testImagePath = Files::concatenatePaths([
-            __DIR__,
-            'Fixtures/Resources/Lighthouse.jpg'
-        ]);
+        $testImagePath = Files::concatenatePaths([__DIR__, 'Fixtures/Resources/Lighthouse.jpg']);
+        $this->assertFileExists($testImagePath);
+
         $resource = $this->resourceManager->importResource($testImagePath);
 
         return new Asset($resource);
@@ -65,7 +63,7 @@ class AbstractExtractorTest extends AbstractTest
     {
         foreach ($expectedDtoData as $key => $value) {
             $getter = 'get' . $key;
-            $this->assertEquals($value, $dto->$getter());
+            $this->assertEquals($value, $dto->$getter(), sprintf('Value of %s does not match expected.', $key));
         }
     }
 }

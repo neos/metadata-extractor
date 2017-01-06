@@ -1,5 +1,5 @@
 <?php
-namespace Neos\MetaData\Extractor\Domain\Extractor\Adapter;
+namespace Neos\MetaData\Extractor\Domain\Extractor;
 
 /*
  * This file is part of the Neos.MetaData.Extractor package.
@@ -11,23 +11,20 @@ namespace Neos\MetaData\Extractor\Domain\Extractor\Adapter;
  * source code.
  */
 
-use ElementareTeilchen\MetaData\Exif;
+use Neos\MetaData\Extractor\Specifications\Exif;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
 use Neos\MetaData\Extractor\Converter\NumberConverter;
 use Neos\MetaData\Extractor\Converter\TimeStampConverter;
-use Neos\MetaData\Extractor\Domain\Extractor\AbstractExtractor;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Resource\Exception as ResourceException;
 use TYPO3\Flow\Resource\Resource as FlowResource;
 
 /**
- * EXIF Adapter
- *
  * @see http://www.cipa.jp/std/documents/e/DC-008-Translation-2016-E.pdf Official standard
  */
-class ExifAdapter extends AbstractExtractor
+class ExifExtractor extends AbstractExtractor
 {
     /**
      * @var array
@@ -41,7 +38,7 @@ class ExifAdapter extends AbstractExtractor
     /**
      * @var array
      */
-    protected $exifData;
+    protected $exifData = null;
 
     /**
      * @param FlowResource $resource
@@ -51,7 +48,7 @@ class ExifAdapter extends AbstractExtractor
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {
-        $convertedExifData = $this->exifData;
+        $convertedExifData = $this->exifData ?: exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
 
         $deprecatedOrUnmappedProperties = [
             'ISOSpeedRatings' => 'PhotographicSensitivity',
@@ -74,10 +71,10 @@ class ExifAdapter extends AbstractExtractor
             'UndefinedTag:0xA434' => 'LensModel',
             'UndefinedTag:0xA435' => 'LensSerialNumber'
         ];
-        foreach ($deprecatedOrUnmappedProperties as $deprecatedOrWrongProperty => $newProperty) {
-            if (isset($convertedExifData[$deprecatedOrWrongProperty])) {
-                $convertedExifData[$newProperty] = $convertedExifData[$deprecatedOrWrongProperty];
-                unset($convertedExifData[$deprecatedOrWrongProperty]);
+        foreach ($deprecatedOrUnmappedProperties as $deprecatedOrUnmappedProperty => $newProperty) {
+            if (isset($convertedExifData[$deprecatedOrUnmappedProperty])) {
+                $convertedExifData[$newProperty] = $convertedExifData[$deprecatedOrUnmappedProperty];
+                unset($convertedExifData[$deprecatedOrUnmappedProperty]);
             }
         }
 
@@ -142,6 +139,7 @@ class ExifAdapter extends AbstractExtractor
             }
         }
 
+        $convertedExifData['GPSVersionID'] = NumberConverter::convertBinaryToVersion($convertedExifData['GPSVersionID']);
         if (isset($convertedExifData['GPSAltitudeRef'], $convertedExifData['GPSAltitude'])) {
             if ($convertedExifData['GPSAltitudeRef'] === 1) {
                 $convertedExifData['GPSAltitude'] = -$convertedExifData['GPSAltitude'];
@@ -176,23 +174,27 @@ class ExifAdapter extends AbstractExtractor
             'SubSecTimeOriginal' => 'DateTimeOriginal',
             'SubSecTimeDigitized' => 'DateTimeDigitized'
         ];
+
         foreach ($subSecondProperties as $subSecondProperty => $dateTimeProperty) {
             if (isset($convertedExifData[$subSecondProperty], $convertedExifData[$dateTimeProperty])) {
                 $convertedExifData[$dateTimeProperty] = \DateTime::createFromFormat('Y-m-d H:i:s.u', $convertedExifData[$dateTimeProperty]->format('Y-m-d H:i:s.') . $convertedExifData[$subSecondProperty]);
                 unset($convertedExifData[$subSecondProperty]);
             }
         }
+
         $timeOffsetProperties = [
             'OffsetTime' => 'DateTime',
             'OffsetTimeOriginal' => 'DateTimeOriginal',
             'OffsetTimeDigitized' => 'DateTimeDigitized',
         ];
+
         foreach ($timeOffsetProperties as $timeOffsetProperty => $dateTimeProperty) {
             if (isset($convertedExifData[$timeOffsetProperty], $convertedExifData[$dateTimeProperty])) {
                 $convertedExifData[$dateTimeProperty] = \DateTime::createFromFormat('Y-m-d H:i:s.uP', $convertedExifData[$dateTimeProperty]->format('Y-m-d H:i:s.u') . $convertedExifData[$timeOffsetProperty]);
                 unset($convertedExifData[$timeOffsetProperty]);
             }
         }
+
         // wrongly encoded UserComment breaks saving of the whole data set, so check for correct encoding and remove if necessary
         if (isset($convertedExifData['UserComment'])) {
             $characterCode = substr($convertedExifData['UserComment'], 0, 8);

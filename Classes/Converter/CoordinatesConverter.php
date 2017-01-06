@@ -12,8 +12,6 @@ namespace Neos\MetaData\Extractor\Converter;
  */
 
 /**
- * GPS Converter
- *
  * @see http://www.cipa.jp/std/documents/e/DC-008-Translation-2016-E.pdf data type definitions
  */
 class CoordinatesConverter

@@ -1,5 +1,5 @@
 <?php
-namespace Neos\MetaData\Extractor\Domain\Extractor\Adapter;
+namespace Neos\MetaData\Extractor\Domain\Extractor;
 
 /*
  * This file is part of the Neos.MetaData.Extractor package.
@@ -11,21 +11,16 @@ namespace Neos\MetaData\Extractor\Domain\Extractor\Adapter;
  * source code.
  */
 
-use ElementareTeilchen\MetaData\Iptc;
+use Neos\MetaData\Extractor\Specifications\Iptc;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
-use Neos\MetaData\Extractor\Domain\Extractor\AbstractExtractor;
-use Neos\MetaData\Extractor\Exception\ExtractorException;
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Resource\Exception as ResourceException;
 use TYPO3\Flow\Resource\Resource as FlowResource;
 
 /**
- * Adapter for IPTC IIM
- *
  * @see https://www.iptc.org/std/IIM/4.2/specification/IIMV4.2.pdf
  */
-class IptcIimAdapter extends AbstractExtractor
+class IptcIimExtractor extends AbstractExtractor
 {
     /**
      * @var array
@@ -54,9 +49,6 @@ class IptcIimAdapter extends AbstractExtractor
     /**
      * @param FlowResource $resource
      * @param MetaDataCollection $metaDataCollection
-     *
-     * @throws ResourceException
-     * @throws ExtractorException
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {

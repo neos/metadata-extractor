@@ -11,9 +11,6 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
-/**
- * Abstract Extractor
- */
 abstract class AbstractExtractor implements ExtractorInterface
 {
     /**
