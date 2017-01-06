@@ -12,7 +12,7 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  */
 
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use TYPO3\Flow\Resource\Resource as FlowResource;
+use TYPO3\Flow\ResourceManagement\PersistentResource as FlowResource;
 
 interface ExtractorInterface
 {
