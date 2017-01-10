@@ -11,8 +11,8 @@ namespace Neos\MetaData\Extractor\Tests\Unit\Converter;
  * source code.
  */
 
-use Neos\MetaData\Extractor\Converter\TimeStampConverter;
 use Neos\Flow\Tests\UnitTestCase;
+use Neos\MetaData\Extractor\Converter\TimeStampConverter;
 
 class TimeStampConverterTest extends UnitTestCase
 {
@@ -26,11 +26,11 @@ class TimeStampConverterTest extends UnitTestCase
                 'timeStamp' => [
                     11.0,
                     16.0,
-                    53.0
+                    53.0,
                 ],
                 'dateStamp' => '2016:02:05',
-                'expected' => \DateTime::createFromFormat('YmdHis', '20160205111653')
-            ]
+                'expected' => \DateTime::createFromFormat('YmdHis', '20160205111653'),
+            ],
         ];
     }
 

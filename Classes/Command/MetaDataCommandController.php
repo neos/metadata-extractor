@@ -5,12 +5,12 @@ namespace Neos\MetaData\Extractor\Command;
  * This file is part of the Neos.MetaData.Extractor package.
  */
 
-use Neos\MetaData\Extractor\Domain\ExtractionManager;
-use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
 use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Domain\Repository\AssetRepository;
+use Neos\MetaData\Extractor\Domain\ExtractionManager;
+use Neos\MetaData\Extractor\Exception\ExtractorException;
 
 /**
  * @Flow\Scope("singleton")

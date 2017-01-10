@@ -24,7 +24,7 @@ class IptcIimExtractorTest extends AbstractExtractorTest
     protected $iptcIimExtractor;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setUp()
     {
@@ -67,7 +67,7 @@ class IptcIimExtractorTest extends AbstractExtractorTest
                 'Leuchtturm',
                 'Neu Seeland',
                 'Neuseeland',
-                'New Zealand'
+                'New Zealand',
             ],
             'Source' => 'Camera',
             'State' => 'Southland',

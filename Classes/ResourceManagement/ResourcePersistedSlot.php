@@ -5,12 +5,9 @@ namespace Neos\MetaData\Extractor\ResourceManagement;
  * This file is part of the Neos.MetaData.Extractor package.
  */
 
-use Neos\MetaData\Extractor\Domain\ExtractionManager;
 use Neos\Flow\Annotations as Flow;
+use Neos\MetaData\Extractor\Domain\ExtractionManager;
 
-/**
- * Resource Persisted Slot
- */
 class ResourcePersistedSlot
 {
     /**

@@ -11,8 +11,8 @@ namespace Neos\MetaData\Extractor\Tests\Unit\Converter;
  * source code.
  */
 
-use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
 use Neos\Flow\Tests\UnitTestCase;
+use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
 
 class CoordinatesConverterTest extends UnitTestCase
 {
@@ -26,20 +26,20 @@ class CoordinatesConverterTest extends UnitTestCase
                 'dmsArray' => [
                     46,
                     39.5872,
-                    0
+                    0,
                 ],
                 'cardinalDirectionReference' => 'S',
-                'expected' => -46.659787
+                'expected' => -46.659787,
             ],
             'longitude' => [
                 'dmsArray' => [
                     168,
                     50.8218,
-                    0
+                    0,
                 ],
                 'cardinalDirectionReference' => 'E',
-                'expected' => 168.84703
-            ]
+                'expected' => 168.84703,
+            ],
         ];
     }
 

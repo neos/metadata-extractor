@@ -11,6 +11,11 @@ namespace Neos\MetaData\Extractor\Converter;
  * source code.
  */
 
+use Neos\Flow\Annotations as Flow;
+
+/**
+ * @Flow\Scope("singleton")
+ */
 class NumberConverter
 {
     /**
@@ -39,7 +44,8 @@ class NumberConverter
      * @param string $binaryVersion
      * @return string
      */
-    public static function convertBinaryToVersion($binaryVersion) {
+    public static function convertBinaryToVersion($binaryVersion)
+    {
         $versionParts = str_split((string) bin2hex($binaryVersion), 2);
         $versionParts = array_map('intval', $versionParts);
         return implode('.', $versionParts);

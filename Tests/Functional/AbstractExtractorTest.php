@@ -11,14 +11,19 @@ namespace Neos\MetaData\Extractor\Tests\Functional;
  * source code.
  */
 
-use Neos\MetaData\Domain\Dto\AbstractMetaDataDto;
 use Neos\Flow\ResourceManagement\ResourceManager;
-use Neos\Utility\Files;
 use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Tests\Functional\AbstractTest;
+use Neos\MetaData\Domain\Dto\AbstractMetaDataDto;
+use Neos\Utility\Files;
 
 abstract class AbstractExtractorTest extends AbstractTest
 {
+    /**
+     * @inheritDoc
+     */
+    protected static $testablePersistenceEnabled = true;
+
     /**
      * @var ResourceManager
      */
@@ -29,10 +34,8 @@ abstract class AbstractExtractorTest extends AbstractTest
      */
     protected $testAsset;
 
-    protected static $testablePersistenceEnabled = true;
-
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setUp()
     {
