@@ -17,7 +17,7 @@ use Neos\Flow\Core\Booting\Step;
 use Neos\Flow\Core\Bootstrap;
 use Neos\Flow\Package\Package as BasePackage;
 use Neos\Media\Domain\Model\Asset;
-use Neos\Media\Domain\Repository\AssetRepository;
+use Neos\Media\Domain\Service\AssetService;
 use Neos\MetaData\Extractor\Domain\ExtractionManager;
 
 /**
@@ -31,7 +31,8 @@ class Package extends BasePackage
     public function boot(Bootstrap $bootstrap)
     {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
-        $dispatcher->connect(AssetRepository::class, 'assetDeleted', ExtractionManager::class, 'extractMetaData');
+        $dispatcher->connect(AssetService::class, 'assetRemoved', ExtractionManager::class, 'extractMetaData');
+        $dispatcher->connect(AssetService::class, 'assetResourceReplaced', ExtractionManager::class, 'extractMetaData');
         $package = $this;
         $dispatcher->connect(
             Sequence::class,
@@ -56,7 +57,7 @@ class Package extends BasePackage
 
         if (isset($settings['realtimeExtraction']['enabled']) && $settings['realtimeExtraction']['enabled'] === true) {
             $dispatcher = $bootstrap->getSignalSlotDispatcher();
-            $dispatcher->connect(Asset::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
+            $dispatcher->connect(AssetService::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
         }
     }
 }
