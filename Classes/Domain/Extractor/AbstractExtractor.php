@@ -11,9 +11,11 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
+use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
+use Neos\Utility\MediaTypes;
+
 abstract class AbstractExtractor implements ExtractorInterface
 {
-
     /**
      * The media types this adapter can handle
      *
@@ -21,17 +23,18 @@ abstract class AbstractExtractor implements ExtractorInterface
      */
     protected static $compatibleMediaTypes = [];
 
-
     /**
-     * @return array
-     * @throws \TYPO3\Neos\Exception
+     * @inheritDoc
      */
-    public static function getCompatibleMediaTypes()
+    public static function isSuitableFor(FlowResource $resource)
     {
-        if (!is_array(static::$compatibleMediaTypes)) {
-            throw new \TYPO3\Neos\Exception('Identifier in class ' . __CLASS__ . ' is empty.', 1461246431);
+        $mediaType = $resource->getMediaType();
+        foreach (static::$compatibleMediaTypes as $compatibleMediaType) {
+            if (MediaTypes::mediaRangeMatches($compatibleMediaType, $mediaType)) {
+                return true;
+            }
         }
 
-        return static::$compatibleMediaTypes;
+        return false;
     }
 }

@@ -5,16 +5,18 @@ namespace Neos\MetaData\Extractor\Command;
  * This file is part of the Neos.MetaData.Extractor package.
  */
 
-use Neos\MetaData\Extractor\Exception\NoExtractorAvailableException;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Media\Domain\Repository\AssetRepository;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Cli\CommandController;
+use Neos\Media\Domain\Model\Asset;
+use Neos\Media\Domain\Repository\AssetRepository;
+use Neos\MetaData\Extractor\Domain\ExtractionManager;
+use Neos\MetaData\Extractor\Exception\ExtractorException;
 
 /**
  * @Flow\Scope("singleton")
  */
-class MetaDataCommandController extends \TYPO3\Flow\Cli\CommandController
+class MetaDataCommandController extends CommandController
 {
-
     /**
      * @Flow\Inject
      * @var AssetRepository
@@ -23,11 +25,13 @@ class MetaDataCommandController extends \TYPO3\Flow\Cli\CommandController
 
     /**
      * @Flow\Inject
-     * @var \Neos\MetaData\Extractor\Domain\ExtractionManager
+     * @var ExtractionManager
      */
     protected $extractionManager;
 
-    
+    /**
+     * Extracts MetaData from Assets
+     */
     public function extractCommand()
     {
         $iterator = $this->assetRepository->findAllIterator();
@@ -35,12 +39,11 @@ class MetaDataCommandController extends \TYPO3\Flow\Cli\CommandController
 
         $this->output->progressStart($assetCount);
         foreach ($this->assetRepository->iterate($iterator) as $asset) {
-            /** @var \TYPO3\Media\Domain\Model\Document $asset */
-
+            /** @var Asset $asset */
             try {
                 $this->extractionManager->extractMetaData($asset);
-            } catch (NoExtractorAvailableException $exception) {
-                $this->output->outputLine($exception->getMessage());
+            } catch (ExtractorException $exception) {
+                $this->output->outputLine(' ' . $exception->getMessage());
             }
 
             $this->output->progressAdvance(1);

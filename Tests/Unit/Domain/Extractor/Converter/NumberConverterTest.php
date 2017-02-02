@@ -11,24 +11,33 @@ namespace Neos\MetaData\Extractor\Tests\Unit\Converter;
  * source code.
  */
 
+use Neos\Flow\Tests\UnitTestCase;
 use Neos\MetaData\Extractor\Converter\NumberConverter;
-use TYPO3\Flow\Tests\UnitTestCase;
 
 class NumberConverterTest extends UnitTestCase
 {
-
-
-    public function setUp()
-    {
-    }
-
     /**
      * @return array
      */
-    public function rationalDataProvider() {
+    public function rationalDataProvider()
+    {
         return [
-            'correctRational' => ['rational' => '24/1', 'expected' => 24.0],
-            'nonRational' => ['rational' => 'twenty-four', 'expected' => 0.0],
+            'correctRational' => [
+                'rational' => '24/1',
+                'expected' => 24.0,
+            ],
+            'negativeRational' => [
+                'rational' => '-24/10',
+                'expected' => -2.4,
+            ],
+            'zero' => [
+                'rational' => '0/0',
+                'expected' => 0.0,
+            ],
+            'nonRational' => [
+                'rational' => 'twenty-four',
+                'expected' => 0.0,
+            ],
         ];
     }
 
@@ -36,8 +45,8 @@ class NumberConverterTest extends UnitTestCase
      * @test
      * @dataProvider rationalDataProvider
      *
-     * @param $rational
-     * @param $expected
+     * @param string $rational
+     * @param float $expected
      */
     public function convertRationalToFloat($rational, $expected)
     {

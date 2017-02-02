@@ -11,28 +11,24 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
+use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use \TYPO3\Flow\Resource\Resource as FlowResource;
+use Neos\MetaData\Extractor\Exception\ExtractorException;
 
 interface ExtractorInterface
 {
+    /**
+     * @param FlowResource $resource
+     *
+     * @return bool
+     */
+    public static function isSuitableFor(FlowResource $resource);
 
     /**
      * @param FlowResource $resource
      * @param MetaDataCollection $metaDataCollection
+     *
+     * @throws ExtractorException
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection);
-
-
-    /**
-     * @param FlowResource $resource
-     * @return bool
-     */
-    public function canHandleExtraction(FlowResource $resource);
-
-
-    /**
-     * @return array
-     */
-    public static function getCompatibleMediaTypes();
 }
