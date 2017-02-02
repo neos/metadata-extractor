@@ -120,7 +120,7 @@ class Exif
         0xA432 => 'LensSpecification',
         0xA433 => 'LensMake',
         0xA434 => 'LensModel',
-        0xA435 => 'LensSerialNumber'
+        0xA435 => 'LensSerialNumber',
     ];
 
     public static $gpsIfd = [
@@ -156,7 +156,7 @@ class Exif
         0x1C => 'GPSAreaInformation',
         0x1D => 'GPSDateStamp',
         0x1E => 'GPSDifferential',
-        0x1F => 'GPSHPositioningError'
+        0x1F => 'GPSHPositioningError',
     ];
 
     public static $valueInterpretationMap = [
@@ -202,7 +202,7 @@ class Exif
             34720 => 'Microsoft Document Imaging (MDI) Vector',
             34892 => 'Lossy JPEG',
             65000 => 'Kodak DCR Compressed',
-            65535 => 'Pentax PEF Compressed'
+            65535 => 'Pentax PEF Compressed',
         ],
         'PhotometricInterpretation' => [
             2 => 'RGB',
@@ -219,7 +219,7 @@ class Exif
             32803 => 'Color Filter Array',
             32844 => 'Pixar LogL',
             32845 => 'Pixar LogLuv',
-            34892 => 'Linear Raw'
+            34892 => 'Linear Raw',
         ],
         'Orientation' => [
             1 => 'The 0th row is at the visual top of the image, and the 0th column is the visual left-hand side',
@@ -229,25 +229,25 @@ class Exif
             5 => 'The 0th row is at the visual left-hand side of the image, and the 0th column is the visual top',
             6 => 'The 0th row is at the visual right-hand side of the image, and the 0th column is the visual top',
             7 => 'The 0th row is at the visual right-hand side of the image, and the 0th column is the visual bottom',
-            8 => 'The 0th row is at the visual left-hand side of the image, and the 0th column is the visual bottom'
+            8 => 'The 0th row is at the visual left-hand side of the image, and the 0th column is the visual bottom',
         ],
         'PlanarConfiguration' => [
             1 => 'chunky format',
-            2 => 'planar format'
+            2 => 'planar format',
         ],
         'YCbCrPositioning' => [
             1 => 'centered',
-            2 => 'co-sited'
+            2 => 'co-sited',
         ],
         'ResolutionUnit' => [
             2 => 'inches',
             3 => 'centimeters',
             1 => 'None',
             4 => 'mm',
-            5 => 'um'
+            5 => 'um',
         ],
         'FlashpixVersion' => [
-            '0100' => 'Flashpix Format Version 1.0'
+            '0100' => 'Flashpix Format Version 1.0',
         ],
         'ColorSpace' => [
             1 => 'sRGB',
@@ -258,7 +258,7 @@ class Exif
             0xFFFE => 'ICC Profile',
             // ?
             5 => 'CMYK',
-            6 => 'YUV'
+            6 => 'YUV',
         ],
         'ExposureProgram' => [
             0 => 'Not defined',
@@ -271,7 +271,7 @@ class Exif
             7 => 'Portrait mode (for closeup photos with the background out of focus)',
             8 => 'Landscape mode (for landscape photos with the background in focus)',
             /** @see http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/EXIF.html */
-            9 => 'Bulb'
+            9 => 'Bulb',
         ],
         'SensitivityType' => [
             0 => 'Unknown',
@@ -281,7 +281,7 @@ class Exif
             4 => 'Standard output sensitivity (SOS) and Recommended exposure index (REI)',
             5 => 'Standard output sensitivity (SOS) and ISO Speed',
             6 => 'Recommended exposure index (REI) and ISO Speed',
-            7 => 'Standard output sensitivity (SOS) and Recommended exposure index (REI) and ISO Speed'
+            7 => 'Standard output sensitivity (SOS) and Recommended exposure index (REI) and ISO Speed',
         ],
         'MeteringMode' => [
             0 => 'unknown',
@@ -291,7 +291,7 @@ class Exif
             4 => 'MultiSpot',
             5 => 'Pattern',
             6 => 'Partial',
-            255 => 'other'
+            255 => 'other',
         ],
         'LightSource' => [
             0 => 'unknown',
@@ -315,7 +315,7 @@ class Exif
             22 => 'D75',
             23 => 'D50',
             24 => 'ISO studio tungsten',
-            255 => 'other light source'
+            255 => 'other light source',
         ],
         'FocalPlaneResolutionUnit' => [
             2 => 'inches',
@@ -323,7 +323,7 @@ class Exif
             /** @see http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/EXIF.html */
             1 => 'None',
             4 => 'mm',
-            5 => 'um'
+            5 => 'um',
         ],
         'SensingMethod' => [
             1 => 'Not defined / Monochrome area',
@@ -333,118 +333,118 @@ class Exif
             5 => 'Color sequential area sensor',
             6 => 'Monochrome linear',
             7 => 'Trilinear sensor',
-            8 => 'Color sequential linear sensor'
+            8 => 'Color sequential linear sensor',
         ],
         'FileSource' => [
             0 => 'others',
             1 => 'scanner of transparent type',
             2 => 'scanner of reflex type',
-            3 => 'DSC'
+            3 => 'DSC',
         ],
         'SceneType' => [
-            1 => 'A directly photographed image'
+            1 => 'A directly photographed image',
         ],
         'CustomRendered' => [
             0 => 'Normal process',
-            1 => 'Custom process'
+            1 => 'Custom process',
         ],
         'ExposureMode' => [
             0 => 'Auto exposure',
             1 => 'Manual exposure',
-            2 => 'Auto bracket'
+            2 => 'Auto bracket',
         ],
         'WhiteBalance' => [
             0 => 'Auto white balance',
-            1 => 'Manual white balance'
+            1 => 'Manual white balance',
         ],
         'SceneCaptureType' => [
             0 => 'Standard',
             1 => 'Landscape',
             2 => 'Portrait',
-            3 => 'Night scene'
+            3 => 'Night scene',
         ],
         'GainControl' => [
             0 => 'None',
             1 => 'Low gain up',
             2 => 'High gain up',
             3 => 'Low gain down',
-            4 => 'High gain down'
+            4 => 'High gain down',
         ],
         'Contrast' => [
             0 => 'Normal',
             1 => 'Soft',
-            2 => 'Hard'
+            2 => 'Hard',
         ],
         'Saturation' => [
             0 => 'Normal',
             1 => 'Low saturation',
-            2 => 'High saturation'
+            2 => 'High saturation',
         ],
         'Sharpness' => [
             0 => 'Normal',
             1 => 'Soft',
-            2 => 'Hard'
+            2 => 'Hard',
         ],
         'SubjectDistanceRange' => [
             0 => 'unknown',
             1 => 'Macro',
             2 => 'Close view',
-            3 => 'Distant view'
+            3 => 'Distant view',
         ],
         'GPSLatitudeRef' => [
             'N' => 'North latitude',
-            'S' => 'South latitude'
+            'S' => 'South latitude',
         ],
         'GPSLongitudeRef' => [
             'E' => 'East longitude',
-            'W' => 'West longitude'
+            'W' => 'West longitude',
         ],
         'GPSAltitudeRef' => [
             0 => 'Sea level',
-            1 => 'Sea level reference (negative value)'
+            1 => 'Sea level reference (negative value)',
         ],
         'GPSStatus' => [
             'A' => 'Measurement in progress',
-            'V' => 'Measurement interrupted'
+            'V' => 'Measurement interrupted',
         ],
         'GPSMeasureMode' => [
             '2' => '2-dimensional measurement',
-            '3' => '3-dimensional measurement'
+            '3' => '3-dimensional measurement',
         ],
         'GPSSpeedRef' => [
             'K' => 'Kilometers per hour',
             'M' => 'Miles per hour',
-            'N' => 'Knots'
+            'N' => 'Knots',
         ],
         'GPSTrackRef' => [
             'T' => 'True direction',
-            'M' => 'Magnetic direction'
+            'M' => 'Magnetic direction',
         ],
         'GPSImgDirectionRef' => [
             'T' => 'True direction',
-            'M' => 'Magnetic direction'
+            'M' => 'Magnetic direction',
         ],
         'GPSDestLatitudeRef' => [
             'N' => 'North latitude',
-            'S' => 'South latitude'
+            'S' => 'South latitude',
         ],
         'GPSDestLongitudeRef' => [
             'E' => 'East longitude',
-            'W' => 'West longitude'
+            'W' => 'West longitude',
         ],
         'GPSDestBearingRef' => [
             'T' => 'True direction',
-            'M' => 'Magnetic direction'
+            'M' => 'Magnetic direction',
         ],
         'GPSDestDistanceRef' => [
             'K' => 'Kilometers',
             'M' => 'Miles',
-            'N' => 'Nautical miles'
+            'N' => 'Nautical miles',
         ],
         'GPSDifferential' => [
             0 => 'Measurement without differential correction',
-            1 => 'Differential correction applied'
-        ]
+            1 => 'Differential correction applied',
+        ],
     ];
 
     /**
@@ -469,6 +469,7 @@ class Exif
                             return 'YCbCr4:2:0';
                     }
                 }
+
                 return $value;
             case 'ComponentsConfiguration':
                 $interpretedValue = '';
@@ -479,13 +480,14 @@ class Exif
                     3 => 'Cr',
                     4 => 'R',
                     5 => 'G',
-                    6 => 'B'
+                    6 => 'B',
                 ];
                 foreach (unpack('C*', $value) as $singleValue) {
                     if (isset($componentsConfigurationInterpretations[$singleValue])) {
                         $interpretedValue .= $componentsConfigurationInterpretations[$singleValue];
                     }
                 }
+
                 return $interpretedValue;
             case 'Flash':
                 $interpretedValue = '';
@@ -522,6 +524,7 @@ class Exif
                 }
                 $interpretedValue .= ($flashFunction === 0b1) ? ' No flash function.' : ' Flash function present.';
                 $interpretedValue .= ($redEyeMode === 0b1) ? ' Red-eye reduction supported.' : ' No red-eye reduction mode or unknown.';
+
                 return $interpretedValue;
         }
         if (isset(static::$valueInterpretationMap[$property][$value])) {
