@@ -37,7 +37,7 @@ class Package extends BasePackage
             Sequence::class,
             'afterInvokeStep',
             function (Step $step) use ($package, $bootstrap) {
-                if ($step->getIdentifier() === 'typo3.flow:reflectionservice') {
+                if ($step->getIdentifier() === 'neos.flow:reflectionservice') {
                     $package->registerExtractionSlot($bootstrap);
                 }
             }
