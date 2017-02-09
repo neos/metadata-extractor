@@ -12,27 +12,27 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  */
 
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use TYPO3\Flow\Resource\Resource as FlowResource;
+use TYPO3\Flow\Resource\Resource as PersistentResource;
 
 interface ExtractorInterface
 {
     /**
-     * @param string $mediaType
+     * @param PersistentResource $resource
      *
      * @return bool
      */
-    public static function isSuitableFor($mediaType);
+    public static function isSuitableFor(PersistentResource $resource);
 
     /**
-     * @param FlowResource $resource
+     * @param PersistentResource $resource
      * @param MetaDataCollection $metaDataCollection
      */
-    public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection);
+    public function extractMetaData(PersistentResource $resource, MetaDataCollection $metaDataCollection);
 
     /**
-     * @param FlowResource $resource
+     * @param PersistentResource $resource
      *
      * @return bool
      */
-    public function canHandleExtraction(FlowResource $resource);
+    public function canHandleExtraction(PersistentResource $resource);
 }
