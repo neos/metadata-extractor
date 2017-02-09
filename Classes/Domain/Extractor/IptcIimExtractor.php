@@ -90,11 +90,14 @@ class IptcIimExtractor extends AbstractExtractor
         $iptcData['Instructions'] = $iim->getProperty(Iptc\Iim::SPECIAL_INSTRUCTIONS);
 
         $creationDateString = $iim->getProperty(Iptc\Iim::DATE_CREATED);
-        if (!empty($creationDateString)) {
+        if (empty($creationDateString)) {
             $creationTimeString = $iim->getProperty(Iptc\Iim::TIME_CREATED);
             $creationDateString .= empty($creationTimeString) ? '000000+0000' : $creationTimeString;
             $iptcData['CreationDate'] = \DateTime::createFromFormat('YmdHisO', $creationDateString);
+        } else {
+            $iptcData['CreationDate'] = \DateTime::createFromFormat('Ymd', $creationDateString);
         }
+        
         $iptcData['Creator'] = $iim->getProperty(Iptc\Iim::BYLINE);
         $iptcData['CreatorTitle'] = $iim->getProperty(Iptc\Iim::BYLINE_TITLE);
         $iptcData['City'] = $iim->getProperty(Iptc\Iim::CITY);

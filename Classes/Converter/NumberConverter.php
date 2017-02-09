@@ -23,9 +23,9 @@ class NumberConverter
     public static function convertRationalToFloat($rationalString)
     {
         if (preg_match('#^(-?\d+)\/(\d+)$#', $rationalString, $matches)) {
-            $divisor = (float) $matches[2];
+            $divisor = (float)$matches[2];
             if ($divisor !== 0.0) {
-                return (int) $matches[1] / $divisor;
+                return (int)$matches[1] / $divisor;
             }
         }
 
@@ -39,8 +39,9 @@ class NumberConverter
      * @param string $binaryVersion
      * @return string
      */
-    public static function convertBinaryToVersion($binaryVersion) {
-        $versionParts = str_split((string) bin2hex($binaryVersion), 2);
+    public static function convertBinaryToVersion($binaryVersion)
+    {
+        $versionParts = str_split((string)bin2hex($binaryVersion), 2);
         $versionParts = array_map('intval', $versionParts);
         return implode('.', $versionParts);
     }

@@ -39,6 +39,9 @@ class IptcIimExtractorTest extends AbstractExtractorTest
     public function extractMetaData()
     {
         $metaDataCollection = new MetaDataCollection();
+
+        $this->assertTrue($this->iptcIimExtractor->canHandleExtraction($this->testAsset->getResource()));
+
         $this->iptcIimExtractor->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
         $iptcDto = $metaDataCollection->get('iptc');
 
@@ -50,7 +53,7 @@ class IptcIimExtractorTest extends AbstractExtractorTest
             'CopyrightNotice' => '© Daniel Lienert',
             'Country' => 'Newzealand',
             'CountryCode' => 'NZ',
-            'CreationDate' => \DateTime::createFromFormat('YmdHis', '20130918105911'),
+            'CreationDate' => \DateTime::createFromFormat('Ymd', '20130918'),
             'Creator' => ['Daniel Lienert'],
             'CreatorTitle' => ['Informatiker'],
             'CreditLine' => 'by-nc',

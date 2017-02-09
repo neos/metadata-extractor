@@ -38,7 +38,97 @@ class ExifExtractor extends AbstractExtractor
     /**
      * @var array
      */
-    protected $exifData = null;
+    protected static $deprecatedOrUnmappedProperties = [
+        'ISOSpeedRatings' => 'PhotographicSensitivity',
+        'GPSVersion' => 'GPSVersionID',
+        'UndefinedTag:0x8830' => 'SensitivityType',
+        'UndefinedTag:0x8832' => 'RecommendedExposureIndex',
+        'UndefinedTag:0x9010' => 'OffsetTime',
+        'UndefinedTag:0x9011' => 'OffsetTimeOriginal',
+        'UndefinedTag:0x9012' => 'OffsetTimeDigitized',
+        'UndefinedTag:0x9400' => 'Temperature',
+        'UndefinedTag:0x9401' => 'Humidity',
+        'UndefinedTag:0x9402' => 'Pressure',
+        'UndefinedTag:0x9403' => 'WaterDepth',
+        'UndefinedTag:0x9404' => 'Acceleration',
+        'UndefinedTag:0x9405' => 'CameraElevationAngle',
+        'UndefinedTag:0xA430' => 'CameraOwnerName',
+        'UndefinedTag:0xA431' => 'BodySerialNumber',
+        'UndefinedTag:0xA432' => 'LensSpecification',
+        'UndefinedTag:0xA433' => 'LensMake',
+        'UndefinedTag:0xA434' => 'LensModel',
+        'UndefinedTag:0xA435' => 'LensSerialNumber'
+    ];
+
+    /**
+     * @var array
+     */
+    protected static $rationalProperties = [
+        'Acceleration',
+        'ApertureValue',
+        'BrightnessValue',
+        'CameraElevationAngle',
+        'CompressedBitsPerPixel',
+        'DigitalZoomRatio',
+        'ExposureBiasValue',
+        'ExposureIndex',
+        'ExposureTime',
+        'FlashEnergy',
+        'FNumber',
+        'FocalLength',
+        'FocalPlaneXResolution',
+        'FocalPlaneYResolution',
+        'GainControl',
+        'Gamma',
+        'GPSAltitude',
+        'GPSDestBearing',
+        'GPSDestDistance',
+        'GPSDOP',
+        'GPSHPositioningError',
+        'GPSImgDirection',
+        'GPSSpeed',
+        'GPSTrack',
+        'Humidity',
+        'MaxApertureValue',
+        'Pressure',
+        'ShutterSpeedValue',
+        'SubjectDistance',
+        'Temperature',
+        'WaterDepth',
+        'XResolution',
+        'YResolution'
+    ];
+
+    /**
+     * @var array
+     */
+    protected static $rationalArrayProperties = [
+        'GPSTimeStamp',
+        'LensSpecification',
+        'PrimaryChromaticities',
+        'ReferenceBlackWhite',
+        'WhitePoint',
+        'YCbCrCoefficients',
+        'GPSLongitude',
+        'GPSLatitude',
+        'GPSDestLongitude',
+        'GPSDestLatitude'
+    ];
+
+    /**
+     * @var array
+     */
+    protected static $gpsProperties = [
+        'GPSLongitude',
+        'GPSLatitude',
+        'GPSDestLongitude',
+        'GPSDestLatitude'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $exifData;
 
     /**
      * @param FlowResource $resource
@@ -50,88 +140,20 @@ class ExifExtractor extends AbstractExtractor
     {
         $convertedExifData = $this->exifData ?: exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
 
-        $deprecatedOrUnmappedProperties = [
-            'ISOSpeedRatings' => 'PhotographicSensitivity',
-            'GPSVersion' => 'GPSVersionID',
-            'UndefinedTag:0x8830' => 'SensitivityType',
-            'UndefinedTag:0x8832' => 'RecommendedExposureIndex',
-            'UndefinedTag:0x9010' => 'OffsetTime',
-            'UndefinedTag:0x9011' => 'OffsetTimeOriginal',
-            'UndefinedTag:0x9012' => 'OffsetTimeDigitized',
-            'UndefinedTag:0x9400' => 'Temperature',
-            'UndefinedTag:0x9401' => 'Humidity',
-            'UndefinedTag:0x9402' => 'Pressure',
-            'UndefinedTag:0x9403' => 'WaterDepth',
-            'UndefinedTag:0x9404' => 'Acceleration',
-            'UndefinedTag:0x9405' => 'CameraElevationAngle',
-            'UndefinedTag:0xA430' => 'CameraOwnerName',
-            'UndefinedTag:0xA431' => 'BodySerialNumber',
-            'UndefinedTag:0xA432' => 'LensSpecification',
-            'UndefinedTag:0xA433' => 'LensMake',
-            'UndefinedTag:0xA434' => 'LensModel',
-            'UndefinedTag:0xA435' => 'LensSerialNumber'
-        ];
-        foreach ($deprecatedOrUnmappedProperties as $deprecatedOrUnmappedProperty => $newProperty) {
+        foreach (static::$deprecatedOrUnmappedProperties as $deprecatedOrUnmappedProperty => $newProperty) {
             if (isset($convertedExifData[$deprecatedOrUnmappedProperty])) {
                 $convertedExifData[$newProperty] = $convertedExifData[$deprecatedOrUnmappedProperty];
                 unset($convertedExifData[$deprecatedOrUnmappedProperty]);
             }
         }
 
-        $rationalProperties = [
-            'Acceleration',
-            'ApertureValue',
-            'BrightnessValue',
-            'CameraElevationAngle',
-            'CompressedBitsPerPixel',
-            'DigitalZoomRatio',
-            'ExposureBiasValue',
-            'ExposureIndex',
-            'ExposureTime',
-            'FlashEnergy',
-            'FNumber',
-            'FocalLength',
-            'FocalPlaneXResolution',
-            'FocalPlaneYResolution',
-            'GainControl',
-            'Gamma',
-            'GPSAltitude',
-            'GPSDestBearing',
-            'GPSDestDistance',
-            'GPSDOP',
-            'GPSHPositioningError',
-            'GPSImgDirection',
-            'GPSSpeed',
-            'GPSTrack',
-            'Humidity',
-            'MaxApertureValue',
-            'Pressure',
-            'ShutterSpeedValue',
-            'SubjectDistance',
-            'Temperature',
-            'WaterDepth',
-            'XResolution',
-            'YResolution'
-        ];
-        foreach ($rationalProperties as $rationalProperty) {
+        foreach (static::$rationalProperties as $rationalProperty) {
             if (isset($convertedExifData[$rationalProperty])) {
                 $convertedExifData[$rationalProperty] = NumberConverter::convertRationalToFloat($convertedExifData[$rationalProperty]);
             }
         }
 
-        $rationalArrayProperties = [
-            'GPSTimeStamp',
-            'LensSpecification',
-            'PrimaryChromaticities',
-            'ReferenceBlackWhite',
-            'WhitePoint',
-            'YCbCrCoefficients',
-            'GPSLongitude',
-            'GPSLatitude',
-            'GPSDestLongitude',
-            'GPSDestLatitude'
-        ];
-        foreach ($rationalArrayProperties as $rationalArrayProperty) {
+        foreach (static::$rationalArrayProperties as $rationalArrayProperty) {
             if (isset($convertedExifData[$rationalArrayProperty])) {
                 foreach ($convertedExifData[$rationalArrayProperty] as $key => $value) {
                     $convertedExifData[$rationalArrayProperty][$key] = NumberConverter::convertRationalToFloat($value);
@@ -150,13 +172,7 @@ class ExifExtractor extends AbstractExtractor
             unset($convertedExifData['GPSAltitudeRef']);
         }
 
-        $gpsProperties = [
-            'GPSLongitude',
-            'GPSLatitude',
-            'GPSDestLongitude',
-            'GPSDestLatitude'
-        ];
-        foreach ($gpsProperties as $gpsProperty) {
+        foreach (static::$gpsProperties as $gpsProperty) {
             if (isset($convertedExifData[$gpsProperty])) {
                 $convertedExifData[$gpsProperty] = CoordinatesConverter::convertDmsToDd($convertedExifData[$gpsProperty], isset($convertedExifData[$gpsProperty . 'Ref']) ? $convertedExifData[$gpsProperty . 'Ref'] : null);
                 unset($convertedExifData[$gpsProperty . 'Ref']);

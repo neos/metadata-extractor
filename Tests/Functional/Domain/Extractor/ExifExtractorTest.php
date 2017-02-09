@@ -94,7 +94,6 @@ class ExifExtractorTest extends AbstractExtractorTest
             'ImageWidth' => 0,
             'ImageLength' => 0,
             'BitsPerSample' => [0, 0, 0],
-            'Compression' => '',
             'PhotometricInterpretation' => '',
             'Orientation' => '',
             'SamplesPerPixel' => 0,

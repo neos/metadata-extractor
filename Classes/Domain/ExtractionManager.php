@@ -11,12 +11,12 @@ namespace Neos\MetaData\Extractor\Domain;
  * source code.
  */
 
-use Neos\Media\Domain\Model\ImageVariant;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Domain\Extractor\ExtractorInterface;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\MetaDataManager;
+use TYPO3\Media\Domain\Model\ImageVariant;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Object\ObjectManager;
 use TYPO3\Flow\Reflection\ReflectionService;

@@ -11,6 +11,8 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
+use TYPO3\Flow\Utility\MediaTypes;
+
 abstract class AbstractExtractor implements ExtractorInterface
 {
     /**
@@ -25,10 +27,12 @@ abstract class AbstractExtractor implements ExtractorInterface
      */
     public static function isSuitableFor($mediaType)
     {
-        $mainMediaType = substr($mediaType, 0, strpos($mediaType, '/'));
+        foreach (static::$compatibleMediaTypes as $compatibleMediaType) {
+            if(MediaTypes::mediaRangeMatches($compatibleMediaType, $mediaType) === true) {
+                return true;
+            };
+        }
 
-        return in_array('*', static::$compatibleMediaTypes, false)
-            || in_array($mainMediaType . '/*', static::$compatibleMediaTypes, false)
-            || in_array($mediaType, static::$compatibleMediaTypes, false);
+        return false;
     }
 }
