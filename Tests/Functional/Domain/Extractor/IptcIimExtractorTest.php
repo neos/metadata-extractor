@@ -40,8 +40,6 @@ class IptcIimExtractorTest extends AbstractExtractorTest
     {
         $metaDataCollection = new MetaDataCollection();
 
-        $this->assertTrue($this->iptcIimExtractor->canHandleExtraction($this->testAsset->getResource()));
-
         $this->iptcIimExtractor->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
         $iptcDto = $metaDataCollection->get('iptc');
 

@@ -11,6 +11,7 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
+use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\Extractor\Specifications\Exif;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
@@ -18,11 +19,12 @@ use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
 use Neos\MetaData\Extractor\Converter\NumberConverter;
 use Neos\MetaData\Extractor\Converter\TimeStampConverter;
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Resource\Exception as ResourceException;
 use TYPO3\Flow\Resource\Resource as FlowResource;
 
 /**
  * @see http://www.cipa.jp/std/documents/e/DC-008-Translation-2016-E.pdf Official standard
+ *
+ * @Flow\Scope("singleton")
  */
 class ExifExtractor extends AbstractExtractor
 {
@@ -126,19 +128,17 @@ class ExifExtractor extends AbstractExtractor
     ];
 
     /**
-     * @var array
-     */
-    protected $exifData;
-
-    /**
      * @param FlowResource $resource
      * @param MetaDataCollection $metaDataCollection
      *
-     * @throws ResourceException
+     * @throws ExtractorException
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {
-        $convertedExifData = $this->exifData ?: exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
+        $convertedExifData = exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
+        if ($convertedExifData === false) {
+            throw new ExtractorException(sprintf('EXIF data of flow resource %s could not be extracted.', $resource->getSha1()), 1486675463);
+        }
 
         foreach (static::$deprecatedOrUnmappedProperties as $deprecatedOrUnmappedProperty => $newProperty) {
             if (isset($convertedExifData[$deprecatedOrUnmappedProperty])) {
@@ -242,20 +242,5 @@ class ExifExtractor extends AbstractExtractor
         }
 
         $metaDataCollection->set('exif', new Dto\Exif($convertedExifData));
-    }
-
-    /**
-     * @param FlowResource $resource
-     *
-     * @return bool
-     */
-    public function canHandleExtraction(FlowResource $resource)
-    {
-        try {
-            $this->exifData = exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
-            return $this->exifData !== false;
-        } catch (\Exception $e) {
-            return false;
-        }
     }
 }

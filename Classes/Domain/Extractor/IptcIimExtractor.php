@@ -11,6 +11,7 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
+use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\Extractor\Specifications\Iptc;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
@@ -18,6 +19,8 @@ use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Resource\Resource as FlowResource;
 
 /**
+ * @Flow\Scope("singleton")
+ *
  * @see https://www.iptc.org/std/IIM/4.2/specification/IIMV4.2.pdf
  */
 class IptcIimExtractor extends AbstractExtractor
@@ -42,17 +45,12 @@ class IptcIimExtractor extends AbstractExtractor
     ];
 
     /**
-     * @var array
-     */
-    protected $iimData;
-
-    /**
      * @param FlowResource $resource
      * @param MetaDataCollection $metaDataCollection
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {
-        $iim = new Iptc\Iim($this->iimData);
+        $iim = new Iptc\Iim($this->readRawIptcData($resource));
 
         $iptcData = [];
         $iptcData['IntellectualGenres'] = $iim->getProperty(Iptc\Iim::OBJECT_ATTRIBUTE_REFERENCE);
@@ -126,24 +124,21 @@ class IptcIimExtractor extends AbstractExtractor
 
     /**
      * @param FlowResource $resource
-     *
-     * @return bool
+     * @return array
+     * @throws ExtractorException
      */
-    public function canHandleExtraction(FlowResource $resource)
+    public function readRawIptcData(FlowResource $resource)
     {
-        try {
-            getimagesize($resource->createTemporaryLocalCopy(), $fileInfo);
+        $iimData = [];
+        getimagesize($resource->createTemporaryLocalCopy(), $fileInfo);
 
-            if (isset($fileInfo['APP13'])) {
-                $this->iimData = iptcparse($fileInfo['APP13']);
-                if ($this->iimData !== false) {
-                    return true;
-                }
+        if (isset($fileInfo['APP13'])) {
+            $iimData = iptcparse($fileInfo['APP13']);
+            if ($iimData === false) {
+                throw new ExtractorException(sprintf('IPTC/IIM data of flow resource %s could not be extracted.', $resource->getSha1()), 1486676374);
             }
-
-            return false;
-        } catch (\Exception $e) {
-            return false;
         }
+
+        return $iimData;
     }
 }

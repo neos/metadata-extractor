@@ -28,11 +28,4 @@ interface ExtractorInterface
      * @param MetaDataCollection $metaDataCollection
      */
     public function extractMetaData(PersistentResource $resource, MetaDataCollection $metaDataCollection);
-
-    /**
-     * @param PersistentResource $resource
-     *
-     * @return bool
-     */
-    public function canHandleExtraction(PersistentResource $resource);
 }

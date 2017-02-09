@@ -72,8 +72,10 @@ class ExtractionManager
         foreach ($suitableAdapterClasses as $suitableAdapterClass) {
             /** @var ExtractorInterface $suitableAdapter */
             $suitableAdapter = $this->objectManager->get($suitableAdapterClass);
-            if ($suitableAdapter->canHandleExtraction($flowResource)) {
+            try {
                 $suitableAdapter->extractMetaData($flowResource, $metaDataCollection);
+            } catch (ExtractorException $exception) {
+                continue;
             }
         }
 
@@ -92,9 +94,9 @@ class ExtractionManager
         $extractorAdapters = $this->reflectionService->getAllImplementationClassNamesForInterface(ExtractorInterface::class);
         $mediaType = $flowResource->getMediaType();
 
-        $suitableAdapterClasses = array_filter($extractorAdapters, function ($extractorAdapterClass) use ($mediaType) {
+        $suitableAdapterClasses = array_filter($extractorAdapters, function ($extractorAdapterClass) use ($flowResource) {
             /** @var ExtractorInterface $extractorAdapterClass */
-            return $extractorAdapterClass::isSuitableFor($mediaType);
+            return $extractorAdapterClass::isSuitableFor($flowResource);
         });
 
         return $suitableAdapterClasses;

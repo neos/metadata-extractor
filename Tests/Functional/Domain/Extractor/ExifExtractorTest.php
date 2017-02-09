@@ -40,7 +40,6 @@ class ExifExtractorTest extends AbstractExtractorTest
     {
         $metaDataCollection = new MetaDataCollection();
 
-
         $this->exifExtractor->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
 
         $exifDto = $metaDataCollection->get('exif');
