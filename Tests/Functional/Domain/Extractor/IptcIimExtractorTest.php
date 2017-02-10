@@ -51,7 +51,7 @@ class IptcIimExtractorTest extends AbstractExtractorTest
             'CopyrightNotice' => '© Daniel Lienert',
             'Country' => 'Newzealand',
             'CountryCode' => 'NZ',
-            'CreationDate' => \DateTime::createFromFormat('Ymd', '20130918'),
+            'CreationDate' => \DateTime::createFromFormat('YmdHis', '20130918105911'),
             'Creator' => ['Daniel Lienert'],
             'CreatorTitle' => ['Informatiker'],
             'CreditLine' => 'by-nc',

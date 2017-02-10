@@ -3,12 +3,12 @@ This package handles extraction of meta data from assets.
 
 **Note: This package is work in progress. The class structure and interfaces may change a lot over time. The package is not meant for productive use.**
 
-The package provides the `ExtractorInterface`. Implementing classes provide the compatible media types and are called with the target assets. Returned DTOs are added to a collection and forwarded to the central `MetaDataManger` of package *Neos.MetaData*.
+The package provides the `ExtractorInterface`. With `isSuitableFor()` the implementing classes decide if they will be used for a specific resource. The `AbstractExtractor` implements a check by media type. Just extend and set `$compatibleMediaTypes` to the possible media type range(s). Returned DTOs are added to a collection and forwarded to the central `MetaDataManger` of the package *Neos.MetaData*.
 
-## Adapters
+## Extractors
 The `ExtractionManager` itself generates the `Asset` DTO for every valid Asset. 
 
-### `ExifExtacrtor` ([EXIF](http://www.exif.org/))
+### `ExifExtractor` ([EXIF](http://www.exif.org/))
 
 #### Supported Media Types
 * image/jpeg
