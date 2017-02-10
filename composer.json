@@ -4,6 +4,7 @@
     "type": "neos-package",
     "license": "MIT",
     "require": {
+        "ext-exif": "*",
         "neos/metadata": "*"
     },
     "autoload": {
