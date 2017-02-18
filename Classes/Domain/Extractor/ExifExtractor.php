@@ -17,7 +17,7 @@ use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
 use Neos\MetaData\Extractor\Converter\NumberConverter;
-use Neos\MetaData\Extractor\Converter\TimeStampConverter;
+use Neos\MetaData\Extractor\Converter\DateConverter;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Resource\Resource as FlowResource;
 
@@ -180,7 +180,7 @@ class ExifExtractor extends AbstractExtractor
         }
 
         if (isset($convertedExifData['GPSTimeStamp'], $convertedExifData['GPSDateStamp'])) {
-            $convertedExifData['GPSDateTimeStamp'] = TimeStampConverter::combineTimeAndDate($convertedExifData['GPSTimeStamp'], $convertedExifData['GPSDateStamp']);
+            $convertedExifData['GPSDateTimeStamp'] = DateConverter::convertGpsDateAndTime($convertedExifData['GPSDateStamp'], $convertedExifData['GPSTimeStamp']);
             unset($convertedExifData['GPSTimeStamp'], $convertedExifData['GPSDateStamp']);
         }
 

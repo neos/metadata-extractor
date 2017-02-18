@@ -11,6 +11,7 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
+use Neos\MetaData\Extractor\Converter\DateConverter;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\Extractor\Specifications\Iptc;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
@@ -87,13 +88,8 @@ class IptcIimExtractor extends AbstractExtractor
         $iptcData['Keywords'] = $iim->getProperty(Iptc\Iim::KEYWORDS);
         $iptcData['Instructions'] = $iim->getProperty(Iptc\Iim::SPECIAL_INSTRUCTIONS);
 
-        $creationDateString = $iim->getProperty(Iptc\Iim::DATE_CREATED);
-        if (!empty($creationDateString)) {
-            $creationTimeString = $iim->getProperty(Iptc\Iim::TIME_CREATED);
-            $creationDateString .= empty($creationTimeString) ? '000000+0000' : $creationTimeString;
-            $iptcData['CreationDate'] = \DateTime::createFromFormat('YmdHisO', $creationDateString);
-        }
-
+        $iptcData['CreationDate'] = DateConverter::convertIso8601DateAndTimeString($iim->getProperty(Iptc\Iim::DATE_CREATED), $iim->getProperty(Iptc\Iim::TIME_CREATED));
+        
         $iptcData['Creator'] = $iim->getProperty(Iptc\Iim::BYLINE);
         $iptcData['CreatorTitle'] = $iim->getProperty(Iptc\Iim::BYLINE_TITLE);
         $iptcData['City'] = $iim->getProperty(Iptc\Iim::CITY);
@@ -111,21 +107,16 @@ class IptcIimExtractor extends AbstractExtractor
         $iptcData['DescriptionWriter'] = $iim->getProperty(Iptc\Iim::WRITER_EDITOR);
 
         // sometimes used but not really specified in IPTC MetaData
-        $digitalCreationDateString = $iim->getProperty(Iptc\Iim::DIGITAL_CREATION_DATE);
-        if (!empty($digitalCreationDateString)) {
-            $digitalCreationTimeString = $iim->getProperty(Iptc\Iim::DIGITAL_CREATION_TIME);
-            $digitalCreationDateString .= empty($digitalCreationTimeString) ? '000000+0000' : $digitalCreationTimeString;
-            $iptcData['DigitalCreationDate'] = \DateTime::createFromFormat('YmdHisO', $digitalCreationDateString);
-        }
+        $iptcData['DigitalCreationDate'] = DateConverter::convertIso8601DateAndTimeString($iim->getProperty(Iptc\Iim::DIGITAL_CREATION_DATE), $iim->getProperty(Iptc\Iim::DIGITAL_CREATION_TIME));
         $metaDataCollection->set('iptc', new Dto\Iptc($iptcData));
     }
-
+    
     /**
      * @param FlowResource $resource
      * @return array
      * @throws ExtractorException
      */
-    public function readRawIptcData(FlowResource $resource)
+    protected function readRawIptcData(FlowResource $resource)
     {
         $iimData = [];
         getimagesize($resource->createTemporaryLocalCopy(), $fileInfo);
@@ -140,3 +131,4 @@ class IptcIimExtractor extends AbstractExtractor
         return $iimData;
     }
 }
+
