@@ -1,3 +1,5 @@
+[![StyleCI](https://styleci.io/repos/56771923/shield?branch=master)](https://styleci.io/repos/56771923) [![Build Status](https://travis-ci.org/neos/metadata-extractor.svg?branch=master)](https://travis-ci.org/neos/metadata-extractor)
+
 # Neos Meta Data Extractor Package
 This package handles extraction of meta data from assets. 
 
