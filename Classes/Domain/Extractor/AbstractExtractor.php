@@ -11,7 +11,7 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
-use Neos\Flow\Utility\MediaTypes;
+use Neos\Utility\MediaTypes;
 use Neos\Flow\ResourceManagement\PersistentResource as PersistentResource;
 
 abstract class AbstractExtractor implements ExtractorInterface
