@@ -16,14 +16,14 @@ use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Domain\Extractor\ExtractorInterface;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\MetaDataManager;
-use TYPO3\Media\Domain\Model\ImageVariant;
+use Neos\Media\Domain\Model\ImageVariant;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ObjectManagement\ObjectManager;
 use Neos\Flow\Reflection\ReflectionService;
 use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
-use TYPO3\Media\Domain\Model\Asset;
-use TYPO3\Media\Domain\Model\AssetCollection;
-use TYPO3\Media\Domain\Model\Tag;
+use Neos\Media\Domain\Model\Asset;
+use Neos\Media\Domain\Model\AssetCollection;
+use Neos\Media\Domain\Model\Tag;
 
 /**
  * ExtractionManager
