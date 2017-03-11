@@ -12,7 +12,7 @@ namespace Neos\MetaData\Extractor\Tests\Functional;
  */
 
 use Neos\MetaData\Domain\Dto\AbstractMetaDataDto;
-use TYPO3\Flow\Resource\ResourceManager;
+use TYPO3\Flow\ResourceManagement\ResourceManager;
 use TYPO3\Flow\Utility\Files;
 use TYPO3\Media\Domain\Model\Asset;
 use TYPO3\Media\Tests\Functional\AbstractTest;

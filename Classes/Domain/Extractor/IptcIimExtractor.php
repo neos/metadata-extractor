@@ -17,7 +17,7 @@ use Neos\MetaData\Extractor\Specifications\Iptc;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Resource\Resource as FlowResource;
+use TYPO3\Flow\ResourceManagement\PersistentResource as FlowResource;
 
 /**
  * @Flow\Scope("singleton")

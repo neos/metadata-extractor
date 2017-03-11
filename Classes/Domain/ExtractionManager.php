@@ -20,7 +20,7 @@ use TYPO3\Media\Domain\Model\ImageVariant;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Object\ObjectManager;
 use TYPO3\Flow\Reflection\ReflectionService;
-use TYPO3\Flow\Resource\Resource as FlowResource;
+use TYPO3\Flow\ResourceManagement\PersistentResource as FlowResource;
 use TYPO3\Media\Domain\Model\Asset;
 use TYPO3\Media\Domain\Model\AssetCollection;
 use TYPO3\Media\Domain\Model\Tag;
