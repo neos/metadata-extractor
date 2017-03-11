@@ -11,8 +11,8 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
-use TYPO3\Flow\Utility\MediaTypes;
-use TYPO3\Flow\ResourceManagement\PersistentResource as PersistentResource;
+use Neos\Flow\Utility\MediaTypes;
+use Neos\Flow\ResourceManagement\PersistentResource as PersistentResource;
 
 abstract class AbstractExtractor implements ExtractorInterface
 {

@@ -12,11 +12,11 @@ namespace Neos\MetaData\Extractor;
  */
 
 use Neos\MetaData\Extractor\Domain\ExtractionManager;
-use TYPO3\Flow\Configuration\ConfigurationManager;
-use TYPO3\Flow\Core\Booting\Sequence;
-use TYPO3\Flow\Core\Booting\Step;
-use TYPO3\Flow\Core\Bootstrap;
-use TYPO3\Flow\Package\Package as BasePackage;
+use Neos\Flow\Configuration\ConfigurationManager;
+use Neos\Flow\Core\Booting\Sequence;
+use Neos\Flow\Core\Booting\Step;
+use Neos\Flow\Core\Bootstrap;
+use Neos\Flow\Package\Package as BasePackage;
 use TYPO3\Media\Domain\Model\Asset;
 use TYPO3\Media\Domain\Repository\AssetRepository;
 
