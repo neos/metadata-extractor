@@ -12,10 +12,10 @@ namespace Neos\MetaData\Extractor\Tests\Functional;
  */
 
 use Neos\MetaData\Domain\Dto\AbstractMetaDataDto;
-use TYPO3\Flow\Resource\ResourceManager;
-use TYPO3\Flow\Utility\Files;
-use TYPO3\Media\Domain\Model\Asset;
-use TYPO3\Media\Tests\Functional\AbstractTest;
+use Neos\Flow\ResourceManagement\ResourceManager;
+use Neos\Utility\Files;
+use Neos\Media\Domain\Model\Asset;
+use Neos\Media\Tests\Functional\AbstractTest;
 
 abstract class AbstractExtractorTest extends AbstractTest
 {

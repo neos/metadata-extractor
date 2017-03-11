@@ -12,7 +12,7 @@ namespace Neos\MetaData\Extractor\Tests\Unit\Converter;
  */
 
 use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
-use TYPO3\Flow\Tests\UnitTestCase;
+use Neos\Flow\Tests\UnitTestCase;
 
 class CoordinatesConverterTest extends UnitTestCase
 {

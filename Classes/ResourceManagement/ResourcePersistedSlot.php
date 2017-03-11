@@ -6,7 +6,7 @@ namespace Neos\MetaData\Extractor\ResourceManagement;
  */
 
 use Neos\MetaData\Extractor\Domain\ExtractionManager;
-use TYPO3\Flow\Annotations as Flow;
+use Neos\Flow\Annotations as Flow;
 
 /**
  * Resource Persisted Slot

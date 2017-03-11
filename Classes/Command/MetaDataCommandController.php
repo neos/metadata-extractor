@@ -7,10 +7,10 @@ namespace Neos\MetaData\Extractor\Command;
 
 use Neos\MetaData\Extractor\Domain\ExtractionManager;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Cli\CommandController;
-use TYPO3\Media\Domain\Model\Asset;
-use TYPO3\Media\Domain\Repository\AssetRepository;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Cli\CommandController;
+use Neos\Media\Domain\Model\Asset;
+use Neos\Media\Domain\Repository\AssetRepository;
 
 /**
  * @Flow\Scope("singleton")
