@@ -17,9 +17,6 @@ use Neos\Flow\Core\Booting\Sequence;
 use Neos\Flow\Core\Booting\Step;
 use Neos\Flow\Core\Bootstrap;
 use Neos\Flow\Package\Package as BasePackage;
-use Neos\Media\Domain\Model\Asset;
-use Neos\Media\Domain\Repository\AssetRepository;
-use Neos\MetaData\Extractor\Domain\ExtractionManager;
 
 /**
  * {@inheritDoc}
