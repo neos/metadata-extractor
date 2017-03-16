@@ -90,7 +90,20 @@ class IptcIimExtractor extends AbstractExtractor
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {
-        $iim = new Iptc\Iim($this->readRawIptcData($resource));
+        try {
+            getimagesize($resource->createTemporaryLocalCopy(), $fileInfo);
+        } catch (FlowResourceException $exception) {
+            throw new ExtractorException('Could not extract IPTC data from ' . $resource->getFilename(), 1484059892, $exception);
+        }
+        if (!isset($fileInfo['APP13'])) {
+            throw new ExtractorException('Could not find "APP13" section in file info of ' . $resource->getFilename(), 1484059903);
+        }
+        $iimData = iptcparse($fileInfo['APP13']);
+        if ($iimData === false) {
+            throw new ExtractorException('Could not parse IPTC data of ' . $resource->getFilename(), 1484059912);
+        }
+
+        $iim = new Iptc\Iim($iimData);
 
         $iptcData = [];
 
@@ -135,25 +148,5 @@ class IptcIimExtractor extends AbstractExtractor
         }
 
         $metaDataCollection->set('iptc', new Dto\Iptc($iptcData));
-    }
-    
-    /**
-     * @param FlowResource $resource
-     * @return array
-     * @throws ExtractorException
-     */
-    protected function readRawIptcData(FlowResource $resource)
-    {
-        $iimData = [];
-        getimagesize($resource->createTemporaryLocalCopy(), $fileInfo);
-
-        if (isset($fileInfo['APP13'])) {
-            $iimData = iptcparse($fileInfo['APP13']);
-            if ($iimData === false) {
-                throw new ExtractorException(sprintf('IPTC/IIM data of flow resource %s could not be extracted.', $resource->getSha1()), 1486676374);
-            }
-        }
-
-        return $iimData;
     }
 }

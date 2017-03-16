@@ -27,6 +27,8 @@ interface ExtractorInterface
     /**
      * @param PersistentResource $resource
      * @param MetaDataCollection $metaDataCollection
+     *
+     * @throws ExtractorException
      */
     public function extractMetaData(PersistentResource $resource, MetaDataCollection $metaDataCollection);
 }
