@@ -17,7 +17,7 @@ namespace Neos\MetaData\Extractor\Converter;
 class CoordinatesConverter
 {
     /**
-     * Converts coordinates in DMS (degrees, minutes, seconds) and the cardinal direction reference (E,W,N,S) into 
+     * Converts coordinates in DMS (degrees, minutes, seconds) and the cardinal direction reference (E,W,N,S) into
      * DD (decimal degrees) notation.
      *
      * @param array<float> $dmsArray Coordinates in DMS (degrees, minutes, seconds)

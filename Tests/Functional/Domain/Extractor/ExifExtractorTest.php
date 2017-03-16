@@ -24,7 +24,7 @@ class ExifExtractorTest extends AbstractExtractorTest
     protected $exifExtractor;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setUp()
     {
@@ -88,11 +88,12 @@ class ExifExtractorTest extends AbstractExtractorTest
             'WhiteBalance' => 'Auto white balance',
             'XResolution' => 240,
             'YResolution' => 240,
-            'GPSVersionID'  => '2.2.0.0',
+            'GPSVersionID' => '2.2.0.0',
             // no data present for the following
             'ImageWidth' => 0,
             'ImageLength' => 0,
             'BitsPerSample' => [0, 0, 0],
+            'Compression' => '',
             'PhotometricInterpretation' => '',
             'Orientation' => '',
             'SamplesPerPixel' => 0,
@@ -127,7 +128,7 @@ class ExifExtractorTest extends AbstractExtractorTest
             'BrightnessValue' => 0.0,
             'SubjectDistance' => 0,
             'LightSource' => '',
-            'SubjectArea' => [0,0],
+            'SubjectArea' => [0, 0],
             'FlashEnergy' => 0.0,
             // 'SpatialFrequencyResponse' => ?,
             'SubjectLocation' => [0, 0],
@@ -162,7 +163,7 @@ class ExifExtractorTest extends AbstractExtractorTest
             'GPSTrackRef' => '',
             'GPSTrack' => 0.0,
             'GPSImgDirectionRef' => '',
-            'GPSMapDatum'  => '',
+            'GPSMapDatum' => '',
             'GPSDestLatitude' => 0.0,
             'GPSDestLongitude' => 0.0,
             'GPSDestBearingRef' => '',

@@ -11,17 +11,16 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
-use Neos\MetaData\Extractor\Converter\DateConverter;
-use Neos\MetaData\Extractor\Exception\ExtractorException;
-use Neos\MetaData\Extractor\Specifications\Iptc;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\ResourceManagement\Exception as FlowResourceException;
+use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
-use Neos\Flow\Annotations as Flow;
-use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
+use Neos\MetaData\Extractor\Exception\ExtractorException;
+use Neos\MetaData\Extractor\Specifications\Iptc;
 
 /**
  * @Flow\Scope("singleton")
- *
  * @see https://www.iptc.org/std/IIM/4.2/specification/IIMV4.2.pdf
  */
 class IptcIimExtractor extends AbstractExtractor
@@ -42,12 +41,11 @@ class IptcIimExtractor extends AbstractExtractor
         'image/iff',
         'image/vnd.wap.wbmp',
         'image/xbm',
-        'image/vnd.microsoft.icon'
+        'image/vnd.microsoft.icon',
     ];
 
     /**
-     * @param FlowResource $resource
-     * @param MetaDataCollection $metaDataCollection
+     * @inheritdoc
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {
@@ -131,4 +129,3 @@ class IptcIimExtractor extends AbstractExtractor
         return $iimData;
     }
 }
-

@@ -11,20 +11,20 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
-use Neos\MetaData\Extractor\Exception\ExtractorException;
-use Neos\MetaData\Extractor\Specifications\Exif;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\ResourceManagement\Exception as FlowResourceException;
+use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
 use Neos\MetaData\Extractor\Converter\NumberConverter;
 use Neos\MetaData\Extractor\Converter\DateConverter;
-use Neos\Flow\Annotations as Flow;
-use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
+use Neos\MetaData\Extractor\Exception\ExtractorException;
+use Neos\MetaData\Extractor\Specifications\Exif;
 
 /**
- * @see http://www.cipa.jp/std/documents/e/DC-008-Translation-2016-E.pdf Official standard
- *
  * @Flow\Scope("singleton")
+ * @see http://www.cipa.jp/std/documents/e/DC-008-Translation-2016-E.pdf Official standard
  */
 class ExifExtractor extends AbstractExtractor
 {
@@ -34,7 +34,7 @@ class ExifExtractor extends AbstractExtractor
     protected static $compatibleMediaTypes = [
         'image/jpeg',
         'video/jpeg',
-        'image/tiff'
+        'image/tiff',
     ];
 
     /**
@@ -59,7 +59,7 @@ class ExifExtractor extends AbstractExtractor
         'UndefinedTag:0xA432' => 'LensSpecification',
         'UndefinedTag:0xA433' => 'LensMake',
         'UndefinedTag:0xA434' => 'LensModel',
-        'UndefinedTag:0xA435' => 'LensSerialNumber'
+        'UndefinedTag:0xA435' => 'LensSerialNumber',
     ];
 
     /**
@@ -98,7 +98,7 @@ class ExifExtractor extends AbstractExtractor
         'Temperature',
         'WaterDepth',
         'XResolution',
-        'YResolution'
+        'YResolution',
     ];
 
     /**
@@ -114,7 +114,7 @@ class ExifExtractor extends AbstractExtractor
         'GPSLongitude',
         'GPSLatitude',
         'GPSDestLongitude',
-        'GPSDestLatitude'
+        'GPSDestLatitude',
     ];
 
     /**
@@ -124,14 +124,11 @@ class ExifExtractor extends AbstractExtractor
         'GPSLongitude',
         'GPSLatitude',
         'GPSDestLongitude',
-        'GPSDestLatitude'
+        'GPSDestLatitude',
     ];
 
     /**
-     * @param FlowResource $resource
-     * @param MetaDataCollection $metaDataCollection
-     *
-     * @throws ExtractorException
+     * @inheritdoc
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {

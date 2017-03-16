@@ -1217,11 +1217,6 @@ class Iim
     const CONFIRMED_OBJECTDATA_SIZE = '9#010';
 
     /**
-     * @var array
-     */
-    protected $properties;
-
-    /**
      * @var array Properties allowed to repeat themselves
      */
     public static $repeatable = [
@@ -1240,8 +1235,13 @@ class Iim
         self::BYLINE_TITLE,
         self::CONTACT,
         self::WRITER_EDITOR,
-        self::SUBFILE
+        self::SUBFILE,
     ];
+
+    /**
+     * @var array
+     */
+    protected $properties;
 
     /**
      * IptcIim constructor.
@@ -1259,20 +1259,6 @@ class Iim
             });
         }
         $this->properties = $properties;
-    }
-
-    /**
-     * @param string $property
-     *
-     * @return array|string
-     */
-    public function getProperty($property)
-    {
-        if (array_key_exists($property, $this->properties)) {
-            return in_array($property, self::$repeatable, false) ? $this->properties[$property] : $this->properties[$property][0];
-        } else {
-            return in_array($property, self::$repeatable, false) ? [] : '';
-        }
     }
 
     /**
@@ -1303,5 +1289,19 @@ class Iim
         ];
 
         return array_key_exists($category, $mapping) ? $mapping[$category] : false;
+    }
+
+    /**
+     * @param string $property
+     *
+     * @return array|string
+     */
+    public function getProperty($property)
+    {
+        if (array_key_exists($property, $this->properties)) {
+            return in_array($property, self::$repeatable, false) ? $this->properties[$property] : $this->properties[$property][0];
+        } else {
+            return in_array($property, self::$repeatable, false) ? [] : '';
+        }
     }
 }

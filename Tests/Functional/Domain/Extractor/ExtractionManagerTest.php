@@ -22,7 +22,7 @@ class ExtractionManagerTest extends AbstractExtractorTest
     protected $extractionManager;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function setUp()
     {
@@ -34,7 +34,8 @@ class ExtractionManagerTest extends AbstractExtractorTest
     /**
      * @test
      */
-    public function instanceCreated() {
+    public function instanceCreated()
+    {
         $this->assertInstanceOf(ExtractionManager::class, $this->extractionManager);
     }
 }
