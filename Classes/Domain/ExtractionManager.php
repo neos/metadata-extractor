@@ -26,7 +26,7 @@ use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\MetaDataManager;
 
 /**
- * ExtractionManager
+ * @Flow\Scope("singleton")
  */
 class ExtractionManager
 {

@@ -11,7 +11,10 @@ namespace Neos\MetaData\Extractor\Converter;
  * source code.
  */
 
+use Neos\Flow\Annotations as Flow;
+
 /**
+ * @Flow\Scope("singleton")
  * @see http://www.cipa.jp/std/documents/e/DC-008-Translation-2016-E.pdf data type definitions
  */
 class CoordinatesConverter
