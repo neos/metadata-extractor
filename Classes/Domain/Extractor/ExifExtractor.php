@@ -128,93 +128,99 @@ class ExifExtractor extends AbstractExtractor
     ];
 
     /**
+     * @var array
+     */
+    protected static $subSecondProperties = [
+        'SubSecTime' => 'DateTime',
+        'SubSecTimeOriginal' => 'DateTimeOriginal',
+        'SubSecTimeDigitized' => 'DateTimeDigitized',
+    ];
+
+    /**
+     * @var array
+     */
+    protected static $timeOffsetProperties = [
+        'OffsetTime' => 'DateTime',
+        'OffsetTimeOriginal' => 'DateTimeOriginal',
+        'OffsetTimeDigitized' => 'DateTimeDigitized',
+    ];
+
+    /**
      * @inheritdoc
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {
-        $convertedExifData = exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
-        if ($convertedExifData === false) {
+        $exifData = exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
+        if ($exifData === false) {
             throw new ExtractorException(sprintf('EXIF data of flow resource %s could not be extracted.', $resource->getSha1()), 1486675463);
         }
 
         foreach (static::$deprecatedOrUnmappedProperties as $deprecatedOrUnmappedProperty => $newProperty) {
-            if (isset($convertedExifData[$deprecatedOrUnmappedProperty])) {
-                $convertedExifData[$newProperty] = $convertedExifData[$deprecatedOrUnmappedProperty];
-                unset($convertedExifData[$deprecatedOrUnmappedProperty]);
+            if (isset($exifData[$deprecatedOrUnmappedProperty])) {
+                $exifData[$newProperty] = $exifData[$deprecatedOrUnmappedProperty];
+                unset($exifData[$deprecatedOrUnmappedProperty]);
             }
         }
 
         foreach (static::$rationalProperties as $rationalProperty) {
-            if (isset($convertedExifData[$rationalProperty])) {
-                $convertedExifData[$rationalProperty] = NumberConverter::convertRationalToFloat($convertedExifData[$rationalProperty]);
+            if (isset($exifData[$rationalProperty])) {
+                $exifData[$rationalProperty] = NumberConverter::convertRationalToFloat($exifData[$rationalProperty]);
             }
         }
 
         foreach (static::$rationalArrayProperties as $rationalArrayProperty) {
-            if (isset($convertedExifData[$rationalArrayProperty])) {
-                foreach ($convertedExifData[$rationalArrayProperty] as $key => $value) {
-                    $convertedExifData[$rationalArrayProperty][$key] = NumberConverter::convertRationalToFloat($value);
+            if (isset($exifData[$rationalArrayProperty])) {
+                foreach ($exifData[$rationalArrayProperty] as $key => $value) {
+                    $exifData[$rationalArrayProperty][$key] = NumberConverter::convertRationalToFloat($value);
                 }
             }
         }
 
-        if (isset($convertedExifData['GPSVersionID'])) {
-            $convertedExifData['GPSVersionID'] = NumberConverter::convertBinaryToVersion($convertedExifData['GPSVersionID']);
+        if (isset($exifData['GPSVersionID'])) {
+            $exifData['GPSVersionID'] = NumberConverter::convertBinaryToVersion($exifData['GPSVersionID']);
         }
 
-        if (isset($convertedExifData['GPSAltitudeRef'], $convertedExifData['GPSAltitude'])) {
-            if ($convertedExifData['GPSAltitudeRef'] === 1) {
-                $convertedExifData['GPSAltitude'] = -$convertedExifData['GPSAltitude'];
+        if (isset($exifData['GPSAltitudeRef'], $exifData['GPSAltitude'])) {
+            if ($exifData['GPSAltitudeRef'] === 1) {
+                $exifData['GPSAltitude'] = -$exifData['GPSAltitude'];
             }
-            unset($convertedExifData['GPSAltitudeRef']);
+            unset($exifData['GPSAltitudeRef']);
         }
 
         foreach (static::$gpsProperties as $gpsProperty) {
-            if (isset($convertedExifData[$gpsProperty])) {
-                $convertedExifData[$gpsProperty] = CoordinatesConverter::convertDmsToDd($convertedExifData[$gpsProperty], isset($convertedExifData[$gpsProperty . 'Ref']) ? $convertedExifData[$gpsProperty . 'Ref'] : null);
-                unset($convertedExifData[$gpsProperty . 'Ref']);
+            if (isset($exifData[$gpsProperty])) {
+                $exifData[$gpsProperty] = CoordinatesConverter::convertDmsToDd($exifData[$gpsProperty], isset($exifData[$gpsProperty . 'Ref']) ? $exifData[$gpsProperty . 'Ref'] : null);
+                unset($exifData[$gpsProperty . 'Ref']);
             }
         }
 
-        if (isset($convertedExifData['GPSTimeStamp'], $convertedExifData['GPSDateStamp'])) {
-            $convertedExifData['GPSDateTimeStamp'] = DateConverter::convertGpsDateAndTime($convertedExifData['GPSDateStamp'], $convertedExifData['GPSTimeStamp']);
-            unset($convertedExifData['GPSTimeStamp'], $convertedExifData['GPSDateStamp']);
+        if (isset($exifData['GPSTimeStamp'], $exifData['GPSDateStamp'])) {
+            $exifData['GPSDateTimeStamp'] = DateConverter::convertGpsDateAndTime($exifData['GPSDateStamp'], $exifData['GPSTimeStamp']);
+            unset($exifData['GPSTimeStamp'], $exifData['GPSDateStamp']);
         }
 
-        foreach ($convertedExifData as $property => $value) {
-            $convertedExifData[$property] = Exif::interpretValue($property, $value);
+        foreach ($exifData as $property => $value) {
+            $exifData[$property] = Exif::interpretValue($property, $value);
         }
 
-        $subSecondProperties = [
-            'SubSecTime' => 'DateTime',
-            'SubSecTimeOriginal' => 'DateTimeOriginal',
-            'SubSecTimeDigitized' => 'DateTimeDigitized'
-        ];
-
-        foreach ($subSecondProperties as $subSecondProperty => $dateTimeProperty) {
-            if (isset($convertedExifData[$subSecondProperty], $convertedExifData[$dateTimeProperty])) {
-                $convertedExifData[$dateTimeProperty] = \DateTime::createFromFormat('Y-m-d H:i:s.u', $convertedExifData[$dateTimeProperty]->format('Y-m-d H:i:s.') . $convertedExifData[$subSecondProperty]);
-                unset($convertedExifData[$subSecondProperty]);
+        foreach (static::$subSecondProperties as $subSecondProperty => $dateTimeProperty) {
+            if (isset($exifData[$subSecondProperty], $exifData[$dateTimeProperty])) {
+                $exifData[$dateTimeProperty] = \DateTime::createFromFormat('Y-m-d H:i:s.u', $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.') . $exifData[$subSecondProperty]);
+                unset($exifData[$subSecondProperty]);
             }
         }
 
-        $timeOffsetProperties = [
-            'OffsetTime' => 'DateTime',
-            'OffsetTimeOriginal' => 'DateTimeOriginal',
-            'OffsetTimeDigitized' => 'DateTimeDigitized',
-        ];
-
-        foreach ($timeOffsetProperties as $timeOffsetProperty => $dateTimeProperty) {
-            if (isset($convertedExifData[$timeOffsetProperty], $convertedExifData[$dateTimeProperty])) {
-                $convertedExifData[$dateTimeProperty] = \DateTime::createFromFormat('Y-m-d H:i:s.uP', $convertedExifData[$dateTimeProperty]->format('Y-m-d H:i:s.u') . $convertedExifData[$timeOffsetProperty]);
-                unset($convertedExifData[$timeOffsetProperty]);
+        foreach (static::$timeOffsetProperties as $timeOffsetProperty => $dateTimeProperty) {
+            if (isset($exifData[$timeOffsetProperty], $exifData[$dateTimeProperty])) {
+                $exifData[$dateTimeProperty] = \DateTime::createFromFormat('Y-m-d H:i:s.uP', $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.u') . $exifData[$timeOffsetProperty]);
+                unset($exifData[$timeOffsetProperty]);
             }
         }
 
         // wrongly encoded UserComment breaks saving of the whole data set, so check for correct encoding and remove if necessary
-        if (isset($convertedExifData['UserComment'])) {
-            $characterCode = substr($convertedExifData['UserComment'], 0, 8);
-            $value = substr($convertedExifData['UserComment'], 8);
+        if (isset($exifData['UserComment'])) {
+            $characterCode = substr($exifData['UserComment'], 0, 8);
+            $value = substr($exifData['UserComment'], 8);
             switch ($characterCode) {
                 case chr(0x41) . chr(0x53) . chr(0x43) . chr(0x49) . chr(0x49) . chr(0x0) . chr(0x0) . chr(0x0): // ASCII
                     $encoding = 'US-ASCII';
@@ -229,15 +235,15 @@ class ExifExtractor extends AbstractExtractor
                 case chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0): // Undefined
                     // try it with ASCII anyway
                     $encoding = 'ASCII';
-                    $value = $convertedExifData['UserComment'];
+                    $value = $exifData['UserComment'];
             }
             if (mb_check_encoding($value, $encoding)) {
-                $convertedExifData['UserComment'] = $value;
+                $exifData['UserComment'] = $value;
             } else {
-                unset($convertedExifData['UserComment']);
+                unset($exifData['UserComment']);
             }
         }
 
-        $metaDataCollection->set('exif', new Dto\Exif($convertedExifData));
+        $metaDataCollection->set('exif', new Dto\Exif($exifData));
     }
 }

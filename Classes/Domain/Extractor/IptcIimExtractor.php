@@ -45,6 +45,47 @@ class IptcIimExtractor extends AbstractExtractor
     ];
 
     /**
+     * @var array
+     */
+    protected static $mapping = [
+        'IntellectualGenres' => Iptc\Iim::OBJECT_ATTRIBUTE_REFERENCE,
+        'Title' => Iptc\Iim::OBJECT_NAME,
+        'SubjectCodes' => Iptc\Iim::SUBJECT_REFERENCE,
+        'Keywords' => Iptc\Iim::KEYWORDS,
+        'Instructions' => Iptc\Iim::SPECIAL_INSTRUCTIONS,
+        'Creator' => Iptc\Iim::BYLINE,
+        'CreatorTitle' => Iptc\Iim::BYLINE_TITLE,
+        'City' => Iptc\Iim::CITY,
+        'Sublocation' => Iptc\Iim::SUBLOCATION,
+        'State' => Iptc\Iim::PROVINCE_STATE,
+        'CountryCode' => Iptc\Iim::COUNTRY_PRIMARY_LOCATION_CODE,
+        'Country' => Iptc\Iim::COUNTRY_PRIMARY_LOCATION_NAME,
+        'JobId' => Iptc\Iim::ORIGINAL_TRANSMISSION_REFERENCE,
+        'Headline' => Iptc\Iim::HEADLINE,
+        'CreditLine' => Iptc\Iim::CREDIT,
+        'Source' => Iptc\Iim::SOURCE,
+        'CopyrightNotice' => Iptc\Iim::COPYRIGHT_NOTICE,
+        'Contact' => Iptc\Iim::CONTACT,
+        'Description' => Iptc\Iim::CAPTION_ABSTRACT,
+        'DescriptionWriter' => Iptc\Iim::WRITER_EDITOR,
+    ];
+
+    /**
+     * @var array
+     */
+    protected static $dateTimeMapping = [
+        'CreationDate' => [
+            'date' => Iptc\Iim::DATE_CREATED,
+            'time' => Iptc\Iim::TIME_CREATED,
+        ],
+        // sometimes used but not really specified in IPTC MetaData
+        'DigitalCreationDate' => [
+            'date' => Iptc\Iim::DIGITAL_CREATION_DATE,
+            'time' => Iptc\Iim::DIGITAL_CREATION_TIME,
+        ],
+    ];
+
+    /**
      * @inheritdoc
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
@@ -52,9 +93,19 @@ class IptcIimExtractor extends AbstractExtractor
         $iim = new Iptc\Iim($this->readRawIptcData($resource));
 
         $iptcData = [];
-        $iptcData['IntellectualGenres'] = $iim->getProperty(Iptc\Iim::OBJECT_ATTRIBUTE_REFERENCE);
-        $iptcData['Title'] = $iim->getProperty(Iptc\Iim::OBJECT_NAME);
-        $iptcData['SubjectCodes'] = $iim->getProperty(Iptc\Iim::SUBJECT_REFERENCE);
+
+        foreach (static::$mapping as $iptcProperty => $iimProperty) {
+            $iptcData[$iptcProperty] = $iim->getProperty($iimProperty);
+        }
+
+        foreach (static::$dateTimeMapping as $iptcProperty => $iimProperties) {
+            $dateString = $iim->getProperty($iimProperties['date']);
+            if (!empty($dateString)) {
+                $timeString = $iim->getProperty($iimProperties['time']);
+                $dateTimeString = $dateString . (empty($timeString) ? '000000+0000' : $timeString);
+                $iptcData[$iptcProperty] = \DateTime::createFromFormat('YmdHisO', $dateTimeString);
+            }
+        }
 
         //caring for deprecated (supplemental) category
         /** @var array $categories */
@@ -83,29 +134,6 @@ class IptcIimExtractor extends AbstractExtractor
             $iptcData['DeprecatedCategories'] = $deprecatedCategories;
         }
 
-        $iptcData['Keywords'] = $iim->getProperty(Iptc\Iim::KEYWORDS);
-        $iptcData['Instructions'] = $iim->getProperty(Iptc\Iim::SPECIAL_INSTRUCTIONS);
-
-        $iptcData['CreationDate'] = DateConverter::convertIso8601DateAndTimeString($iim->getProperty(Iptc\Iim::DATE_CREATED), $iim->getProperty(Iptc\Iim::TIME_CREATED));
-        
-        $iptcData['Creator'] = $iim->getProperty(Iptc\Iim::BYLINE);
-        $iptcData['CreatorTitle'] = $iim->getProperty(Iptc\Iim::BYLINE_TITLE);
-        $iptcData['City'] = $iim->getProperty(Iptc\Iim::CITY);
-        $iptcData['Sublocation'] = $iim->getProperty(Iptc\Iim::SUBLOCATION);
-        $iptcData['State'] = $iim->getProperty(Iptc\Iim::PROVINCE_STATE);
-        $iptcData['CountryCode'] = $iim->getProperty(Iptc\Iim::COUNTRY_PRIMARY_LOCATION_CODE);
-        $iptcData['Country'] = $iim->getProperty(Iptc\Iim::COUNTRY_PRIMARY_LOCATION_NAME);
-        $iptcData['JobId'] = $iim->getProperty(Iptc\Iim::ORIGINAL_TRANSMISSION_REFERENCE);
-        $iptcData['Headline'] = $iim->getProperty(Iptc\Iim::HEADLINE);
-        $iptcData['CreditLine'] = $iim->getProperty(Iptc\Iim::CREDIT);
-        $iptcData['Source'] = $iim->getProperty(Iptc\Iim::SOURCE);
-        $iptcData['CopyrightNotice'] = $iim->getProperty(Iptc\Iim::COPYRIGHT_NOTICE);
-        $iptcData['Contact'] = $iim->getProperty(Iptc\Iim::CONTACT);
-        $iptcData['Description'] = $iim->getProperty(Iptc\Iim::CAPTION_ABSTRACT);
-        $iptcData['DescriptionWriter'] = $iim->getProperty(Iptc\Iim::WRITER_EDITOR);
-
-        // sometimes used but not really specified in IPTC MetaData
-        $iptcData['DigitalCreationDate'] = DateConverter::convertIso8601DateAndTimeString($iim->getProperty(Iptc\Iim::DIGITAL_CREATION_DATE), $iim->getProperty(Iptc\Iim::DIGITAL_CREATION_TIME));
         $metaDataCollection->set('iptc', new Dto\Iptc($iptcData));
     }
     
