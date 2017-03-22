@@ -11,20 +11,21 @@ namespace Neos\MetaData\Extractor;
  * source code.
  */
 
-use Neos\MetaData\Extractor\Domain\ExtractionManager;
 use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Core\Booting\Sequence;
 use Neos\Flow\Core\Booting\Step;
 use Neos\Flow\Core\Bootstrap;
 use Neos\Flow\Package\Package as BasePackage;
+use Neos\Media\Domain\Service\AssetService;
+use Neos\MetaData\Extractor\Domain\ExtractionManager;
 
 /**
- * {@inheritDoc}
+ * @inheritDoc
  */
 class Package extends BasePackage
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function boot(Bootstrap $bootstrap)
     {

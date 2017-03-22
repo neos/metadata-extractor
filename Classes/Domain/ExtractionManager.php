@@ -11,22 +11,22 @@ namespace Neos\MetaData\Extractor\Domain;
  * source code.
  */
 
-use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use Neos\MetaData\Domain\Dto;
-use Neos\MetaData\Extractor\Domain\Extractor\ExtractorInterface;
-use Neos\MetaData\Extractor\Exception\ExtractorException;
-use Neos\MetaData\MetaDataManager;
-use Neos\Media\Domain\Model\ImageVariant;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ObjectManagement\ObjectManager;
 use Neos\Flow\Reflection\ReflectionService;
 use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
 use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Domain\Model\AssetCollection;
+use Neos\Media\Domain\Model\ImageVariant;
 use Neos\Media\Domain\Model\Tag;
+use Neos\MetaData\Domain\Collection\MetaDataCollection;
+use Neos\MetaData\Domain\Dto;
+use Neos\MetaData\Extractor\Domain\Extractor\ExtractorInterface;
+use Neos\MetaData\Extractor\Exception\ExtractorException;
+use Neos\MetaData\MetaDataManager;
 
 /**
- * ExtractionManager
+ * @Flow\Scope("singleton")
  */
 class ExtractionManager
 {
@@ -62,7 +62,7 @@ class ExtractionManager
 
         $flowResource = $asset->getResource();
         if ($flowResource === null) {
-            throw new ExtractorException('Resource of Asset "' . $asset->getTitle() . '"" not found.', 201611111954);
+            throw new ExtractorException('Resource of Asset "' . $asset->getTitle() . '"" not found.', 1484060541);
         }
 
         $metaDataCollection = new MetaDataCollection();
@@ -75,6 +75,7 @@ class ExtractionManager
             try {
                 $suitableAdapter->extractMetaData($flowResource, $metaDataCollection);
             } catch (ExtractorException $exception) {
+                //Extractor is theoretically suitable but failed to extract meta data
                 continue;
             }
         }
@@ -82,24 +83,6 @@ class ExtractionManager
         $this->metaDataManager->updateMetaDataForAsset($asset, $metaDataCollection);
 
         return $metaDataCollection;
-    }
-
-    /**
-     * @param FlowResource $flowResource
-     *
-     * @return array
-     */
-    protected function findSuitableExtractorAdaptersForResource(FlowResource $flowResource)
-    {
-        $extractorAdapters = $this->reflectionService->getAllImplementationClassNamesForInterface(ExtractorInterface::class);
-        $mediaType = $flowResource->getMediaType();
-
-        $suitableAdapterClasses = array_filter($extractorAdapters, function ($extractorAdapterClass) use ($flowResource) {
-            /** @var ExtractorInterface $extractorAdapterClass */
-            return $extractorAdapterClass::isSuitableFor($flowResource);
-        });
-
-        return $suitableAdapterClasses;
     }
 
     /**
@@ -127,8 +110,25 @@ class ExtractionManager
             'FileName' => $asset->getResource()->getFilename(),
             'Collections' => $collections,
             'Tags' => $tags,
-            'AssetObject' => $asset
+            'AssetObject' => $asset,
         ]);
         $metaDataCollection->set('asset', $assetDto);
+    }
+
+    /**
+     * @param FlowResource $flowResource
+     *
+     * @return array
+     */
+    protected function findSuitableExtractorAdaptersForResource(FlowResource $flowResource)
+    {
+        $extractorAdapters = $this->reflectionService->getAllImplementationClassNamesForInterface(ExtractorInterface::class);
+
+        $suitableAdapterClasses = array_filter($extractorAdapters, function ($extractorAdapterClass) use ($flowResource) {
+            /** @var ExtractorInterface $extractorAdapterClass */
+            return $extractorAdapterClass::isSuitableFor($flowResource);
+        });
+
+        return $suitableAdapterClasses;
     }
 }

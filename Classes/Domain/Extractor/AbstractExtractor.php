@@ -11,8 +11,8 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
+use Neos\Flow\ResourceManagement\PersistentResource;
 use Neos\Utility\MediaTypes;
-use Neos\Flow\ResourceManagement\PersistentResource as PersistentResource;
 
 abstract class AbstractExtractor implements ExtractorInterface
 {
@@ -28,10 +28,11 @@ abstract class AbstractExtractor implements ExtractorInterface
      */
     public static function isSuitableFor(PersistentResource $resource)
     {
+        $mediaType = $resource->getMediaType();
         foreach (static::$compatibleMediaTypes as $compatibleMediaType) {
-            if(MediaTypes::mediaRangeMatches($compatibleMediaType, $resource->getMediaType()) === true) {
+            if (MediaTypes::mediaRangeMatches($compatibleMediaType, $mediaType)) {
                 return true;
-            };
+            }
         }
 
         return false;

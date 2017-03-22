@@ -11,8 +11,8 @@ namespace Neos\MetaData\Extractor\Tests\Unit\Converter;
  * source code.
  */
 
-use Neos\MetaData\Extractor\Converter\NumberConverter;
 use Neos\Flow\Tests\UnitTestCase;
+use Neos\MetaData\Extractor\Converter\NumberConverter;
 
 class NumberConverterTest extends UnitTestCase
 {
@@ -24,15 +24,19 @@ class NumberConverterTest extends UnitTestCase
         return [
             'correctRational' => [
                 'rational' => '24/1',
-                'expected' => 24.0
+                'expected' => 24.0,
             ],
             'negativeRational' => [
                 'rational' => '-24/10',
-                'expected' => -2.4
+                'expected' => -2.4,
+            ],
+            'zero' => [
+                'rational' => '0/0',
+                'expected' => 0.0,
             ],
             'nonRational' => [
                 'rational' => 'twenty-four',
-                'expected' => 0.0
+                'expected' => 0.0,
             ],
         ];
     }
@@ -49,6 +53,4 @@ class NumberConverterTest extends UnitTestCase
         $actual = NumberConverter::convertRationalToFloat($rational);
         $this->assertEquals($expected, $actual);
     }
-
-
 }

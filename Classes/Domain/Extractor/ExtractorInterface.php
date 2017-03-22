@@ -11,8 +11,9 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  * source code.
  */
 
+use Neos\Flow\ResourceManagement\PersistentResource;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use Neos\Flow\ResourceManagement\PersistentResource as PersistentResource;
+use Neos\MetaData\Extractor\Exception\ExtractorException;
 
 interface ExtractorInterface
 {
@@ -26,6 +27,8 @@ interface ExtractorInterface
     /**
      * @param PersistentResource $resource
      * @param MetaDataCollection $metaDataCollection
+     *
+     * @throws ExtractorException
      */
     public function extractMetaData(PersistentResource $resource, MetaDataCollection $metaDataCollection);
 }
