@@ -115,7 +115,15 @@ class IptcIimExtractor extends AbstractExtractor
             $dateString = $iim->getProperty($iimProperties['date']);
             if (!empty($dateString)) {
                 $timeString = $iim->getProperty($iimProperties['time']);
-                $dateTimeString = $dateString . (empty($timeString) ? '000000+0000' : $timeString);
+                $dateTimeString = $dateString;
+                if (empty($timeString)) {
+                    $dateTimeString .= '000000+0000';
+                } else {
+                    $dateTimeString .= $timeString;
+                    if ((strpos($timeString, '+') === false && strpos($timeString, '-')) === false) {
+                        $dateTimeString .= '+0000';
+                    }
+                }
                 $iptcData[$iptcProperty] = \DateTime::createFromFormat('YmdHisO', $dateTimeString);
             }
         }
