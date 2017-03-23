@@ -153,7 +153,7 @@ class ExifExtractor extends AbstractExtractor
         try {
             $exifData = @exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
         } catch (FlowResourceException $exception) {
-            throw new ExtractorException('Could not extract EXIF data from ' . $resource->getFilename(), 1484059228, $e);
+            throw new ExtractorException('Could not extract EXIF data from ' . $resource->getFilename(), 1484059228, $exception);
         }
         if ($exifData === false) {
             throw new ExtractorException('Could not extract EXIF data from ' . $resource->getFilename(), 1484056779);
