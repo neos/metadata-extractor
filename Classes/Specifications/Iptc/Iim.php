@@ -1254,7 +1254,7 @@ class Iim
         if (!array_key_exists(self::CODED_CHARACTER_SET, $properties)) {
             array_walk_recursive($properties, function (&$element) {
                 if (is_string($element) && mb_detect_encoding($element, 'UTF-8', true) === false) {
-                    $element = utf8_encode($element);
+                    $element = mb_convert_encoding($element, 'UTF-8', 'ISO-8859-1');
                 }
             });
         }
