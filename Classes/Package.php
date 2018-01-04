@@ -57,7 +57,6 @@ class Package extends BasePackage
         if (isset($settings['realtimeExtraction']['enabled']) && $settings['realtimeExtraction']['enabled'] === true) {
             $dispatcher = $bootstrap->getSignalSlotDispatcher();
             $dispatcher->connect(AssetService::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
-            $dispatcher->connect(AssetService::class, 'assetUpdated', ExtractionManager::class, 'extractMetaData');
         }
     }
 }
