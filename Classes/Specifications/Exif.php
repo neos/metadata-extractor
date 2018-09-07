@@ -1,5 +1,4 @@
 <?php
-
 namespace Neos\MetaData\Extractor\Specifications;
 
 /**
@@ -10,6 +9,9 @@ namespace Neos\MetaData\Extractor\Specifications;
  */
 class Exif
 {
+    /**
+     * @var string[]
+     */
     public static $exifIfd = [
         // TIFF Rev. 6.0 Attribute Information
         0x100 => 'ImageWidth',
@@ -123,6 +125,9 @@ class Exif
         0xA435 => 'LensSerialNumber',
     ];
 
+    /**
+     * @var string[]
+     */
     public static $gpsIfd = [
         // GPS Attribute Information
         0x0 => 'GPSVersionID',
@@ -159,6 +164,9 @@ class Exif
         0x1F => 'GPSHPositioningError',
     ];
 
+    /**
+     * @var string[][]
+     */
     public static $valueInterpretationMap = [
         'Compression' => [
             1 => 'uncompressed',
@@ -450,10 +458,9 @@ class Exif
     /**
      * @param string $property
      * @param mixed $value
-     *
      * @return string|mixed
      */
-    public static function interpretValue($property, $value)
+    public static function interpretValue(string $property, $value)
     {
         switch ($property) {
             case 'DateTime':
@@ -482,7 +489,7 @@ class Exif
                     5 => 'G',
                     6 => 'B',
                 ];
-                foreach (unpack('C*', $value) as $singleValue) {
+                foreach (\unpack('C*', $value) as $singleValue) {
                     if (isset($componentsConfigurationInterpretations[$singleValue])) {
                         $interpretedValue .= $componentsConfigurationInterpretations[$singleValue];
                     }
@@ -523,14 +530,14 @@ class Exif
                         break;
                 }
                 $interpretedValue .= ($flashFunction === 0b1) ? ' No flash function.' : ' Flash function present.';
-                $interpretedValue .= ($redEyeMode === 0b1) ? ' Red-eye reduction supported.' : ' No red-eye reduction mode or unknown.';
+                $interpretedValue .= ($redEyeMode === 0b1)
+                    ? ' Red-eye reduction supported.'
+                    : ' No red-eye reduction mode or unknown.'
+                ;
 
                 return $interpretedValue;
         }
-        if (isset(static::$valueInterpretationMap[$property][$value])) {
-            return static::$valueInterpretationMap[$property][$value];
-        }
 
-        return $value;
+        return static::$valueInterpretationMap[$property][$value] ?? $value;
     }
 }

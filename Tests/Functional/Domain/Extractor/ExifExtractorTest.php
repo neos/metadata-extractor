@@ -62,7 +62,8 @@ class ExifExtractorTest extends AbstractExtractorTest
             'ExposureMode' => 'Manual exposure',
             'ExposureProgram' => 'Manual',
             'ExposureTime' => 0.0015625,
-            'Flash' => 'Flash did not fire. No strobe return detection function. Compulsory flash suppression. Flash function present. No red-eye reduction mode or unknown.',
+            'Flash' => 'Flash did not fire. No strobe return detection function. Compulsory flash suppression.'
+                . ' Flash function present. No red-eye reduction mode or unknown.',
             'FNumber' => 8.0,
             'FocalLength' => 24,
             'FocalPlaneResolutionUnit' => 'inches',

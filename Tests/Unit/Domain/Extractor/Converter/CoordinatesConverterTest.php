@@ -17,7 +17,7 @@ use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
 class CoordinatesConverterTest extends UnitTestCase
 {
     /**
-     * @return array
+     * @return mixed[][]
      */
     public function gpsDataProvider()
     {
@@ -47,11 +47,12 @@ class CoordinatesConverterTest extends UnitTestCase
      * @test
      * @dataProvider gpsDataProvider
      *
-     * @param array $dmsArray
+     * @param float[] $dmsArray
      * @param string $cardinalDirectionReference
      * @param float $expected
+     * @return void
      */
-    public function convertDmsToDd($dmsArray, $cardinalDirectionReference, $expected)
+    public function convertDmsToDd(array $dmsArray, string $cardinalDirectionReference, float $expected)
     {
         $actual = CoordinatesConverter::convertDmsToDd($dmsArray, $cardinalDirectionReference);
         $this->assertEquals($expected, $actual);

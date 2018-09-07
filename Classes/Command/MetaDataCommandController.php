@@ -5,13 +5,13 @@ namespace Neos\MetaData\Extractor\Command;
  * This file is part of the Neos.MetaData.Extractor package.
  */
 
-use Neos\Flow\Persistence\Doctrine\PersistenceManager;
-use Neos\MetaData\Extractor\Domain\ExtractionManager;
-use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
+use Neos\Flow\Persistence\Doctrine\PersistenceManager;
 use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Domain\Repository\AssetRepository;
+use Neos\MetaData\Extractor\Domain\ExtractionManager;
+use Neos\MetaData\Extractor\Exception\ExtractorException;
 
 /**
  * @Flow\Scope("singleton")
@@ -38,6 +38,8 @@ class MetaDataCommandController extends CommandController
 
     /**
      * Extracts MetaData from Assets
+     *
+     * @return void
      */
     public function extractCommand()
     {
@@ -55,7 +57,7 @@ class MetaDataCommandController extends CommandController
 
             $this->output->progressAdvance(1);
 
-            if($iterator->key() % 100 === 0) {
+            if ($iterator->key() % 100 === 0) {
                 $this->persistenceManager->persistAll();
             }
         }

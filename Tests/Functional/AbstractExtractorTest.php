@@ -48,7 +48,7 @@ abstract class AbstractExtractorTest extends AbstractTest
     /**
      * @return Asset
      */
-    protected function buildTestAsset()
+    protected function buildTestAsset() : Asset
     {
         $testImagePath = Files::concatenatePaths([__DIR__, 'Fixtures/Resources/Lighthouse.jpg']);
         $this->assertFileExists($testImagePath);
@@ -60,13 +60,14 @@ abstract class AbstractExtractorTest extends AbstractTest
 
     /**
      * @param AbstractMetaDataDto $dto
-     * @param array $expectedDtoData
+     * @param mixed[] $expectedDtoData
+     * @return void
      */
     protected function assertDtoGettersReturnData(AbstractMetaDataDto $dto, array $expectedDtoData)
     {
         foreach ($expectedDtoData as $key => $value) {
             $getter = 'get' . $key;
-            $this->assertEquals($value, $dto->$getter(), sprintf('Value of %s does not match expected.', $key));
+            $this->assertEquals($value, $dto->$getter(), \sprintf('Value of %s does not match expected.', $key));
         }
     }
 }

@@ -16,6 +16,7 @@ use Neos\Flow\ResourceManagement\Exception as FlowResourceException;
 use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
+use Neos\MetaData\Extractor\Converter\DateConverter;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\Extractor\Specifications\Iptc;
 
@@ -26,52 +27,52 @@ use Neos\MetaData\Extractor\Specifications\Iptc;
 class IptcIimExtractor extends AbstractExtractor
 {
     /**
-     * @var array
+     * @var string[]
      */
     protected static $compatibleMediaTypes = [
+        'application/octet-stream',
+        'application/x-shockwave-flash',
+        'image/bmp',
         'image/gif',
+        'image/iff',
+        'image/jp2',
         'image/jpeg',
         'image/png',
-        'application/x-shockwave-flash',
         'image/psd',
-        'image/bmp',
         'image/tiff',
-        'application/octet-stream',
-        'image/jp2',
-        'image/iff',
+        'image/vnd.microsoft.icon',
         'image/vnd.wap.wbmp',
         'image/xbm',
-        'image/vnd.microsoft.icon',
     ];
 
     /**
-     * @var array
+     * @var string[]
      */
     protected static $mapping = [
-        'IntellectualGenres' => Iptc\Iim::OBJECT_ATTRIBUTE_REFERENCE,
-        'Title' => Iptc\Iim::OBJECT_NAME,
-        'SubjectCodes' => Iptc\Iim::SUBJECT_REFERENCE,
-        'Keywords' => Iptc\Iim::KEYWORDS,
-        'Instructions' => Iptc\Iim::SPECIAL_INSTRUCTIONS,
+        'City' => Iptc\Iim::CITY,
+        'Contact' => Iptc\Iim::CONTACT,
+        'CopyrightNotice' => Iptc\Iim::COPYRIGHT_NOTICE,
+        'Country' => Iptc\Iim::COUNTRY_PRIMARY_LOCATION_NAME,
+        'CountryCode' => Iptc\Iim::COUNTRY_PRIMARY_LOCATION_CODE,
         'Creator' => Iptc\Iim::BYLINE,
         'CreatorTitle' => Iptc\Iim::BYLINE_TITLE,
-        'City' => Iptc\Iim::CITY,
-        'Sublocation' => Iptc\Iim::SUBLOCATION,
-        'State' => Iptc\Iim::PROVINCE_STATE,
-        'CountryCode' => Iptc\Iim::COUNTRY_PRIMARY_LOCATION_CODE,
-        'Country' => Iptc\Iim::COUNTRY_PRIMARY_LOCATION_NAME,
-        'JobId' => Iptc\Iim::ORIGINAL_TRANSMISSION_REFERENCE,
-        'Headline' => Iptc\Iim::HEADLINE,
         'CreditLine' => Iptc\Iim::CREDIT,
-        'Source' => Iptc\Iim::SOURCE,
-        'CopyrightNotice' => Iptc\Iim::COPYRIGHT_NOTICE,
-        'Contact' => Iptc\Iim::CONTACT,
         'Description' => Iptc\Iim::CAPTION_ABSTRACT,
         'DescriptionWriter' => Iptc\Iim::WRITER_EDITOR,
+        'Headline' => Iptc\Iim::HEADLINE,
+        'Instructions' => Iptc\Iim::SPECIAL_INSTRUCTIONS,
+        'IntellectualGenres' => Iptc\Iim::OBJECT_ATTRIBUTE_REFERENCE,
+        'JobId' => Iptc\Iim::ORIGINAL_TRANSMISSION_REFERENCE,
+        'Keywords' => Iptc\Iim::KEYWORDS,
+        'Source' => Iptc\Iim::SOURCE,
+        'State' => Iptc\Iim::PROVINCE_STATE,
+        'SubjectCodes' => Iptc\Iim::SUBJECT_REFERENCE,
+        'Sublocation' => Iptc\Iim::SUBLOCATION,
+        'Title' => Iptc\Iim::OBJECT_NAME,
     ];
 
     /**
-     * @var array
+     * @var string[][]
      */
     protected static $dateTimeMapping = [
         'CreationDate' => [
@@ -91,14 +92,21 @@ class IptcIimExtractor extends AbstractExtractor
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {
         try {
-            getimagesize($resource->createTemporaryLocalCopy(), $fileInfo);
+            \getimagesize($resource->createTemporaryLocalCopy(), $fileInfo);
         } catch (FlowResourceException $exception) {
-            throw new ExtractorException('Could not extract IPTC data from ' . $resource->getFilename(), 1484059892, $exception);
+            throw new ExtractorException(
+                'Could not extract IPTC data from ' . $resource->getFilename(),
+                1484059892,
+                $exception
+            );
         }
         if (!isset($fileInfo['APP13'])) {
-            throw new ExtractorException('Could not find "APP13" section in file info of ' . $resource->getFilename(), 1484059903);
+            throw new ExtractorException(
+                'Could not find "APP13" section in file info of ' . $resource->getFilename(),
+                1484059903
+            );
         }
-        $iimData = iptcparse($fileInfo['APP13']);
+        $iimData = \iptcparse($fileInfo['APP13']);
         if ($iimData === false) {
             throw new ExtractorException('Could not parse IPTC data of ' . $resource->getFilename(), 1484059912);
         }
@@ -114,22 +122,15 @@ class IptcIimExtractor extends AbstractExtractor
         foreach (static::$dateTimeMapping as $iptcProperty => $iimProperties) {
             $dateString = $iim->getProperty($iimProperties['date']);
             if (!empty($dateString)) {
-                $timeString = $iim->getProperty($iimProperties['time']);
-                $dateTimeString = $dateString;
-                if (empty($timeString)) {
-                    $dateTimeString .= '000000+0000';
-                } else {
-                    $dateTimeString .= $timeString;
-                    if ((strpos($timeString, '+') === false && strpos($timeString, '-')) === false) {
-                        $dateTimeString .= '+0000';
-                    }
-                }
-                $iptcData[$iptcProperty] = \DateTime::createFromFormat('YmdHisO', $dateTimeString);
+                $iptcData[$iptcProperty] = DateConverter::convertIso8601DateAndTimeString(
+                    $dateString,
+                    $iim->getProperty($iimProperties['time'])
+                );
             }
         }
 
         //caring for deprecated (supplemental) category
-        /** @var array $categories */
+        /** @var string[] $categories */
         $categories = $iim->getProperty(Iptc\Iim::SUPPLEMENTAL_CATEGORY);
         $categories[] = $iim->getProperty(Iptc\Iim::CATEGORY);
         $subjectCodesFromCategories = [];
@@ -148,7 +149,7 @@ class IptcIimExtractor extends AbstractExtractor
             if (!isset($iptcData['SubjectCodes'])) {
                 $iptcData['SubjectCodes'] = $subjectCodesFromCategories;
             } else {
-                $iptcData['SubjectCodes'] = array_merge($iptcData['SubjectCodes'], $subjectCodesFromCategories);
+                $iptcData['SubjectCodes'] = \array_merge($iptcData['SubjectCodes'], $subjectCodesFromCategories);
             }
         }
         if (!empty($deprecatedCategories)) {
