@@ -11,15 +11,15 @@ namespace Neos\MetaData\Extractor\Tests\Unit\Converter;
  * source code.
  */
 
-use Neos\MetaData\Extractor\Converter\DateConverter;
 use Neos\Flow\Tests\UnitTestCase;
+use Neos\MetaData\Extractor\Converter\DateConverter;
 
 class DateConverterTest extends UnitTestCase
 {
     /**
-     * @return array
+     * @return mixed[][]
      */
-    public function gpsTimeStampDataProvider()
+    public function gpsTimeStampDataProvider() : array
     {
         return [
             [
@@ -27,10 +27,10 @@ class DateConverterTest extends UnitTestCase
                 'timeStamp' => [
                     11.0,
                     16.0,
-                    53.0
+                    53.0,
                 ],
-                'expected' => \DateTime::createFromFormat('YmdHis', '20160205111653')
-            ]
+                'expected' => \DateTime::createFromFormat('YmdHis', '20160205111653'),
+            ],
         ];
     }
 
@@ -39,36 +39,37 @@ class DateConverterTest extends UnitTestCase
      * @dataProvider gpsTimeStampDataProvider
      *
      * @param string $dateStamp
-     * @param array $timeStamp
+     * @param string[] $timeStamp
      * @param \DateTime $expected
+     * @return void
      */
-    public function convertGpsDateAndTime($dateStamp, $timeStamp, $expected)
+    public function convertGpsDateAndTime(string $dateStamp, array $timeStamp, \DateTime $expected)
     {
         $actual = DateConverter::convertGpsDateAndTime($dateStamp, $timeStamp);
         $this->assertEquals($expected, $actual);
     }
 
     /**
-     * @return array
+     * @return mixed[][]
      */
-    public function iso8601DateAndTimeDataProvider()
+    public function iso8601DateAndTimeDataProvider() : array
     {
         return [
             'dateStringOnly' => [
                 'dateString' => '20130918',
                 'timeString' => '',
-                'expected' => \DateTime::createFromFormat('YmdHisO', '20130918000000+0000')
+                'expected' => \DateTime::createFromFormat('YmdHisO', '20130918000000+0000'),
             ],
             'dateAndTimeAndUtcDifference' => [
                 'dateString' => '20130918',
                 'timeString' => '105911+0200',
-                'expected' => \DateTime::createFromFormat('YmdHisO', '20130918105911+0200')
+                'expected' => \DateTime::createFromFormat('YmdHisO', '20130918105911+0200'),
             ],
             'dateAndTimeWithoutSeparator' => [
                 'dateString' => '20130918',
                 'timeString' => '105911',
-                'expected' => \DateTime::createFromFormat('YmdHisO', '20130918105911+0000')
-            ]
+                'expected' => \DateTime::createFromFormat('YmdHisO', '20130918105911+0000'),
+            ],
         ];
     }
 
@@ -77,10 +78,11 @@ class DateConverterTest extends UnitTestCase
      * @dataProvider iso8601DateAndTimeDataProvider
      *
      * @param string $dateString
-     * @param string $timeString
+     * @param string|null $timeString
      * @param \DateTime $expected
+     * @return void
      */
-    public function convertIso8601DateAndTimeString($dateString, $timeString, $expected)
+    public function convertIso8601DateAndTimeString(string $dateString, string $timeString, \DateTime $expected)
     {
         $actual = DateConverter::convertIso8601DateAndTimeString($dateString, $timeString);
         $this->assertInstanceOf(\DateTime::class, $actual, 'The date and time could not be converted');

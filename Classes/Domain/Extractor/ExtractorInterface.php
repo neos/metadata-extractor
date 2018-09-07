@@ -19,15 +19,14 @@ interface ExtractorInterface
 {
     /**
      * @param PersistentResource $resource
-     *
      * @return bool
      */
-    public static function isSuitableFor(PersistentResource $resource);
+    public static function isSuitableFor(PersistentResource $resource) : bool;
 
     /**
      * @param PersistentResource $resource
      * @param MetaDataCollection $metaDataCollection
-     *
+     * @return void
      * @throws ExtractorException
      */
     public function extractMetaData(PersistentResource $resource, MetaDataCollection $metaDataCollection);

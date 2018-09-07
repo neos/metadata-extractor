@@ -15,6 +15,7 @@ use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Core\Booting\Sequence;
 use Neos\Flow\Core\Booting\Step;
 use Neos\Flow\Core\Bootstrap;
+use Neos\Flow\Exception;
 use Neos\Flow\Package\Package as BasePackage;
 use Neos\Media\Domain\Service\AssetService;
 use Neos\MetaData\Extractor\Domain\ExtractionManager;
@@ -46,14 +47,18 @@ class Package extends BasePackage
      * Registers slots for signals in order to be able extract meta data from assets
      *
      * @param Bootstrap $bootstrap
-     * @throws \Neos\Flow\Exception
+     * @return void
+     * @throws Exception
      */
     public function registerExtractionSlot(Bootstrap $bootstrap)
     {
         $configurationManager = $bootstrap->getObjectManager()->get(ConfigurationManager::class);
-        $settings = $configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, $this->getPackageKey());
+        $settings = $configurationManager->getConfiguration(
+            ConfigurationManager::CONFIGURATION_TYPE_SETTINGS,
+            $this->getPackageKey()
+        );
 
-        if (isset($settings['realtimeExtraction']['enabled']) && $settings['realtimeExtraction']['enabled'] === true) {
+        if ($settings['realtimeExtraction']['enabled'] === true) {
             $dispatcher = $bootstrap->getSignalSlotDispatcher();
             $dispatcher->connect(AssetService::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
             $dispatcher->connect(AssetService::class, 'assetUpdated', ExtractionManager::class, 'extractMetaData');

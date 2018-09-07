@@ -17,9 +17,9 @@ use Neos\MetaData\Extractor\Converter\NumberConverter;
 class NumberConverterTest extends UnitTestCase
 {
     /**
-     * @return array
+     * @return mixed[][]
      */
-    public function rationalDataProvider()
+    public function rationalDataProvider() : array
     {
         return [
             'correctRational' => [
@@ -47,8 +47,9 @@ class NumberConverterTest extends UnitTestCase
      *
      * @param string $rational
      * @param float $expected
+     * @return void
      */
-    public function convertRationalToFloat($rational, $expected)
+    public function convertRationalToFloat(string $rational, float $expected)
     {
         $actual = NumberConverter::convertRationalToFloat($rational);
         $this->assertEquals($expected, $actual);

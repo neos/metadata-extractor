@@ -51,45 +51,8 @@ class ExtractionManager
 
     /**
      * @param Asset $asset
-     *
-     * @return MetaDataCollection
-     * @throws ExtractorException
-     * @throws UnknownObjectException
-     */
-    public function extractMetaData(Asset $asset)
-    {
-        if ($asset instanceof ImageVariant) {
-            $asset = $asset->getOriginalAsset();
-        }
-
-        $flowResource = $asset->getResource();
-        if ($flowResource === null) {
-            throw new ExtractorException('Resource of Asset "' . $asset->getTitle() . '"" not found.', 1484060541);
-        }
-
-        $metaDataCollection = new MetaDataCollection();
-        $this->buildAssetMetaData($asset, $metaDataCollection);
-
-        $suitableAdapterClasses = $this->findSuitableExtractorAdaptersForResource($flowResource);
-        foreach ($suitableAdapterClasses as $suitableAdapterClass) {
-            /** @var ExtractorInterface $suitableAdapter */
-            $suitableAdapter = $this->objectManager->get($suitableAdapterClass);
-            try {
-                $suitableAdapter->extractMetaData($flowResource, $metaDataCollection);
-            } catch (ExtractorException $exception) {
-                //Extractor is theoretically suitable but failed to extract meta data
-                continue;
-            }
-        }
-
-        $this->metaDataManager->updateMetaDataForAsset($asset, $metaDataCollection);
-
-        return $metaDataCollection;
-    }
-
-    /**
-     * @param Asset $asset
      * @param MetaDataCollection $metaDataCollection
+     * @return void
      */
     protected function buildAssetMetaData(Asset $asset, MetaDataCollection $metaDataCollection)
     {
@@ -119,18 +82,61 @@ class ExtractionManager
 
     /**
      * @param FlowResource $flowResource
-     *
-     * @return array
+     * @return string[] Class names
      */
-    protected function findSuitableExtractorAdaptersForResource(FlowResource $flowResource)
+    protected function findSuitableExtractorAdaptersForResource(FlowResource $flowResource) : array
     {
-        $extractorAdapters = $this->reflectionService->getAllImplementationClassNamesForInterface(ExtractorInterface::class);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $extractorAdapters = $this->reflectionService->getAllImplementationClassNamesForInterface(
+            ExtractorInterface::class
+        );
 
-        $suitableAdapterClasses = array_filter($extractorAdapters, function ($extractorAdapterClass) use ($flowResource) {
-            /** @var ExtractorInterface $extractorAdapterClass */
-            return $extractorAdapterClass::isSuitableFor($flowResource);
-        });
+        $suitableAdapterClasses = \array_filter(
+            $extractorAdapters,
+            function ($extractorAdapterClass) use ($flowResource) {
+                /** @var ExtractorInterface $extractorAdapterClass */
+                return $extractorAdapterClass::isSuitableFor($flowResource);
+            }
+        );
 
         return $suitableAdapterClasses;
+    }
+
+    /**
+     * @param Asset $asset
+     * @return MetaDataCollection
+     * @throws ExtractorException
+     * @throws UnknownObjectException
+     */
+    public function extractMetaData(Asset $asset) : MetaDataCollection
+    {
+        if ($asset instanceof ImageVariant) {
+            $asset = $asset->getOriginalAsset();
+        }
+
+        $flowResource = $asset->getResource();
+        if ($flowResource === null) {
+            throw new ExtractorException('Resource of Asset "' . $asset->getTitle() . '"" not found.', 1484060541);
+        }
+
+        $metaDataCollection = new MetaDataCollection();
+        $this->buildAssetMetaData($asset, $metaDataCollection);
+
+        $suitableAdapterClasses = $this->findSuitableExtractorAdaptersForResource($flowResource);
+        foreach ($suitableAdapterClasses as $suitableAdapterClass) {
+            /** @var ExtractorInterface $suitableAdapter */
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $suitableAdapter = $this->objectManager->get($suitableAdapterClass);
+            try {
+                $suitableAdapter->extractMetaData($flowResource, $metaDataCollection);
+            } catch (ExtractorException $exception) {
+                //Extractor is theoretically suitable but failed to extract meta data
+                continue;
+            }
+        }
+
+        $this->metaDataManager->updateMetaDataForAsset($asset, $metaDataCollection);
+
+        return $metaDataCollection;
     }
 }

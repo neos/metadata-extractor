@@ -23,19 +23,18 @@ class CoordinatesConverter
      * Converts coordinates in DMS (degrees, minutes, seconds) and the cardinal direction reference (E,W,N,S) into
      * DD (decimal degrees) notation.
      *
-     * @param array<float> $dmsArray Coordinates in DMS (degrees, minutes, seconds)
+     * @param float[] $dmsArray Coordinates in DMS (degrees, minutes, seconds)
      * @param string $cardinalDirectionReference cardinal direction reference (E,W,N,S)
-     *
      * @return float Coordinates in DD (decimal degrees)
      */
-    public static function convertDmsToDd($dmsArray, $cardinalDirectionReference)
+    public static function convertDmsToDd(array $dmsArray, string $cardinalDirectionReference) : float
     {
-        $degrees = isset($dmsArray[0]) ? $dmsArray[0] : 0.0;
-        $minutes = isset($dmsArray[1]) ? $dmsArray[1] : 0.0;
-        $seconds = isset($dmsArray[2]) ? $dmsArray[2] : 0.0;
+        $degrees = $dmsArray[0] ?? 0.0;
+        $minutes = $dmsArray[1] ?? 0.0;
+        $seconds = $dmsArray[2] ?? 0.0;
 
         $flip = ($cardinalDirectionReference === 'W' || $cardinalDirectionReference === 'S') ? -1 : 1;
 
-        return round($flip * ($degrees + $minutes / 60 + $seconds / 3600), 6);
+        return \round($flip * ($degrees + $minutes / 60 + $seconds / 3600), 6);
     }
 }

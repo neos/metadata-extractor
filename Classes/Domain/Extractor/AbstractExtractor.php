@@ -19,14 +19,14 @@ abstract class AbstractExtractor implements ExtractorInterface
     /**
      * The media types this adapter can handle
      *
-     * @var array
+     * @var string[]
      */
     protected static $compatibleMediaTypes = [];
 
     /**
      * @inheritDoc
      */
-    public static function isSuitableFor(PersistentResource $resource)
+    public static function isSuitableFor(PersistentResource $resource) : bool
     {
         $mediaType = $resource->getMediaType();
         foreach (static::$compatibleMediaTypes as $compatibleMediaType) {
