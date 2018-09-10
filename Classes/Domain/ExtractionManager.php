@@ -12,6 +12,7 @@ namespace Neos\MetaData\Extractor\Domain;
  */
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\ObjectManagement\Exception\UnknownObjectException;
 use Neos\Flow\ObjectManagement\ObjectManager;
 use Neos\Flow\Reflection\ReflectionService;
 use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
@@ -53,6 +54,7 @@ class ExtractionManager
      *
      * @return MetaDataCollection
      * @throws ExtractorException
+     * @throws UnknownObjectException
      */
     public function extractMetaData(Asset $asset)
     {
