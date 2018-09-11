@@ -30,8 +30,6 @@ class Package extends BasePackage
     public function boot(Bootstrap $bootstrap)
     {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
-        $dispatcher->connect(AssetService::class, 'assetRemoved', ExtractionManager::class, 'extractMetaData');
-        $dispatcher->connect(AssetService::class, 'assetResourceReplaced', ExtractionManager::class, 'extractMetaData');
         $package = $this;
         $dispatcher->connect(
             Sequence::class,
@@ -45,9 +43,10 @@ class Package extends BasePackage
     }
 
     /**
-     * Registers slots for signals in order to be able to index nodes
+     * Registers slots for signals in order to be able extract meta data from assets
      *
      * @param Bootstrap $bootstrap
+     * @throws \Neos\Flow\Exception
      */
     public function registerExtractionSlot(Bootstrap $bootstrap)
     {
@@ -57,6 +56,8 @@ class Package extends BasePackage
         if (isset($settings['realtimeExtraction']['enabled']) && $settings['realtimeExtraction']['enabled'] === true) {
             $dispatcher = $bootstrap->getSignalSlotDispatcher();
             $dispatcher->connect(AssetService::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
+            $dispatcher->connect(AssetService::class, 'assetUpdated', ExtractionManager::class, 'extractMetaData');
+            $dispatcher->connect(AssetService::class, 'assetRemoved', ExtractionManager::class, 'extractMetaData');
         }
     }
 }
