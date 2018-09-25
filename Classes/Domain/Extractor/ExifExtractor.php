@@ -60,6 +60,7 @@ class ExifExtractor extends AbstractExtractor
         'UndefinedTag:0xA433' => 'LensMake',
         'UndefinedTag:0xA434' => 'LensModel',
         'UndefinedTag:0xA435' => 'LensSerialNumber',
+        'UndefinedTag:0xA500' => 'Gamma',
     ];
 
     /**
@@ -178,8 +179,15 @@ class ExifExtractor extends AbstractExtractor
 
         foreach (static::$rationalArrayProperties as $rationalArrayProperty) {
             if (isset($exifData[$rationalArrayProperty])) {
-                foreach ($exifData[$rationalArrayProperty] as $key => $value) {
-                    $exifData[$rationalArrayProperty][$key] = NumberConverter::convertRationalToFloat($value);
+                // Although defined as an array, some implementations only use one rational
+                if (\is_array($exifData[$rationalArrayProperty])) {
+                    foreach ($exifData[$rationalArrayProperty] as $key => $value) {
+                        $exifData[$rationalArrayProperty][$key] = NumberConverter::convertRationalToFloat($value);
+                    }
+                } else {
+                    $exifData[$rationalArrayProperty] = NumberConverter::convertRationalToFloat(
+                        $exifData[$rationalArrayProperty]
+                    );
                 }
             }
         }
