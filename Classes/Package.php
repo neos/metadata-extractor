@@ -13,7 +13,6 @@ namespace Neos\MetaData\Extractor;
 
 use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Core\Bootstrap;
-use Neos\Flow\Exception;
 use Neos\Flow\Package\Package as BasePackage;
 use Neos\Flow\SignalSlot\Dispatcher as SignalSlotDispatcher;
 use Neos\Media\Domain\Service\AssetService;
@@ -42,7 +41,7 @@ class Package extends BasePackage
             }
         );
     }
-  
+
     /**
      * @param SignalSlotDispatcher $dispatcher
      *
