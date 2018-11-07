@@ -191,9 +191,9 @@ class ExifExtractor extends AbstractExtractor
                 }
             }
         }
-        
-        if (isset($exifData['PhotographicSensitivity']) && is_array($exifData['PhotographicSensitivity'])) {
-            $exifData['PhotographicSensitivity'] = (int)current($exifData['PhotographicSensitivity']);
+
+        if (isset($exifData['PhotographicSensitivity']) && \is_array($exifData['PhotographicSensitivity'])) {
+            $exifData['PhotographicSensitivity'] = (int)\current($exifData['PhotographicSensitivity']);
         }
 
         if (isset($exifData['GPSVersionID'])) {
