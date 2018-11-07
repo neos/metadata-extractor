@@ -17,8 +17,8 @@ use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
 use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
-use Neos\MetaData\Extractor\Converter\NumberConverter;
 use Neos\MetaData\Extractor\Converter\DateConverter;
+use Neos\MetaData\Extractor\Converter\NumberConverter;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\Extractor\Specifications\Exif;
 
@@ -29,20 +29,20 @@ use Neos\MetaData\Extractor\Specifications\Exif;
 class ExifExtractor extends AbstractExtractor
 {
     /**
-     * @var array
+     * @var string[]
      */
     protected static $compatibleMediaTypes = [
         'image/jpeg',
-        'video/jpeg',
         'image/tiff',
+        'video/jpeg',
     ];
 
     /**
-     * @var array
+     * @var string[]
      */
     protected static $deprecatedOrUnmappedProperties = [
-        'ISOSpeedRatings' => 'PhotographicSensitivity',
         'GPSVersion' => 'GPSVersionID',
+        'ISOSpeedRatings' => 'PhotographicSensitivity',
         'UndefinedTag:0x8830' => 'SensitivityType',
         'UndefinedTag:0x8832' => 'RecommendedExposureIndex',
         'UndefinedTag:0x9010' => 'OffsetTime',
@@ -63,7 +63,7 @@ class ExifExtractor extends AbstractExtractor
     ];
 
     /**
-     * @var array
+     * @var string[]
      */
     protected static $rationalProperties = [
         'Acceleration',
@@ -102,47 +102,47 @@ class ExifExtractor extends AbstractExtractor
     ];
 
     /**
-     * @var array
+     * @var string[]
      */
     protected static $rationalArrayProperties = [
+        'GPSDestLatitude',
+        'GPSDestLongitude',
+        'GPSLatitude',
+        'GPSLongitude',
         'GPSTimeStamp',
         'LensSpecification',
         'PrimaryChromaticities',
         'ReferenceBlackWhite',
         'WhitePoint',
         'YCbCrCoefficients',
-        'GPSLongitude',
-        'GPSLatitude',
-        'GPSDestLongitude',
-        'GPSDestLatitude',
     ];
 
     /**
-     * @var array
+     * @var string[]
      */
     protected static $gpsProperties = [
-        'GPSLongitude',
-        'GPSLatitude',
-        'GPSDestLongitude',
         'GPSDestLatitude',
+        'GPSDestLongitude',
+        'GPSLatitude',
+        'GPSLongitude',
     ];
 
     /**
-     * @var array
+     * @var string[]
      */
     protected static $subSecondProperties = [
         'SubSecTime' => 'DateTime',
-        'SubSecTimeOriginal' => 'DateTimeOriginal',
         'SubSecTimeDigitized' => 'DateTimeDigitized',
+        'SubSecTimeOriginal' => 'DateTimeOriginal',
     ];
 
     /**
-     * @var array
+     * @var string[]
      */
     protected static $timeOffsetProperties = [
         'OffsetTime' => 'DateTime',
-        'OffsetTimeOriginal' => 'DateTimeOriginal',
         'OffsetTimeDigitized' => 'DateTimeDigitized',
+        'OffsetTimeOriginal' => 'DateTimeOriginal',
     ];
 
     /**
@@ -151,9 +151,13 @@ class ExifExtractor extends AbstractExtractor
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {
         try {
-            $exifData = @exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
+            $exifData = @\exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
         } catch (FlowResourceException $exception) {
-            throw new ExtractorException('Could not extract EXIF data from ' . $resource->getFilename(), 1484059228, $exception);
+            throw new ExtractorException(
+                'Could not extract EXIF data from ' . $resource->getFilename(),
+                1484059228,
+                $exception
+            );
         }
         if ($exifData === false) {
             throw new ExtractorException('Could not extract EXIF data from ' . $resource->getFilename(), 1484056779);
@@ -179,6 +183,10 @@ class ExifExtractor extends AbstractExtractor
                 }
             }
         }
+        
+        if (isset($exifData['PhotographicSensitivity']) && is_array($exifData['PhotographicSensitivity'])) {
+            $exifData['PhotographicSensitivity'] = (int)current($exifData['PhotographicSensitivity']);
+        }
 
         if (isset($exifData['GPSVersionID'])) {
             $exifData['GPSVersionID'] = NumberConverter::convertBinaryToVersion($exifData['GPSVersionID']);
@@ -193,13 +201,19 @@ class ExifExtractor extends AbstractExtractor
 
         foreach (static::$gpsProperties as $gpsProperty) {
             if (isset($exifData[$gpsProperty])) {
-                $exifData[$gpsProperty] = CoordinatesConverter::convertDmsToDd($exifData[$gpsProperty], isset($exifData[$gpsProperty . 'Ref']) ? $exifData[$gpsProperty . 'Ref'] : null);
+                $exifData[$gpsProperty] = CoordinatesConverter::convertDmsToDd(
+                    $exifData[$gpsProperty],
+                    $exifData[$gpsProperty . 'Ref'] ?? null
+                );
                 unset($exifData[$gpsProperty . 'Ref']);
             }
         }
 
         if (isset($exifData['GPSTimeStamp'], $exifData['GPSDateStamp'])) {
-            $exifData['GPSDateTimeStamp'] = DateConverter::convertGpsDateAndTime($exifData['GPSDateStamp'], $exifData['GPSTimeStamp']);
+            $exifData['GPSDateTimeStamp'] = DateConverter::convertGpsDateAndTime(
+                $exifData['GPSDateStamp'],
+                $exifData['GPSTimeStamp']
+            );
             unset($exifData['GPSTimeStamp'], $exifData['GPSDateStamp']);
         }
 
@@ -209,39 +223,50 @@ class ExifExtractor extends AbstractExtractor
 
         foreach (static::$subSecondProperties as $subSecondProperty => $dateTimeProperty) {
             if (isset($exifData[$subSecondProperty], $exifData[$dateTimeProperty])) {
-                $exifData[$dateTimeProperty] = \DateTime::createFromFormat('Y-m-d H:i:s.u', $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.') . $exifData[$subSecondProperty]);
+                $exifData[$dateTimeProperty] = \DateTime::createFromFormat(
+                    'Y-m-d H:i:s.u',
+                    $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.') . $exifData[$subSecondProperty]
+                );
                 unset($exifData[$subSecondProperty]);
             }
         }
 
         foreach (static::$timeOffsetProperties as $timeOffsetProperty => $dateTimeProperty) {
             if (isset($exifData[$timeOffsetProperty], $exifData[$dateTimeProperty])) {
-                $exifData[$dateTimeProperty] = \DateTime::createFromFormat('Y-m-d H:i:s.uP', $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.u') . $exifData[$timeOffsetProperty]);
+                $exifData[$dateTimeProperty] = \DateTime::createFromFormat(
+                    'Y-m-d H:i:s.uP',
+                    $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.u') . $exifData[$timeOffsetProperty]
+                );
                 unset($exifData[$timeOffsetProperty]);
             }
         }
 
-        // wrongly encoded UserComment breaks saving of the whole data set, so check for correct encoding and remove if necessary
+        // wrongly encoded UserComment breaks saving of the whole data set,
+        // so check for correct encoding and remove if necessary
         if (isset($exifData['UserComment'])) {
-            $characterCode = substr($exifData['UserComment'], 0, 8);
-            $value = substr($exifData['UserComment'], 8);
+            $characterCode = \substr($exifData['UserComment'], 0, 8);
+            $value = \substr($exifData['UserComment'], 8);
             switch ($characterCode) {
-                case chr(0x41) . chr(0x53) . chr(0x43) . chr(0x49) . chr(0x49) . chr(0x0) . chr(0x0) . chr(0x0): // ASCII
+                case \chr(0x41) . \chr(0x53) . \chr(0x43) . \chr(0x49) . \chr(0x49)
+                    . \chr(0x0) . \chr(0x0) . \chr(0x0): // ASCII
                     $encoding = 'US-ASCII';
                     break;
-                case chr(0x4A) . chr(0x49) . chr(0x53) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0): // JIS
+                case \chr(0x4A) . \chr(0x49) . \chr(0x53) . \chr(0x0) . \chr(0x0)
+                    . \chr(0x0) . \chr(0x0) . \chr(0x0): // JIS
                     $encoding = 'EUC-JP';
                     break;
-                case chr(0x55) . chr(0x4E) . chr(0x49) . chr(0x43) . chr(0x4F) . chr(0x44) . chr(0x45) . chr(0x0): // Unicode
+                case \chr(0x55) . \chr(0x4E) . \chr(0x49) . \chr(0x43) . \chr(0x4F)
+                    . \chr(0x44) . \chr(0x45) . \chr(0x0): // Unicode
                     $encoding = 'UTF-8';
                     break;
+                case \chr(0x0) . \chr(0x0) . \chr(0x0) . \chr(0x0) . \chr(0x0)
+                    . \chr(0x0) . \chr(0x0) . \chr(0x0): // Undefined
                 default:
-                case chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0): // Undefined
                     // try it with ASCII anyway
                     $encoding = 'ASCII';
                     $value = $exifData['UserComment'];
             }
-            if (mb_check_encoding($value, $encoding)) {
+            if (\mb_check_encoding($value, $encoding)) {
                 $exifData['UserComment'] = $value;
             } else {
                 unset($exifData['UserComment']);

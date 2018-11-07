@@ -17,34 +17,30 @@ class DateConverter
      * Combines the EXIF GPSTimeStamp and GPSDateStamp into a DateTime object
      *
      * @param string $gpsDateStamp
-     * @param array $gpsTimeStamp
-     *
+     * @param string[] $gpsTimeStamp
      * @return \DateTime
      */
-    public static function convertGpsDateAndTime($gpsDateStamp, $gpsTimeStamp)
+    public static function convertGpsDateAndTime(string $gpsDateStamp, array $gpsTimeStamp) : \DateTime
     {
-        return \DateTime::createFromFormat('Y:m:d H:i:s', $gpsDateStamp . ' ' . (int)$gpsTimeStamp[0] . ':' . (int)$gpsTimeStamp[1] . ':' . (int)$gpsTimeStamp[2]);
+        return \DateTime::createFromFormat(
+            'Y:m:d H:i:s',
+            $gpsDateStamp . ' ' . (int)$gpsTimeStamp[0] . ':' . (int)$gpsTimeStamp[1] . ':' . (int)$gpsTimeStamp[2]
+        );
     }
 
     /**
      * Combines ISO 8601 like date and time string into a DateTime Object
      *
-     * @param $dateString
-     * @param $timeString
-     * @return bool|\DateTime
+     * @param string $dateString
+     * @param string|null $timeString
+     * @return \DateTime|bool
      */
-    public static function convertIso8601DateAndTimeString($dateString, $timeString)
+    public static function convertIso8601DateAndTimeString(string $dateString, string $timeString = null)
     {
-        if (empty($dateString)) {
-            return false;
-        }
-
         if (empty($timeString)) {
             $timeString = '000000+0000';
-        } else {
-            if(!strpos($timeString, '+')) {
-                $timeString .= '+0000';
-            }
+        } elseif (\strpos($timeString, '+') === false && \strpos($timeString, '-') === false) {
+            $timeString .= '+0000';
         }
 
         return \DateTime::createFromFormat('YmdHisO', $dateString . $timeString);

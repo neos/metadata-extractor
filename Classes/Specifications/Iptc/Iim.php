@@ -1,5 +1,4 @@
 <?php
-
 namespace Neos\MetaData\Extractor\Specifications\Iptc;
 
 /**
@@ -10,7 +9,7 @@ namespace Neos\MetaData\Extractor\Specifications\Iptc;
  */
 class Iim
 {
-// Envelope Record
+    // Envelope Record
     /**
      * Model Version
      *
@@ -261,7 +260,7 @@ class Iim
      */
     const ARM_VERSION = '1#122';
 
-// Application Record
+    // Application Record
     /**
      * Record Version
      *
@@ -779,7 +778,8 @@ class Iim
      *
      * Repeatable, maximum 32 octets, consisting of graphic characters plus spaces.
      *
-     * A by-line title is the title of the creator or creators of an objectdata. Where used, a by-line title should follow the by-line it modifies.
+     * A by-line title is the title of the creator or creators of an objectdata. Where used, a by-line title should
+     * follow the by-line it modifies.
      *
      * Examples: "Staff Photographer", "Corresponsal", "Envoyé Spécial"
      */
@@ -801,7 +801,8 @@ class Iim
      *
      * Not repeatable, maximum 32 octets, consisting of graphic characters plus spaces.
      *
-     * Identifies the location within a city from which the objectdata originates, according to guidelines established by the provider.
+     * Identifies the location within a city from which the objectdata originates, according to guidelines established
+     * by the provider.
      *
      * Examples: "Capitol Hill", "Maple Leaf Gardens", "Strandgateparken"
      */
@@ -951,8 +952,8 @@ class Iim
      *
      * ##Possible values##
      * ###Octet 1###
-     * `0` = No objectdata. If this option is chosen, DataSet 8:10 of the objectdata Record will be present (mandatory), but will be empty,
-     * i.e. a count of zero octets.
+     * `0` = No objectdata. If this option is chosen, DataSet 8:10 of the objectdata Record will be present
+     * (mandatory), but will be empty, i.e. a count of zero octets.
      *
      * `1` = Single component, e.g. black and white or one component of a colour project.
      *
@@ -962,7 +963,8 @@ class Iim
      *
      * Other values are reserved for future use.
      *
-     * The alphabetic character will indicate the exact content of the current objectdata in terms of colour composition.
+     * The alphabetic character will indicate the exact content of the current objectdata in terms of colour
+     * composition.
      * ###Octet 2###
      * `W` = Monochrome.
      *
@@ -1149,7 +1151,7 @@ class Iim
      */
     const OBJECTDATA_PREVIEW_DATA = '2#202';
 
-// Pre-ObjectData Descriptor Record
+    // Pre-ObjectData Descriptor Record
     /**
      * Size Mode
      *
@@ -1193,17 +1195,18 @@ class Iim
      */
     const MAXIMUM_OBJECTDATA_SIZE = '7#095';
 
-// ObjectData Record
+    // ObjectData Record
     /**
      * Subfile
      *
      * Mandatory, repeatable.
      *
-     * Subfile DataSet containing the objectdata itself. Subfiles must be sequential so that the subfiles may be reassembled.
+     * Subfile DataSet containing the objectdata itself. Subfiles must be sequential so that the subfiles may be
+     * reassembled.
      */
     const SUBFILE = '8#010';
 
-// Post-ObjectData Descriptor Record
+    // Post-ObjectData Descriptor Record
     /**
      * Confirmed ObjectData Size
      *
@@ -1217,7 +1220,7 @@ class Iim
     const CONFIRMED_OBJECTDATA_SIZE = '9#010';
 
     /**
-     * @var array Properties allowed to repeat themselves
+     * @var string[] Properties allowed to repeat themselves
      */
     public static $repeatable = [
         self::DESTINATION,
@@ -1239,34 +1242,36 @@ class Iim
     ];
 
     /**
-     * @var array
+     * @var mixed[]
      */
     protected $properties;
 
     /**
      * IptcIim constructor.
      *
-     * @param array $properties
+     * @param mixed[] $properties
      */
     public function __construct(array $properties)
     {
         // sometimes data is encoded in UTF-8 but not marked as such and therefore has to be converted
-        if (!array_key_exists(self::CODED_CHARACTER_SET, $properties)) {
-            array_walk_recursive($properties, function (&$element) {
-                if (is_string($element) && mb_detect_encoding($element, 'UTF-8', true) === false) {
-                    $element = mb_convert_encoding($element, 'UTF-8', 'ISO-8859-1');
+        if (!\array_key_exists(self::CODED_CHARACTER_SET, $properties)) {
+            \array_walk_recursive(
+                $properties,
+                function (&$element) {
+                    if (\is_string($element) && \mb_detect_encoding($element, 'UTF-8', true) === false) {
+                        $element = \mb_convert_encoding($element, 'UTF-8', 'ISO-8859-1');
+                    }
                 }
-            });
+            );
         }
         $this->properties = $properties;
     }
 
     /**
      * @param string $category
-     *
      * @return bool|string
      */
-    public static function convertCategoryToSubjectCode($category)
+    public static function convertCategoryToSubjectCode(string $category)
     {
         $mapping = [
             'ACE' => '01000000',
@@ -1288,20 +1293,22 @@ class Iim
             'WEA' => '17000000',
         ];
 
-        return array_key_exists($category, $mapping) ? $mapping[$category] : false;
+        return \array_key_exists($category, $mapping) ? $mapping[$category] : false;
     }
 
     /**
      * @param string $property
-     *
-     * @return array|string
+     * @return string|string[]
      */
-    public function getProperty($property)
+    public function getProperty(string $property)
     {
-        if (array_key_exists($property, $this->properties)) {
-            return in_array($property, self::$repeatable, false) ? $this->properties[$property] : $this->properties[$property][0];
-        } else {
-            return in_array($property, self::$repeatable, false) ? [] : '';
+        if (\array_key_exists($property, $this->properties)) {
+            return \in_array($property, self::$repeatable, false)
+                ? $this->properties[$property]
+                : $this->properties[$property][0]
+            ;
         }
+
+        return \in_array($property, self::$repeatable, false) ? [] : '';
     }
 }

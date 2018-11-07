@@ -1,9 +1,21 @@
 {
   "name": "neos/metadata-extractor",
   "description": "Extracts meta data from files into a neos/metadata data structure",
+  "keywords": [
+    "exif",
+    "extractor",
+    "flow",
+    "iptc",
+    "iptc iim",
+    "iptciim",
+    "meta data",
+    "metadata",
+    "neos"
+  ],
   "type": "neos-package",
   "license": "MIT",
   "require": {
+    "php": "^7.0",
     "ext-exif": "*",
     "ext-mbstring": "*",
 

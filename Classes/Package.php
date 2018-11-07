@@ -13,6 +13,7 @@ namespace Neos\MetaData\Extractor;
 
 use Neos\Flow\Configuration\ConfigurationManager;
 use Neos\Flow\Core\Bootstrap;
+use Neos\Flow\Exception;
 use Neos\Flow\Package\Package as BasePackage;
 use Neos\Flow\SignalSlot\Dispatcher as SignalSlotDispatcher;
 use Neos\Media\Domain\Service\AssetService;
@@ -24,18 +25,6 @@ use Neos\MetaData\Extractor\Domain\ExtractionManager;
 class Package extends BasePackage
 {
     /**
-     * @param SignalSlotDispatcher $dispatcher
-     *
-     * @return void
-     */
-    protected static function connectMetaDataExtraction(SignalSlotDispatcher $dispatcher)
-    {
-        $dispatcher->connect(AssetService::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
-        $dispatcher->connect(AssetService::class, 'assetUpdated', ExtractionManager::class, 'extractMetaData');
-        $dispatcher->connect(AssetService::class, 'assetRemoved', ExtractionManager::class, 'extractMetaData');
-    }
-
-    /**
      * @inheritDoc
      */
     public function boot(Bootstrap $bootstrap)
@@ -46,14 +35,23 @@ class Package extends BasePackage
             ConfigurationManager::class,
             'configurationManagerReady',
             function (ConfigurationManager $configurationManager) use ($packageKey, $dispatcher) {
-                $extractionEnabled = $configurationManager->getConfiguration(
-                    ConfigurationManager::CONFIGURATION_TYPE_SETTINGS,
-                    $packageKey . '.realtimeExtraction.enabled'
-                );
+                $extractionEnabled = $configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, $packageKey . '.realtimeExtraction.enabled');
                 if ($extractionEnabled === true) {
                     static::connectMetaDataExtraction($dispatcher);
                 }
             }
         );
+    }
+  
+    /**
+     * @param SignalSlotDispatcher $dispatcher
+     *
+     * @return void
+     */
+    protected static function connectMetaDataExtraction(SignalSlotDispatcher $dispatcher): void
+    {
+        $dispatcher->connect(AssetService::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
+        $dispatcher->connect(AssetService::class, 'assetUpdated', ExtractionManager::class, 'extractMetaData');
+        $dispatcher->connect(AssetService::class, 'assetRemoved', ExtractionManager::class, 'extractMetaData');
     }
 }
