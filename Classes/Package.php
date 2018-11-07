@@ -12,11 +12,9 @@ namespace Neos\MetaData\Extractor;
  */
 
 use Neos\Flow\Configuration\ConfigurationManager;
-use Neos\Flow\Core\Booting\Sequence;
-use Neos\Flow\Core\Booting\Step;
 use Neos\Flow\Core\Bootstrap;
-use Neos\Flow\Exception;
 use Neos\Flow\Package\Package as BasePackage;
+use Neos\Flow\SignalSlot\Dispatcher as SignalSlotDispatcher;
 use Neos\Media\Domain\Service\AssetService;
 use Neos\MetaData\Extractor\Domain\ExtractionManager;
 
@@ -31,38 +29,28 @@ class Package extends BasePackage
     public function boot(Bootstrap $bootstrap)
     {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
-        $package = $this;
+        $packageKey = $this->getPackageKey();
         $dispatcher->connect(
-            Sequence::class,
-            'afterInvokeStep',
-            function (Step $step) use ($package, $bootstrap) {
-                if ($step->getIdentifier() === 'neos.flow:reflectionservice') {
-                    $package->registerExtractionSlot($bootstrap);
+            ConfigurationManager::class,
+            'configurationManagerReady',
+            function (ConfigurationManager $configurationManager) use ($packageKey, $dispatcher) {
+                $extractionEnabled = $configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, $packageKey . '.realtimeExtraction.enabled');
+                if ($extractionEnabled === true) {
+                    static::connectMetaDataExtraction($dispatcher);
                 }
             }
         );
     }
 
     /**
-     * Registers slots for signals in order to be able extract meta data from assets
+     * @param SignalSlotDispatcher $dispatcher
      *
-     * @param Bootstrap $bootstrap
      * @return void
-     * @throws Exception
      */
-    public function registerExtractionSlot(Bootstrap $bootstrap)
+    protected static function connectMetaDataExtraction(SignalSlotDispatcher $dispatcher)
     {
-        $configurationManager = $bootstrap->getObjectManager()->get(ConfigurationManager::class);
-        $settings = $configurationManager->getConfiguration(
-            ConfigurationManager::CONFIGURATION_TYPE_SETTINGS,
-            $this->getPackageKey()
-        );
-
-        if ($settings['realtimeExtraction']['enabled'] === true) {
-            $dispatcher = $bootstrap->getSignalSlotDispatcher();
-            $dispatcher->connect(AssetService::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
-            $dispatcher->connect(AssetService::class, 'assetUpdated', ExtractionManager::class, 'extractMetaData');
-            $dispatcher->connect(AssetService::class, 'assetRemoved', ExtractionManager::class, 'extractMetaData');
-        }
+        $dispatcher->connect(AssetService::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
+        $dispatcher->connect(AssetService::class, 'assetUpdated', ExtractionManager::class, 'extractMetaData');
+        $dispatcher->connect(AssetService::class, 'assetRemoved', ExtractionManager::class, 'extractMetaData');
     }
 }
