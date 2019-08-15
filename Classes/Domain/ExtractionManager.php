@@ -70,6 +70,7 @@ class ExtractionManager
 
         $assetDto = new Dto\Asset([
             'Caption' => $asset->getCaption(),
+            'CopyrightNotice' => $asset->getCopyrightNotice(),
             'Identifier' => $asset->getIdentifier(),
             'Title' => $asset->getTitle(),
             'FileName' => $asset->getResource()->getFilename(),
