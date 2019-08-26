@@ -140,4 +140,31 @@ class ExtractionManager
 
         return $metaDataCollection;
     }
+
+    /**
+     * @param Asset $asset
+     * @return MetaDataCollection
+     * @throws ExtractorException
+     * @throws UnknownObjectException
+     */
+    public function onAssetRemoved(Asset $asset) : MetaDataCollection
+    {
+        if ($asset instanceof ImageVariant) {
+            $asset = $asset->getOriginalAsset();
+        }
+
+        $flowResource = $asset->getResource();
+        if ($flowResource === null) {
+            throw new ExtractorException('Resource of Asset "' . $asset->getTitle() . '"" not found.', 1484060541);
+        }
+
+        $metaDataCollection = new MetaDataCollection();
+        $this->buildAssetMetaData($asset, $metaDataCollection);
+
+        // Because the signal assetRemoved was emitted the deleted flag for $flowResource is true
+        // thus the signal metaDataCollectionUpdated finally deletes the metadata for the asset
+        $this->metaDataManager->emitMetaDataCollectionUpdated($asset, $metaDataCollection);
+
+        return $metaDataCollection;
+    }
 }
