@@ -24,7 +24,7 @@ class DateConverter
     {
         return \DateTime::createFromFormat(
             'Y:m:d H:i:s',
-            $gpsDateStamp . ' ' . (int)$gpsTimeStamp[0] . ':' . (int)$gpsTimeStamp[1] . ':' . (int)$gpsTimeStamp[2]
+            $gpsDateStamp . ' ' . sprintf('%02d:%02d:%02d', (int)$gpsTimeStamp[0], (int)$gpsTimeStamp[1], (int)$gpsTimeStamp[2])
         );
     }
 
