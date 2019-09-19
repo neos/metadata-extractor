@@ -163,7 +163,7 @@ class ExifExtractor extends AbstractExtractor
 
         $exifData = @\exif_read_data($temporaryLocalCopyPath, 'EXIF');
 
-        unlink($temporaryLocalCopyPath);
+        \unlink($temporaryLocalCopyPath);
 
         if ($exifData === false) {
             throw new ExtractorException('Could not extract EXIF data from ' . $resource->getFilename(), 1484056779);

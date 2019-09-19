@@ -103,7 +103,7 @@ class IptcIimExtractor extends AbstractExtractor
 
         \getimagesize($temporaryLocalCopyPath, $fileInfo);
 
-        unlink($temporaryLocalCopyPath);
+        \unlink($temporaryLocalCopyPath);
 
         if (!isset($fileInfo['APP13'])) {
             throw new ExtractorException(
