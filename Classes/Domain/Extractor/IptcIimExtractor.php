@@ -91,18 +91,19 @@ class IptcIimExtractor extends AbstractExtractor
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {
-        $temporaryLocalCopyPath = $resource->createTemporaryLocalCopy();
         try {
-            \getimagesize($temporaryLocalCopyPath, $fileInfo);
+            $temporaryLocalCopyPath = $resource->createTemporaryLocalCopy();
         } catch (FlowResourceException $exception) {
             throw new ExtractorException(
                 'Could not extract IPTC data from ' . $resource->getFilename(),
                 1484059892,
                 $exception
             );
-        } finally {
-            unlink($temporaryLocalCopyPath);
         }
+
+        \getimagesize($temporaryLocalCopyPath, $fileInfo);
+
+        unlink($temporaryLocalCopyPath);
 
         if (!isset($fileInfo['APP13'])) {
             throw new ExtractorException(

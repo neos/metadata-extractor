@@ -151,18 +151,19 @@ class ExifExtractor extends AbstractExtractor
      */
     public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
     {
-        $temporaryLocalCopyPath = $resource->createTemporaryLocalCopy();
         try {
-            $exifData = @\exif_read_data($temporaryLocalCopyPath, 'EXIF');
+            $temporaryLocalCopyPath = $resource->createTemporaryLocalCopy();
         } catch (FlowResourceException $exception) {
             throw new ExtractorException(
                 'Could not extract EXIF data from ' . $resource->getFilename(),
                 1484059228,
                 $exception
             );
-        } finally {
-            unlink($temporaryLocalCopyPath);
         }
+
+        $exifData = @\exif_read_data($temporaryLocalCopyPath, 'EXIF');
+
+        unlink($temporaryLocalCopyPath);
 
         if ($exifData === false) {
             throw new ExtractorException('Could not extract EXIF data from ' . $resource->getFilename(), 1484056779);
