@@ -68,16 +68,19 @@ class ExtractionManager
             $collections[] = $collectionObject->getTitle();
         }
 
-        $assetDto = new Dto\Asset([
+        $properties = [
             'Caption' => $asset->getCaption(),
-            'CopyrightNotice' => $asset->getCopyrightNotice(),
             'Identifier' => $asset->getIdentifier(),
             'Title' => $asset->getTitle(),
             'FileName' => $asset->getResource()->getFilename(),
             'Collections' => $collections,
             'Tags' => $tags,
             'AssetObject' => $asset,
-        ]);
+        ];
+        if (method_exists($asset, 'getCopyrightNotice')) {
+            $properties['CopyrightNotice'] = $asset->getCopyrightNotice();
+        }
+        $assetDto = new Dto\Asset($properties);
         $metaDataCollection->set('asset', $assetDto);
     }
 

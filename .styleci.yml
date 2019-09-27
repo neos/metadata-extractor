@@ -22,7 +22,6 @@ enabled:
   - modernize_types_casting
   - multiline_comment_opening_closing
   - native_function_casing
-  - native_function_invocation
   - newline_before_semicolons_chained
   - no_alias_functions
   - no_alternative_syntax
