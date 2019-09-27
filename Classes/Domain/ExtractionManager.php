@@ -78,7 +78,7 @@ class ExtractionManager
             'AssetObject' => $asset,
         ];
         if (method_exists($asset, 'getCopyrightNotice')) {
-            $properties['CopyrightNotice'] =  $asset->getCopyrightNotice();
+            $properties['CopyrightNotice'] = $asset->getCopyrightNotice();
         }
         $assetDto = new Dto\Asset($properties);
         $metaDataCollection->set('asset', $assetDto);
