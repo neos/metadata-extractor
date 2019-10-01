@@ -161,10 +161,6 @@ class ExtractionManager
         $metaDataCollection = new MetaDataCollection();
         $this->buildAssetMetaData($asset, $metaDataCollection);
 
-        // Because the signal assetRemoved was emitted the deleted flag for $flowResource is true
-        // thus the signal metaDataCollectionUpdated finally deletes the metadata for the asset
-        $this->metaDataManager->emitMetaDataCollectionUpdated($asset, $metaDataCollection);
-
-        return $metaDataCollection;
+        $this->metaDataManager->updateMetaDataForAsset($asset, $metaDataCollection);
     }
 }
