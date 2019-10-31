@@ -15,14 +15,14 @@
   "type": "neos-package",
   "license": "MIT",
   "require": {
-    "php": "^7.0",
+    "php": "^7.1",
     "ext-exif": "*",
     "ext-mbstring": "*",
 
-    "neos/flow": "^4.0 || ^5.0 || dev-master",
-    "neos/media": "^3.0 || ^4.0 || dev-master",
+    "neos/flow": "^4.0 || ^5.0 || ^6.0 || dev-master",
+    "neos/media": "^3.0 || ^4.0 || ^5.0 || dev-master",
     "neos/metadata": "^2.0 || dev-master",
-    "neos/utility-mediatypes": "^4.0 || ^5.0 || dev-master"
+    "neos/utility-mediatypes": "^4.0 || ^5.0 || ^6.0 || dev-master"
   },
   "autoload": {
     "psr-4": {
