@@ -29,6 +29,8 @@ class Package extends BasePackage
     public function boot(Bootstrap $bootstrap)
     {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
+        $dispatcher->connect(AssetService::class, 'assetRemoved', ExtractionManager::class, 'onAssetRemoved');
+
         $packageKey = $this->getPackageKey();
         $dispatcher->connect(
             ConfigurationManager::class,
@@ -51,6 +53,5 @@ class Package extends BasePackage
     {
         $dispatcher->connect(AssetService::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
         $dispatcher->connect(AssetService::class, 'assetUpdated', ExtractionManager::class, 'extractMetaData');
-        $dispatcher->connect(AssetService::class, 'assetRemoved', ExtractionManager::class, 'extractMetaData');
     }
 }
