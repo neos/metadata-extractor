@@ -230,7 +230,10 @@ class ExifExtractor extends AbstractExtractor
         }
 
         foreach (static::$subSecondProperties as $subSecondProperty => $dateTimeProperty) {
-            if (isset($exifData[$subSecondProperty], $exifData[$dateTimeProperty])) {
+            if (
+                isset($exifData[$subSecondProperty], $exifData[$dateTimeProperty]) &&
+                $exifData[$dateTimeProperty] instanceof \DateTimeInterface
+            ) {
                 $exifData[$dateTimeProperty] = \DateTime::createFromFormat(
                     'Y-m-d H:i:s.u',
                     $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.') . $exifData[$subSecondProperty]
@@ -240,7 +243,10 @@ class ExifExtractor extends AbstractExtractor
         }
 
         foreach (static::$timeOffsetProperties as $timeOffsetProperty => $dateTimeProperty) {
-            if (isset($exifData[$timeOffsetProperty], $exifData[$dateTimeProperty])) {
+            if (
+                isset($exifData[$timeOffsetProperty], $exifData[$dateTimeProperty]) &&
+                $exifData[$dateTimeProperty] instanceof \DateTimeInterface
+            ) {
                 $exifData[$dateTimeProperty] = \DateTime::createFromFormat(
                     'Y-m-d H:i:s.uP',
                     $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.u') . $exifData[$timeOffsetProperty]
@@ -256,19 +262,19 @@ class ExifExtractor extends AbstractExtractor
             $value = \substr($exifData['UserComment'], 8);
             switch ($characterCode) {
                 case \chr(0x41) . \chr(0x53) . \chr(0x43) . \chr(0x49) . \chr(0x49)
-                    . \chr(0x0) . \chr(0x0) . \chr(0x0): // ASCII
+                . \chr(0x0) . \chr(0x0) . \chr(0x0): // ASCII
                     $encoding = 'US-ASCII';
                     break;
                 case \chr(0x4A) . \chr(0x49) . \chr(0x53) . \chr(0x0) . \chr(0x0)
-                    . \chr(0x0) . \chr(0x0) . \chr(0x0): // JIS
+                . \chr(0x0) . \chr(0x0) . \chr(0x0): // JIS
                     $encoding = 'EUC-JP';
                     break;
                 case \chr(0x55) . \chr(0x4E) . \chr(0x49) . \chr(0x43) . \chr(0x4F)
-                    . \chr(0x44) . \chr(0x45) . \chr(0x0): // Unicode
+                . \chr(0x44) . \chr(0x45) . \chr(0x0): // Unicode
                     $encoding = 'UTF-8';
                     break;
                 case \chr(0x0) . \chr(0x0) . \chr(0x0) . \chr(0x0) . \chr(0x0)
-                    . \chr(0x0) . \chr(0x0) . \chr(0x0): // Undefined
+                . \chr(0x0) . \chr(0x0) . \chr(0x0): // Undefined
                 default:
                     // try it with ASCII anyway
                     $encoding = 'ASCII';
