@@ -230,7 +230,10 @@ class ExifExtractor extends AbstractExtractor
         }
 
         foreach (static::$subSecondProperties as $subSecondProperty => $dateTimeProperty) {
-            if (isset($exifData[$subSecondProperty], $exifData[$dateTimeProperty])) {
+            if (
+                isset($exifData[$subSecondProperty], $exifData[$dateTimeProperty]) &&
+                $exifData[$dateTimeProperty] instanceof \DateTimeInterface
+            ) {
                 $exifData[$dateTimeProperty] = \DateTime::createFromFormat(
                     'Y-m-d H:i:s.u',
                     $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.') . $exifData[$subSecondProperty]
@@ -240,7 +243,10 @@ class ExifExtractor extends AbstractExtractor
         }
 
         foreach (static::$timeOffsetProperties as $timeOffsetProperty => $dateTimeProperty) {
-            if (isset($exifData[$timeOffsetProperty], $exifData[$dateTimeProperty])) {
+            if (
+                isset($exifData[$timeOffsetProperty], $exifData[$dateTimeProperty]) &&
+                $exifData[$dateTimeProperty] instanceof \DateTimeInterface
+            ) {
                 $exifData[$dateTimeProperty] = \DateTime::createFromFormat(
                     'Y-m-d H:i:s.uP',
                     $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.u') . $exifData[$timeOffsetProperty]
