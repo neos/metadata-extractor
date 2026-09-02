@@ -1,5 +1,215 @@
 Neos:
   MetaData:
+    metaDataProperties:
+      # Properties filled by the Neos.MetaData.Extractor package from the EXIF / IPTC data of an asset.
+      # Values are stored as strings; array-valued tags are stored as their JSON representation, dates as
+      # an ISO date string ('Y-m-d H:i:s').
+      'exif.ApertureValue':
+        type: string
+      'exif.Artist':
+        type: string
+      'exif.BodySerialNumber':
+        type: string
+      'exif.CameraOwnerName':
+        type: string
+      'exif.ColorSpace':
+        type: string
+      'exif.ComponentsConfiguration':
+        type: string
+      'exif.Compression':
+        type: string
+      'exif.Copyright':
+        type: string
+      'exif.CustomRendered':
+        type: string
+      'exif.DateTime':
+        type: string
+      'exif.DateTimeDigitized':
+        type: string
+      'exif.DateTimeOriginal':
+        type: string
+      'exif.DigitalZoomRatio':
+        type: string
+      'exif.ExifVersion':
+        type: string
+      'exif.ExposureBiasValue':
+        type: string
+      'exif.ExposureIndex':
+        type: string
+      'exif.ExposureMode':
+        type: string
+      'exif.ExposureProgram':
+        type: string
+      'exif.ExposureTime':
+        type: string
+      'exif.FNumber':
+        type: string
+      'exif.Flash':
+        type: string
+      'exif.FlashpixVersion':
+        type: string
+      'exif.FocalLength':
+        type: string
+      'exif.FocalLengthIn35mmFilm':
+        type: string
+      'exif.FocalPlaneResolutionUnit':
+        type: string
+      'exif.FocalPlaneXResolution':
+        type: string
+      'exif.FocalPlaneYResolution':
+        type: string
+      'exif.GainControl':
+        type: string
+      'exif.Gamma':
+        type: string
+      'exif.GPSAltitude':
+        type: string
+      'exif.GPSDestBearing':
+        type: string
+      'exif.GPSDestDistance':
+        type: string
+      'exif.GPSDestLatitude':
+        type: string
+      'exif.GPSDestLongitude':
+        type: string
+      'exif.GPSDOP':
+        type: string
+      'exif.GPSHPositioningError':
+        type: string
+      'exif.GPSImgDirection':
+        type: string
+      'exif.GPSLatitude':
+        type: string
+      'exif.GPSLongitude':
+        type: string
+      'exif.GPSSpeed':
+        type: string
+      'exif.GPSTrack':
+        type: string
+      'exif.GPSVersionID':
+        type: string
+      'exif.Humidity':
+        type: string
+      'exif.ImageDescription':
+        type: string
+      'exif.ImageUniqueID':
+        type: string
+      'exif.LensMake':
+        type: string
+      'exif.LensModel':
+        type: string
+      'exif.LensSerialNumber':
+        type: string
+      'exif.LensSpecification':
+        type: string
+      'exif.LightSource':
+        type: string
+      'exif.Make':
+        type: string
+      'exif.MaxApertureValue':
+        type: string
+      'exif.MeteringMode':
+        type: string
+      'exif.Model':
+        type: string
+      'exif.OffsetTime':
+        type: string
+      'exif.OffsetTimeDigitized':
+        type: string
+      'exif.OffsetTimeOriginal':
+        type: string
+      'exif.Orientation':
+        type: string
+      'exif.PhotometricInterpretation':
+        type: string
+      'exif.PhotographicSensitivity':
+        type: string
+      'exif.PixelXDimension':
+        type: string
+      'exif.PixelYDimension':
+        type: string
+      'exif.Pressure':
+        type: string
+      'exif.RecommendedExposureIndex':
+        type: string
+      'exif.ResolutionUnit':
+        type: string
+      'exif.SceneCaptureType':
+        type: string
+      'exif.SensingMethod':
+        type: string
+      'exif.SensitivityType':
+        type: string
+      'exif.ShutterSpeedValue':
+        type: string
+      'exif.Software':
+        type: string
+      'exif.StandardOutputSensitivity':
+        type: string
+      'exif.SubjectDistance':
+        type: string
+      'exif.Temperature':
+        type: string
+      'exif.UserComment':
+        type: string
+      'exif.WaterDepth':
+        type: string
+      'exif.WhiteBalance':
+        type: string
+      'exif.XResolution':
+        type: string
+      'exif.YResolution':
+        type: string
+      'exif.Acceleration':
+        type: string
+      'exif.CameraElevationAngle':
+        type: string
+      'iptc.City':
+        type: string
+      'iptc.Contact':
+        type: string
+      'iptc.CopyrightNotice':
+        type: string
+      'iptc.Country':
+        type: string
+      'iptc.CountryCode':
+        type: string
+      'iptc.CreationDate':
+        type: string
+      'iptc.Creator':
+        type: string
+      'iptc.CreatorTitle':
+        type: string
+      'iptc.CreditLine':
+        type: string
+      'iptc.DeprecatedCategories':
+        type: string
+      'iptc.Description':
+        type: string
+      'iptc.DescriptionWriter':
+        type: string
+      'iptc.DigitalCreationDate':
+        type: string
+      'iptc.Headline':
+        type: string
+      'iptc.Instructions':
+        type: string
+      'iptc.IntellectualGenres':
+        type: string
+      'iptc.JobId':
+        type: string
+      'iptc.Keywords':
+        type: string
+      'iptc.Source':
+        type: string
+      'iptc.State':
+        type: string
+      'iptc.SubjectCodes':
+        type: string
+      'iptc.Sublocation':
+        type: string
+      'iptc.Title':
+        type: string
     Extractor:
       realtimeExtraction:
         enabled: true
