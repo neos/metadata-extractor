@@ -35,7 +35,7 @@ class DateConverter
      * @param string|null $timeString
      * @return \DateTime|bool
      */
-    public static function convertIso8601DateAndTimeString(string $dateString, string $timeString = null)
+    public static function convertIso8601DateAndTimeString(string $dateString, ?string $timeString = null)
     {
         if (empty($timeString)) {
             $timeString = '000000+0000';

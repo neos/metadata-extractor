@@ -37,7 +37,7 @@ abstract class AbstractExtractorTest extends AbstractTest
     /**
      * @inheritDoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

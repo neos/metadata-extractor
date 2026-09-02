@@ -1,0 +1,9 @@
+parameters:
+    level: 3
+    phpVersion: 80400
+    paths:
+        - Classes
+        - Tests
+    scanDirectories:
+        - Packages/Framework/Neos.Flow/Tests
+        - Packages/Application/Neos.Media/Tests
