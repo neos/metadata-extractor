@@ -34,11 +34,9 @@ class IptcIimExtractorTest extends AbstractExtractorTestCase
     /**
      * @test
      */
-    public function extractMetaData()
+    public function extractMetaData(): void
     {
-        $extractedData = [];
-
-        $this->iptcIimExtractor->extractMetaData($this->testAsset->getResource(), $extractedData);
+        $extractedData = $this->iptcIimExtractor->extractMetaData($this->testAsset->getResource());
 
         $expectedIptcData = [
             'iptc.City' => 'Otara',

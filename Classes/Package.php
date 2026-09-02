@@ -42,12 +42,7 @@ class Package extends BasePackage
         );
     }
 
-    /**
-     * @param SignalSlotDispatcher $dispatcher
-     *
-     * @return void
-     */
-    protected static function connectMetaDataExtraction(SignalSlotDispatcher $dispatcher)
+    protected static function connectMetaDataExtraction(SignalSlotDispatcher $dispatcher): void
     {
         $dispatcher->connect(AssetService::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
         $dispatcher->connect(AssetService::class, 'assetUpdated', ExtractionManager::class, 'extractMetaData');

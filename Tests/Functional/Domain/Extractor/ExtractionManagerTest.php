@@ -29,13 +29,15 @@ class ExtractionManagerTest extends AbstractExtractorTestCase
     {
         parent::setUp();
 
-        $this->extractionManager = $this->objectManager->get(ExtractionManager::class);
+        /** @var ExtractionManager $extractionManager */
+        $extractionManager = $this->objectManager->get(ExtractionManager::class);
+        $this->extractionManager = $extractionManager;
     }
 
     /**
      * @test
      */
-    public function instanceCreated()
+    public function instanceCreated(): void
     {
         $this->assertInstanceOf(ExtractionManager::class, $this->extractionManager);
     }
@@ -43,12 +45,12 @@ class ExtractionManagerTest extends AbstractExtractorTestCase
     /**
      * @test
      */
-    public function extractMetaData()
+    public function extractMetaData(): void
     {
         $extractedData = $this->extractionManager->extractMetaData($this->testAsset);
 
-        $this->assertSame('Canon EOS 5D Mark II', $extractedData['exif.Model']);
-        $this->assertSame('Otara', $extractedData['iptc.City']);
+        $this->assertSame('Canon EOS 5D Mark II', $extractedData->get('exif.Model'));
+        $this->assertSame('Otara', $extractedData->get('iptc.City'));
 
         // the values of the defined properties are persisted and can be read back via the MetaDataManager
         $this->assertSame('Canon EOS 5D Mark II', $this->getStoredMetaDataPropertyValue('exif.Model'));
@@ -60,8 +62,8 @@ class ExtractionManagerTest extends AbstractExtractorTestCase
         );
 
         // only properties that are defined in the meta data configuration are persisted
-        $this->assertArrayHasKey('exif.MimeType', $extractedData);
-        $this->assertSame('image/jpeg', $extractedData['exif.MimeType']);
+        $this->assertTrue($extractedData->has('exif.MimeType'));
+        $this->assertSame('image/jpeg', $extractedData->get('exif.MimeType'));
         $this->assertFalse(
             $this->metaDataManager->getPropertyDefinitions()->include(MetaDataPropertyName::fromString('exif.MimeType'))
         );

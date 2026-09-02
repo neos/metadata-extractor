@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace Neos\MetaData\Extractor\Domain\Extractor;
 
 /*
@@ -21,11 +23,8 @@ abstract class AbstractExtractor implements ExtractorInterface
      *
      * @var string[]
      */
-    protected static $compatibleMediaTypes = [];
+    protected static array $compatibleMediaTypes = [];
 
-    /**
-     * @inheritDoc
-     */
     public static function isSuitableFor(PersistentResource $resource) : bool
     {
         $mediaType = $resource->getMediaType();
@@ -43,11 +42,10 @@ abstract class AbstractExtractor implements ExtractorInterface
      *
      * Dates are normalized to an ISO date string, arrays to their JSON representation. Floats are kept
      * as strings so that their representation (e.g. "240" instead of "240.0") stays stable.
-     *
-     * @param mixed $value
-     * @return string|int|bool
+     * @throws \JsonException
+     * @throws \InvalidArgumentException
      */
-    protected static function convertValueForMetadata($value)
+    protected static function convertValueForMetadata(mixed $value): string|int|bool
     {
         if ($value instanceof \DateTimeInterface) {
             return $value->format('Y-m-d H:i:s');
@@ -58,6 +56,13 @@ abstract class AbstractExtractor implements ExtractorInterface
         if (\is_float($value)) {
             return (string)$value;
         }
-        return $value;
+        if (\is_string($value) || \is_int($value) || \is_bool($value)) {
+            return $value;
+        }
+
+        throw new \InvalidArgumentException(
+            'Extracted metadata value of type "' . \get_debug_type($value) . '" cannot be converted to a scalar.',
+            1484061567
+        );
     }
 }

@@ -15,42 +15,36 @@ namespace Neos\MetaData\Extractor\Domain;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ObjectManagement\ObjectManager;
+use Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException;
+use Neos\Flow\Reflection\Exception\InvalidClassException;
 use Neos\Flow\Reflection\ReflectionService;
 use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
 use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Domain\Model\ImageVariant;
 use Neos\MetaData\Domain\Dto\MetaDataAssetReference;
 use Neos\MetaData\Domain\Dto\MetaDataPropertyName;
+use Neos\MetaData\Extractor\Domain\Dto\ExtractedMetaData;
 use Neos\MetaData\Extractor\Domain\Extractor\ExtractorInterface;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\MetaDataManager;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class ExtractionManager
 {
-    /**
-     * @Flow\Inject
-     * @var ObjectManager
-     */
-    protected $objectManager;
+    #[Flow\Inject]
+    protected ObjectManager $objectManager;
+
+    #[Flow\Inject]
+    protected ReflectionService $reflectionService;
+
+    #[Flow\Inject]
+    protected MetaDataManager $metaDataManager;
 
     /**
-     * @Flow\Inject
-     * @var ReflectionService
-     */
-    protected $reflectionService;
-
-    /**
-     * @Flow\Inject
-     * @var MetaDataManager
-     */
-    protected $metaDataManager;
-
-    /**
-     * @param FlowResource $flowResource
      * @return string[] Class names
+     * @throws \ReflectionException
+     * @throws ClassLoadingForReflectionFailedException
+     * @throws InvalidClassException
      */
     protected function findSuitableExtractorAdaptersForResource(FlowResource $flowResource) : array
     {
@@ -59,39 +53,33 @@ class ExtractionManager
             ExtractorInterface::class
         );
 
-        $suitableAdapterClasses = \array_filter(
+        return \array_filter(
             $extractorAdapters,
-            function ($extractorAdapterClass) use ($flowResource) {
+            static function ($extractorAdapterClass) use ($flowResource) {
                 /** @var ExtractorInterface $extractorAdapterClass */
                 return $extractorAdapterClass::isSuitableFor($flowResource);
             }
         );
-
-        return $suitableAdapterClasses;
     }
 
     /**
-     * Extracts all metadata of the given asset and returns it keyed by property name (e.g. 'exif.Model').
+     * Extracts all metadata of the given asset and returns it as a collection of named, scalar values
+     * (e.g. {@code exif.Model}, {@code iptc.Title}).
      *
      * The extracted values are additionally persisted for every property that is defined in the meta data
      * configuration, see {@see self::persistExtractedValues()}.
      *
-     * @param Asset $asset
-     * @return array<string, string|int|bool>
-     * @throws ExtractorException
+     * Extractors that throw an {@see ExtractorException} are skipped, all others are processed.
      */
-    public function extractMetaData(Asset $asset) : array
+    public function extractMetaData(Asset $asset) : ExtractedMetaData
     {
         if ($asset instanceof ImageVariant) {
             $asset = $asset->getOriginalAsset();
         }
 
         $flowResource = $asset->getResource();
-        if ($flowResource === null) {
-            throw new ExtractorException('Resource of Asset "' . $asset->getTitle() . '"" not found.', 1484060541);
-        }
 
-        $metaData = [];
+        $metaData = new ExtractedMetaData();
 
         $suitableAdapterClasses = $this->findSuitableExtractorAdaptersForResource($flowResource);
         foreach ($suitableAdapterClasses as $suitableAdapterClass) {
@@ -99,9 +87,12 @@ class ExtractionManager
             /** @noinspection PhpUnhandledExceptionInspection */
             $suitableAdapter = $this->objectManager->get($suitableAdapterClass);
             try {
-                $suitableAdapter->extractMetaData($flowResource, $metaData);
-            } catch (ExtractorException $exception) {
-                //Extractor is theoretically suitable but failed to extract meta data
+                $adapterData = $suitableAdapter->extractMetaData($flowResource);
+                foreach ($adapterData as $propertyName => $propertyValue) {
+                    $metaData->set($propertyName, $propertyValue);
+                }
+            } catch (ExtractorException) {
+                // Extractor is theoretically suitable but failed to extract metadata
                 continue;
             }
         }
@@ -112,16 +103,12 @@ class ExtractionManager
     }
 
     /**
-     * Persists the extracted values for all properties that are defined in the meta data configuration.
+     * Persists the extracted values for all properties that are defined in the metadata configuration.
      *
-     * Values for properties that are not defined (or that cannot be represented by their configured type)
-     * are ignored, so that extraction stays flexible without writing arbitrary data.
-     *
-     * @param Asset $asset
-     * @param array<string, string|int|bool> $metaData
-     * @return void
+     * Values for properties that are not defined are ignored, so that extraction stays flexible without
+     * writing arbitrary data.
      */
-    protected function persistExtractedValues(Asset $asset, array $metaData)
+    protected function persistExtractedValues(Asset $asset, ExtractedMetaData $metaData): void
     {
         $assetReference = MetaDataAssetReference::create($asset->getAssetSourceIdentifier(), $asset->getIdentifier());
         $propertyDefinitions = $this->metaDataManager->getPropertyDefinitions();
@@ -129,9 +116,6 @@ class ExtractionManager
         foreach ($metaData as $propertyName => $propertyValue) {
             $metaDataPropertyName = MetaDataPropertyName::fromString($propertyName);
             if (!$propertyDefinitions->include($metaDataPropertyName)) {
-                continue;
-            }
-            if (!\is_string($propertyValue) && !\is_int($propertyValue) && !\is_bool($propertyValue)) {
                 continue;
             }
             $this->metaDataManager->setMetaDataPropertyValue($assetReference, $metaDataPropertyName, $propertyValue);

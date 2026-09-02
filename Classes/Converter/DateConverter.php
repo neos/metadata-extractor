@@ -11,31 +11,31 @@ namespace Neos\MetaData\Extractor\Converter;
  * source code.
  */
 
-class DateConverter
+final class DateConverter
 {
     /**
      * Combines the EXIF GPSTimeStamp and GPSDateStamp into a DateTime object
      *
-     * @param string $gpsDateStamp
      * @param string[] $gpsTimeStamp
-     * @return \DateTime
      */
     public static function convertGpsDateAndTime(string $gpsDateStamp, array $gpsTimeStamp) : \DateTime
     {
-        return \DateTime::createFromFormat(
+        $dateTime = \DateTime::createFromFormat(
             'Y:m:d H:i:s',
             $gpsDateStamp . ' ' . \sprintf('%02d:%02d:%02d', (int)$gpsTimeStamp[0], (int)$gpsTimeStamp[1], (int)$gpsTimeStamp[2])
         );
+
+        if ($dateTime === false) {
+            throw new \InvalidArgumentException('Could not create DateTime from GPS date and time.', 1788349233);
+        }
+
+        return $dateTime;
     }
 
     /**
      * Combines ISO 8601 like date and time string into a DateTime Object
-     *
-     * @param string $dateString
-     * @param string|null $timeString
-     * @return \DateTime|bool
      */
-    public static function convertIso8601DateAndTimeString(string $dateString, ?string $timeString = null)
+    public static function convertIso8601DateAndTimeString(string $dateString, ?string $timeString = null): \DateTime|false
     {
         if (empty($timeString)) {
             $timeString = '000000+0000';

@@ -34,11 +34,9 @@ class ExifExtractorTest extends AbstractExtractorTestCase
     /**
      * @test
      */
-    public function extractMetaData()
+    public function extractMetaData(): void
     {
-        $extractedData = [];
-
-        $this->exifExtractor->extractMetaData($this->testAsset->getResource(), $extractedData);
+        $extractedData = $this->exifExtractor->extractMetaData($this->testAsset->getResource());
 
         $expectedExifData = [
             'exif.ApertureValue' => 6.0,

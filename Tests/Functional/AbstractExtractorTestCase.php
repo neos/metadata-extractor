@@ -18,6 +18,7 @@ use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Tests\Functional\AbstractTest;
 use Neos\MetaData\Domain\Dto\MetaDataAssetReference;
 use Neos\MetaData\Domain\Dto\MetaDataPropertyName;
+use Neos\MetaData\Extractor\Domain\Dto\ExtractedMetaData;
 use Neos\MetaData\MetaDataManager;
 use Neos\Utility\Files;
 
@@ -52,12 +53,16 @@ abstract class AbstractExtractorTestCase extends AbstractTest
 
         $this->createMetaDataValueTable();
 
-        $this->resourceManager = $this->objectManager->get(ResourceManager::class);
+        /** @var ResourceManager $resourceManager */
+        $resourceManager = $this->objectManager->get(ResourceManager::class);
+        $this->resourceManager = $resourceManager;
         $this->testAsset = $this->buildTestAsset();
         // the metadata storage references assets by their identifier, so the asset must be persisted first
         $this->persistenceManager->persistAll();
 
-        $this->metaDataManager = $this->objectManager->get(MetaDataManager::class);
+        /** @var MetaDataManager $metaDataManager */
+        $metaDataManager = $this->objectManager->get(MetaDataManager::class);
+        $this->metaDataManager = $metaDataManager;
     }
 
     /**
@@ -71,7 +76,9 @@ abstract class AbstractExtractorTestCase extends AbstractTest
      */
     protected function createMetaDataValueTable()
     {
-        $connection = $this->objectManager->get(EntityManagerInterface::class)->getConnection();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->objectManager->get(EntityManagerInterface::class);
+        $connection = $entityManager->getConnection();
         if (!$connection->getDatabasePlatform() instanceof AbstractMySQLPlatform) {
             $this->markTestSkipped('The metadata storage adapter requires MySQL or MariaDB');
         }
@@ -102,20 +109,17 @@ abstract class AbstractExtractorTestCase extends AbstractTest
      * Asserts that the extracted data contains the given property values.
      *
      * @param array<string, mixed> $expectedExtractedData
-     * @param array<string, string|int|bool> $extractedData
-     * @return void
      */
-    protected function assertExtractedData(array $expectedExtractedData, array $extractedData)
+    protected function assertExtractedData(array $expectedExtractedData, ExtractedMetaData $extractedData): void
     {
         foreach ($expectedExtractedData as $propertyName => $expectedValue) {
-            $this->assertArrayHasKey(
-                $propertyName,
-                $extractedData,
+            $this->assertTrue(
+                $extractedData->has($propertyName),
                 \sprintf('Extracted value for %s is missing.', $propertyName)
             );
             $this->assertEquals(
                 $expectedValue,
-                $extractedData[$propertyName],
+                $extractedData->get($propertyName),
                 \sprintf('Value of %s does not match expected.', $propertyName)
             );
         }
@@ -127,7 +131,7 @@ abstract class AbstractExtractorTestCase extends AbstractTest
      * @param string $propertyName
      * @return string|int|bool|null
      */
-    protected function getStoredMetaDataPropertyValue(string $propertyName)
+    protected function getStoredMetaDataPropertyValue(string $propertyName): string|int|bool|null
     {
         return $this->metaDataManager->getMetaDataPropertyValue(
             $this->testAssetMetaDataReference(),
