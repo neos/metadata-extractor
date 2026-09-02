@@ -499,6 +499,9 @@ class Exif
 
                 return $interpretedValue;
             case 'Flash':
+                if (!\is_int($value)) {
+                    return $value;
+                }
                 $interpretedValue = '';
                 $flashFired = $value & 0b1;
                 $flashReturn = ($value >> 1) & 0b11;

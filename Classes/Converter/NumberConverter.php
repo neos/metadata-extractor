@@ -18,8 +18,9 @@ final class NumberConverter
     /**
      * Converts a rational string like EXIF / (S)RATIONAL into a float number.
      */
-    public static function convertRationalToFloat(string $rationalString) : float
+    public static function convertRationalToFloat(string|int|float $rationalString) : float
     {
+        $rationalString = (string)$rationalString;
         if (\preg_match('#^(-?\d+)\/(\d+)$#', $rationalString, $matches)) {
             $divisor = (float)$matches[2];
             if ($divisor !== 0.0) {
