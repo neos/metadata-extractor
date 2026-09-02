@@ -11,10 +11,11 @@ namespace Neos\MetaData\Extractor\Tests\Functional\Domain\Extractor;
  * source code.
  */
 
+use Neos\MetaData\Domain\Dto\MetaDataPropertyName;
 use Neos\MetaData\Extractor\Domain\ExtractionManager;
-use Neos\MetaData\Extractor\Tests\Functional\AbstractExtractorTest;
+use Neos\MetaData\Extractor\Tests\Functional\AbstractExtractorTestCase;
 
-class ExtractionManagerTest extends AbstractExtractorTest
+class ExtractionManagerTest extends AbstractExtractorTestCase
 {
     /**
      * @var ExtractionManager
@@ -37,5 +38,32 @@ class ExtractionManagerTest extends AbstractExtractorTest
     public function instanceCreated()
     {
         $this->assertInstanceOf(ExtractionManager::class, $this->extractionManager);
+    }
+
+    /**
+     * @test
+     */
+    public function extractMetaData()
+    {
+        $extractedData = $this->extractionManager->extractMetaData($this->testAsset);
+
+        $this->assertSame('Canon EOS 5D Mark II', $extractedData['exif.Model']);
+        $this->assertSame('Otara', $extractedData['iptc.City']);
+
+        // the values of the defined properties are persisted and can be read back via the MetaDataManager
+        $this->assertSame('Canon EOS 5D Mark II', $this->getStoredMetaDataPropertyValue('exif.Model'));
+        $this->assertSame('Daniel Lienert', $this->getStoredMetaDataPropertyValue('exif.Artist'));
+        $this->assertSame('© Daniel Lienert', $this->getStoredMetaDataPropertyValue('iptc.CopyrightNotice'));
+        $this->assertSame(
+            '["Beste","Leuchtturm","Neu Seeland","Neuseeland","New Zealand"]',
+            $this->getStoredMetaDataPropertyValue('iptc.Keywords')
+        );
+
+        // only properties that are defined in the meta data configuration are persisted
+        $this->assertArrayHasKey('exif.MimeType', $extractedData);
+        $this->assertSame('image/jpeg', $extractedData['exif.MimeType']);
+        $this->assertFalse(
+            $this->metaDataManager->getPropertyDefinitions()->include(MetaDataPropertyName::fromString('exif.MimeType'))
+        );
     }
 }

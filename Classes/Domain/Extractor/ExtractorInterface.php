@@ -12,7 +12,6 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
  */
 
 use Neos\Flow\ResourceManagement\PersistentResource;
-use Neos\MetaData\Domain\Collection\MetaDataCollection;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 
 interface ExtractorInterface
@@ -24,10 +23,16 @@ interface ExtractorInterface
     public static function isSuitableFor(PersistentResource $resource) : bool;
 
     /**
+     * Extracts the metadata of the given resource and writes the values into $metaData under their
+     * property names (e.g. 'exif.Model' or 'iptc.City').
+     *
+     * Values must be scalar (string, integer or boolean): dates are normalized to an ISO date string,
+     * arrays to their JSON representation.
+     *
      * @param PersistentResource $resource
-     * @param MetaDataCollection $metaDataCollection
+     * @param array<string, string|int|bool> $metaData
      * @return void
      * @throws ExtractorException
      */
-    public function extractMetaData(PersistentResource $resource, MetaDataCollection $metaDataCollection);
+    public function extractMetaData(PersistentResource $resource, array &$metaData): void;
 }

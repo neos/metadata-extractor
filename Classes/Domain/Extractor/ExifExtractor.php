@@ -14,8 +14,6 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\Exception as FlowResourceException;
 use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
-use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
 use Neos\MetaData\Extractor\Converter\DateConverter;
 use Neos\MetaData\Extractor\Converter\NumberConverter;
@@ -149,7 +147,7 @@ class ExifExtractor extends AbstractExtractor
     /**
      * @inheritdoc
      */
-    public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
+    public function extractMetaData(FlowResource $resource, array &$metaData): void
     {
         try {
             $exifData = @\exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
@@ -281,6 +279,11 @@ class ExifExtractor extends AbstractExtractor
             }
         }
 
-        $metaDataCollection->set('exif', new Dto\Exif($exifData));
+        foreach ($exifData as $property => $value) {
+            if ($value === null || $value === '' || $value === []) {
+                continue;
+            }
+            $metaData['exif.' . $property] = self::convertValueForMetadata($value);
+        }
     }
 }

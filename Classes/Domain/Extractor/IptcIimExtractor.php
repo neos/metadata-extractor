@@ -14,8 +14,6 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\Exception as FlowResourceException;
 use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
-use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Converter\DateConverter;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\Extractor\Specifications\Iptc;
@@ -89,7 +87,7 @@ class IptcIimExtractor extends AbstractExtractor
     /**
      * @inheritdoc
      */
-    public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
+    public function extractMetaData(FlowResource $resource, array &$metaData): void
     {
         try {
             \getimagesize($resource->createTemporaryLocalCopy(), $fileInfo);
@@ -156,6 +154,11 @@ class IptcIimExtractor extends AbstractExtractor
             $iptcData['DeprecatedCategories'] = $deprecatedCategories;
         }
 
-        $metaDataCollection->set('iptc', new Dto\Iptc($iptcData));
+        foreach ($iptcData as $property => $value) {
+            if ($value === null || $value === '' || $value === []) {
+                continue;
+            }
+            $metaData['iptc.' . $property] = self::convertValueForMetadata($value);
+        }
     }
 }
