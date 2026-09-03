@@ -34,14 +34,14 @@ class MetaDataCommandController extends CommandController
         $iterator = $this->assetRepository->findAllIterator();
         $assetCount = $this->assetRepository->countAll();
 
-        $assets = $this->assetRepository->iterate($iterator);
-        if ($assets === null) {
+        if ($assetCount === 0) {
             $this->output->outputLine('No assets found.');
             return;
         }
 
         $this->output->progressStart($assetCount);
-        foreach ($assets as $asset) {
+        /** @phpstan-ignore-next-line */
+        foreach ($this->assetRepository->iterate($iterator) as $asset) {
             /** @var Asset $asset */
             $this->extractionManager->extractMetaData($asset);
 
