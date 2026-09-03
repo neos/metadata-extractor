@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file original="" product-name="Neos.MetaData" source-language="en" target-language="de" datatype="plaintext">
+    <body>
+      <trans-unit id="properties.exif.Acceleration">
+        <target>Beschleunigung</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ApertureValue">
+        <target>Blendenwert</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Artist">
+        <target>Künstler</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.BodySerialNumber">
+        <target>Seriennummer des Gehäuses</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.CameraElevationAngle">
+        <target>Kameraneigungswinkel</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.CameraOwnerName">
+        <target>Name des Kamerabesitzers</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ColorSpace">
+        <target>Farbraum</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ComponentsConfiguration">
+        <target>Komponentenkonfiguration</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Compression">
+        <target>Kompression</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Copyright">
+        <target>Copyright</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.CustomRendered">
+        <target>Individuell bearbeitet</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.DateTime">
+        <target>Datum/Uhrzeit</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.DateTimeDigitized">
+        <target>Digitalisierungsdatum</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.DateTimeOriginal">
+        <target>Aufnahmedatum</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.DigitalZoomRatio">
+        <target>Digitaler Zoomfaktor</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExifVersion">
+        <target>Exif-Version</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExposureBiasValue">
+        <target>Belichtungskorrektur</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExposureIndex">
+        <target>Belichtungsindex</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExposureMode">
+        <target>Belichtungsmodus</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExposureProgram">
+        <target>Belichtungsprogramm</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExposureTime">
+        <target>Belichtungszeit</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.FNumber">
+        <target>Blendenzahl</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Flash">
+        <target>Blitz</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.FlashpixVersion">
+        <target>FlashPix-Version</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.FocalLength">
+        <target>Brennweite</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.FocalLengthIn35mmFilm">
+        <target>Brennweite (35mm-Äquivalent)</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.FocalPlaneResolutionUnit">
+        <target>Auflösungseinheit der Fokusebene</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.FocalPlaneXResolution">
+        <target>Horizontale Auflösung der Fokusebene</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.FocalPlaneYResolution">
+        <target>Vertikale Auflösung der Fokusebene</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GainControl">
+        <target>Verstärkungsregelung</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Gamma">
+        <target>Gammawert</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSAltitude">
+        <target>GPS-Höhe</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSDestBearing">
+        <target>GPS-Peilung des Ziels</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSDestDistance">
+        <target>GPS-Entfernung zum Ziel</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSDestLatitude">
+        <target>GPS-Breitengrad des Ziels</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSDestLongitude">
+        <target>GPS-Längengrad des Ziels</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSDOP">
+        <target>GPS-Präzision</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSHPositioningError">
+        <target>GPS-Horizontalpositionsfehler</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSImgDirection">
+        <target>GPS-Bildrichtung</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSLatitude">
+        <target>GPS-Breitengrad</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSLongitude">
+        <target>GPS-Längengrad</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSSpeed">
+        <target>GPS-Geschwindigkeit</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSTrack">
+        <target>GPS-Kurs</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSVersionID">
+        <target>GPS-Versions-ID</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Humidity">
+        <target>Luftfeuchtigkeit</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ImageDescription">
+        <target>Bildbeschreibung</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ImageUniqueID">
+        <target>Eindeutige Bild-ID</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.LensMake">
+        <target>Objektivhersteller</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.LensModel">
+        <target>Objektivmodell</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.LensSerialNumber">
+        <target>Objektiv-Seriennummer</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.LensSpecification">
+        <target>Objektivspezifikation</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.LightSource">
+        <target>Lichtquelle</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Make">
+        <target>Kamerahersteller</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.MaxApertureValue">
+        <target>Maximale Blendenzahl</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.MeteringMode">
+        <target>Messmethode</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Model">
+        <target>Kameramodell</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.OffsetTime">
+        <target>Zeitzonenversatz</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.OffsetTimeDigitized">
+        <target>Zeitzonenversatz (digitalisiert)</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.OffsetTimeOriginal">
+        <target>Zeitzonenversatz (Original)</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Orientation">
+        <target>Ausrichtung</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.PhotometricInterpretation">
+        <target>Photometrische Interpretation</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.PhotographicSensitivity">
+        <target>ISO-Empfindlichkeit</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.PixelXDimension">
+        <target>Bildbreite</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.PixelYDimension">
+        <target>Bildhöhe</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Pressure">
+        <target>Luftdruck</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.RecommendedExposureIndex">
+        <target>Empfohlener Belichtungsindex</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ResolutionUnit">
+        <target>Auflösungseinheit</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.SceneCaptureType">
+        <target>Aufnahmeszene</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.SensingMethod">
+        <target>Sensortyp</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.SensitivityType">
+        <target>Empfindlichkeitstyp</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.ShutterSpeedValue">
+        <target>Verschlusszeit</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Software">
+        <target>Software</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.StandardOutputSensitivity">
+        <target>Standard-Ausgabeempfindlichkeit</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.SubjectDistance">
+        <target>Objektabstand</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.Temperature">
+        <target>Temperatur</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.UserComment">
+        <target>Benutzerkommentar</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.WaterDepth">
+        <target>Wassertiefe</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.WhiteBalance">
+        <target>Weißabgleich</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.XResolution">
+        <target>Horizontale Auflösung</target>
+      </trans-unit>
+      <trans-unit id="properties.exif.YResolution">
+        <target>Vertikale Auflösung</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.City">
+        <target>Stadt</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Contact">
+        <target>Kontakt</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.CopyrightNotice">
+        <target>Urheberrechtshinweis</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Country">
+        <target>Land</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.CountryCode">
+        <target>Ländercode</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.CreationDate">
+        <target>Erstellungsdatum</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Creator">
+        <target>Autor</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.CreatorTitle">
+        <target>Berufsbezeichnung des Autors</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.CreditLine">
+        <target>Quellenangabe</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.DeprecatedCategories">
+        <target>Kategorien</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Description">
+        <target>Beschreibung</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.DescriptionWriter">
+        <target>Verfasser der Beschreibung</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.DigitalCreationDate">
+        <target>Digitales Erstellungsdatum</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Headline">
+        <target>Überschrift</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Instructions">
+        <target>Anweisungen</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.IntellectualGenres">
+        <target>Intellektuelle Genres</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.JobId">
+        <target>Auftrags-ID</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Keywords">
+        <target>Schlagwörter</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Source">
+        <target>Quelle</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.State">
+        <target>Bundesland</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.SubjectCodes">
+        <target>Themenschlüssel</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Sublocation">
+        <target>Ort</target>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Title">
+        <target>Titel</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
