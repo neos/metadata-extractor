@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace Neos\MetaData\Extractor\Converter;
 
 /*
@@ -11,21 +13,14 @@ namespace Neos\MetaData\Extractor\Converter;
  * source code.
  */
 
-use Neos\Flow\Annotations as Flow;
-
-/**
- * @Flow\Scope("singleton")
- */
-class NumberConverter
+final class NumberConverter
 {
     /**
      * Converts a rational string like EXIF / (S)RATIONAL into a float number.
-     *
-     * @param string $rationalString
-     * @return float
      */
-    public static function convertRationalToFloat(string $rationalString) : float
+    public static function convertRationalToFloat(string|int|float $rationalString) : float
     {
+        $rationalString = (string)$rationalString;
         if (\preg_match('#^(-?\d+)\/(\d+)$#', $rationalString, $matches)) {
             $divisor = (float)$matches[2];
             if ($divisor !== 0.0) {
@@ -38,9 +33,6 @@ class NumberConverter
 
     /**
      * Converts a version in the format like 0x02020000 to 2.2.0.0
-     *
-     * @param string $binaryVersion
-     * @return string
      */
     public static function convertBinaryToVersion(string $binaryVersion) : string
     {

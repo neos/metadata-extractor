@@ -6,7 +6,7 @@
 
 # Neos.MetaData.Extractor Package
 
-This package handles extraction of meta data from assets.
+This package handles extraction of metadata from assets.
 
 ## Installation
 
@@ -16,10 +16,10 @@ Install using composer:
 
 Some related packages are:
 
-- [`neos/metadata`](https://github.com/neos/metadata): Provides provides data types and interfaces
+- [`neos/metadata`](https://github.com/neos/metadata): Provides data types and interfaces
   (and is automatically installed with this package)
 - [`neos/metadata-contentrepositoryadapter`](https://github.com/neos/metadata-contentrepositoryadapter):
-  Handles the mapping of meta data DTOs to the Neos Content Repository
+  Handles the mapping of metadata DTOs to the Neos Content Repository
 
  ### Requirements
 
@@ -28,7 +28,7 @@ is available in PHP by default.)
 
 ## Configuration
 
-This package provides realtime meta data extraction. This can be switched off, if needed, using:
+This package provides realtime metadata extraction. This can be switched off, if needed, using:
 
 ```yaml
 Neos:  
@@ -40,7 +40,7 @@ Neos:
 
 ## Usage  
   
-The package extracts IPTC and EXIF meta data from assets using a CLI command:
+The package extracts IPTC and EXIF metadata from assets using a CLI command:
 
     ./flow metadata:extract
 

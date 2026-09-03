@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace Neos\MetaData\Extractor\Converter;
 
 /*
@@ -11,13 +13,10 @@ namespace Neos\MetaData\Extractor\Converter;
  * source code.
  */
 
-use Neos\Flow\Annotations as Flow;
-
 /**
- * @Flow\Scope("singleton")
  * @see http://www.cipa.jp/std/documents/e/DC-008-Translation-2016-E.pdf data type definitions
  */
-class CoordinatesConverter
+final class CoordinatesConverter
 {
     /**
      * Converts coordinates in DMS (degrees, minutes, seconds) and the cardinal direction reference (E,W,N,S) into

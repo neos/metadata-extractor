@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace Neos\MetaData\Extractor\Command;
 
 /*
@@ -11,49 +13,37 @@ use Neos\Flow\Persistence\Doctrine\PersistenceManager;
 use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Domain\Repository\AssetRepository;
 use Neos\MetaData\Extractor\Domain\ExtractionManager;
-use Neos\MetaData\Extractor\Exception\ExtractorException;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class MetaDataCommandController extends CommandController
 {
-    /**
-     * @Flow\Inject
-     * @var AssetRepository
-     */
-    protected $assetRepository;
+    #[Flow\Inject]
+    protected AssetRepository $assetRepository;
 
-    /**
-     * @Flow\Inject
-     * @var ExtractionManager
-     */
-    protected $extractionManager;
+    #[Flow\Inject]
+    protected ExtractionManager $extractionManager;
 
-    /**
-     * @Flow\Inject
-     * @var PersistenceManager
-     */
-    protected $persistenceManager;
+    #[Flow\Inject]
+    protected PersistenceManager $persistenceManager;
 
     /**
      * Extracts MetaData from Assets
-     *
-     * @return void
      */
-    public function extractCommand()
+    public function extractCommand(): void
     {
         $iterator = $this->assetRepository->findAllIterator();
         $assetCount = $this->assetRepository->countAll();
 
+        if ($assetCount === 0) {
+            $this->output->outputLine('No assets found.');
+            return;
+        }
+
         $this->output->progressStart($assetCount);
+        /** @phpstan-ignore-next-line */
         foreach ($this->assetRepository->iterate($iterator) as $asset) {
             /** @var Asset $asset */
-            try {
-                $this->extractionManager->extractMetaData($asset);
-            } catch (ExtractorException $exception) {
-                $this->output->outputLine(' ' . $exception->getMessage());
-            }
+            $this->extractionManager->extractMetaData($asset);
 
             $this->output->progressAdvance(1);
 

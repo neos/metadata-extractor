@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace Neos\MetaData\Extractor\Domain\Extractor;
 
 /*
@@ -14,33 +16,32 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\Exception as FlowResourceException;
 use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
-use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Converter\CoordinatesConverter;
 use Neos\MetaData\Extractor\Converter\DateConverter;
 use Neos\MetaData\Extractor\Converter\NumberConverter;
+use Neos\MetaData\Extractor\Domain\Dto\ExtractedMetaData;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\Extractor\Specifications\Exif;
 
 /**
- * @Flow\Scope("singleton")
  * @see http://www.cipa.jp/std/documents/e/DC-008-Translation-2016-E.pdf Official standard
  */
+#[Flow\Scope('singleton')]
 class ExifExtractor extends AbstractExtractor
 {
     /**
      * @var string[]
      */
-    protected static $compatibleMediaTypes = [
+    protected static array $compatibleMediaTypes = [
         'image/jpeg',
         'image/tiff',
         'video/jpeg',
     ];
 
     /**
-     * @var string[]
+     * @var array<string, string>
      */
-    protected static $deprecatedOrUnmappedProperties = [
+    protected static array $deprecatedOrUnmappedProperties = [
         'GPSVersion' => 'GPSVersionID',
         'ISOSpeedRatings' => 'PhotographicSensitivity',
         'UndefinedTag:0x8830' => 'SensitivityType',
@@ -66,7 +67,7 @@ class ExifExtractor extends AbstractExtractor
     /**
      * @var string[]
      */
-    protected static $rationalProperties = [
+    protected static array $rationalProperties = [
         'Acceleration',
         'ApertureValue',
         'BrightnessValue',
@@ -105,7 +106,7 @@ class ExifExtractor extends AbstractExtractor
     /**
      * @var string[]
      */
-    protected static $rationalArrayProperties = [
+    protected static array $rationalArrayProperties = [
         'GPSDestLatitude',
         'GPSDestLongitude',
         'GPSLatitude',
@@ -121,7 +122,7 @@ class ExifExtractor extends AbstractExtractor
     /**
      * @var string[]
      */
-    protected static $gpsProperties = [
+    protected static array $gpsProperties = [
         'GPSDestLatitude',
         'GPSDestLongitude',
         'GPSLatitude',
@@ -129,18 +130,18 @@ class ExifExtractor extends AbstractExtractor
     ];
 
     /**
-     * @var string[]
+     * @var array<string, string>
      */
-    protected static $subSecondProperties = [
+    protected static array $subSecondProperties = [
         'SubSecTime' => 'DateTime',
         'SubSecTimeDigitized' => 'DateTimeDigitized',
         'SubSecTimeOriginal' => 'DateTimeOriginal',
     ];
 
     /**
-     * @var string[]
+     * @var array<string, string>
      */
-    protected static $timeOffsetProperties = [
+    protected static array $timeOffsetProperties = [
         'OffsetTime' => 'DateTime',
         'OffsetTimeDigitized' => 'DateTimeDigitized',
         'OffsetTimeOriginal' => 'DateTimeOriginal',
@@ -149,7 +150,7 @@ class ExifExtractor extends AbstractExtractor
     /**
      * @inheritdoc
      */
-    public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
+    public function extractMetaData(FlowResource $resource): ExtractedMetaData
     {
         try {
             $exifData = @\exif_read_data($resource->createTemporaryLocalCopy(), 'EXIF');
@@ -230,7 +231,8 @@ class ExifExtractor extends AbstractExtractor
         }
 
         foreach (static::$subSecondProperties as $subSecondProperty => $dateTimeProperty) {
-            if (isset($exifData[$subSecondProperty], $exifData[$dateTimeProperty])) {
+            if (isset($exifData[$subSecondProperty], $exifData[$dateTimeProperty])
+                && $exifData[$dateTimeProperty] instanceof \DateTimeInterface) {
                 $exifData[$dateTimeProperty] = \DateTime::createFromFormat(
                     'Y-m-d H:i:s.u',
                     $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.') . $exifData[$subSecondProperty]
@@ -240,7 +242,8 @@ class ExifExtractor extends AbstractExtractor
         }
 
         foreach (static::$timeOffsetProperties as $timeOffsetProperty => $dateTimeProperty) {
-            if (isset($exifData[$timeOffsetProperty], $exifData[$dateTimeProperty])) {
+            if (isset($exifData[$timeOffsetProperty], $exifData[$dateTimeProperty])
+                && $exifData[$dateTimeProperty] instanceof \DateTimeInterface) {
                 $exifData[$dateTimeProperty] = \DateTime::createFromFormat(
                     'Y-m-d H:i:s.uP',
                     $exifData[$dateTimeProperty]->format('Y-m-d H:i:s.u') . $exifData[$timeOffsetProperty]
@@ -281,6 +284,14 @@ class ExifExtractor extends AbstractExtractor
             }
         }
 
-        $metaDataCollection->set('exif', new Dto\Exif($exifData));
+        $metaData = new ExtractedMetaData();
+        foreach ($exifData as $property => $value) {
+            if ($value === null || $value === '' || $value === []) {
+                continue;
+            }
+            $metaData->set('exif.' . $property, self::convertValueForMetadata($value));
+        }
+
+        return $metaData;
     }
 }

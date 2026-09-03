@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace Neos\MetaData\Extractor\Domain\Extractor;
 
 /*
@@ -14,9 +16,8 @@ namespace Neos\MetaData\Extractor\Domain\Extractor;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\ResourceManagement\Exception as FlowResourceException;
 use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
-use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Converter\DateConverter;
+use Neos\MetaData\Extractor\Domain\Dto\ExtractedMetaData;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\Extractor\Specifications\Iptc;
 
@@ -29,7 +30,7 @@ class IptcIimExtractor extends AbstractExtractor
     /**
      * @var string[]
      */
-    protected static $compatibleMediaTypes = [
+    protected static array $compatibleMediaTypes = [
         'application/octet-stream',
         'application/x-shockwave-flash',
         'image/bmp',
@@ -48,7 +49,7 @@ class IptcIimExtractor extends AbstractExtractor
     /**
      * @var string[]
      */
-    protected static $mapping = [
+    protected static array $mapping = [
         'City' => Iptc\Iim::CITY,
         'Contact' => Iptc\Iim::CONTACT,
         'CopyrightNotice' => Iptc\Iim::COPYRIGHT_NOTICE,
@@ -74,7 +75,7 @@ class IptcIimExtractor extends AbstractExtractor
     /**
      * @var string[][]
      */
-    protected static $dateTimeMapping = [
+    protected static array $dateTimeMapping = [
         'CreationDate' => [
             'date' => Iptc\Iim::DATE_CREATED,
             'time' => Iptc\Iim::TIME_CREATED,
@@ -89,7 +90,7 @@ class IptcIimExtractor extends AbstractExtractor
     /**
      * @inheritdoc
      */
-    public function extractMetaData(FlowResource $resource, MetaDataCollection $metaDataCollection)
+    public function extractMetaData(FlowResource $resource): ExtractedMetaData
     {
         try {
             \getimagesize($resource->createTemporaryLocalCopy(), $fileInfo);
@@ -113,26 +114,34 @@ class IptcIimExtractor extends AbstractExtractor
 
         $iim = new Iptc\Iim($iimData);
 
-        $iptcData = [];
-
-        foreach (static::$mapping as $iptcProperty => $iimProperty) {
-            $iptcData[$iptcProperty] = $iim->getProperty($iimProperty);
-        }
+        $iptcData = array_map(static function ($iimProperty) use ($iim) {
+            return $iim->getProperty($iimProperty);
+        }, static::$mapping);
 
         foreach (static::$dateTimeMapping as $iptcProperty => $iimProperties) {
             $dateString = $iim->getProperty($iimProperties['date']);
-            if (!empty($dateString)) {
+            if (\is_string($dateString) && $dateString !== '') {
+                $timeString = $iim->getProperty($iimProperties['time']);
                 $iptcData[$iptcProperty] = DateConverter::convertIso8601DateAndTimeString(
                     $dateString,
-                    $iim->getProperty($iimProperties['time'])
+                    \is_string($timeString) ? $timeString : null
                 );
             }
         }
 
         //caring for deprecated (supplemental) category
         /** @var string[] $categories */
-        $categories = $iim->getProperty(Iptc\Iim::SUPPLEMENTAL_CATEGORY);
-        $categories[] = $iim->getProperty(Iptc\Iim::CATEGORY);
+        $categories = [];
+        $supplementalCategories = $iim->getProperty(Iptc\Iim::SUPPLEMENTAL_CATEGORY);
+        if (\is_array($supplementalCategories)) {
+            $categories = $supplementalCategories;
+        } else {
+            $categories[] = $supplementalCategories;
+        }
+        $category = $iim->getProperty(Iptc\Iim::CATEGORY);
+        if (\is_string($category)) {
+            $categories[] = $category;
+        }
         $subjectCodesFromCategories = [];
         $deprecatedCategories = [];
         foreach ($categories as $category) {
@@ -148,14 +157,24 @@ class IptcIimExtractor extends AbstractExtractor
         if (!empty($subjectCodesFromCategories)) {
             if (!isset($iptcData['SubjectCodes'])) {
                 $iptcData['SubjectCodes'] = $subjectCodesFromCategories;
-            } else {
+            } elseif (\is_array($iptcData['SubjectCodes'])) {
                 $iptcData['SubjectCodes'] = \array_merge($iptcData['SubjectCodes'], $subjectCodesFromCategories);
+            } else {
+                $iptcData['SubjectCodes'] = \array_merge([$iptcData['SubjectCodes']], $subjectCodesFromCategories);
             }
         }
         if (!empty($deprecatedCategories)) {
             $iptcData['DeprecatedCategories'] = $deprecatedCategories;
         }
 
-        $metaDataCollection->set('iptc', new Dto\Iptc($iptcData));
+        $metaData = new ExtractedMetaData();
+        foreach ($iptcData as $property => $value) {
+            if ($value === '' || $value === []) {
+                continue;
+            }
+            $metaData->set('iptc.' . $property, self::convertValueForMetadata($value));
+        }
+
+        return $metaData;
     }
 }

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace Neos\MetaData\Extractor\Domain;
 
 /*
@@ -12,81 +14,37 @@ namespace Neos\MetaData\Extractor\Domain;
  */
 
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\ObjectManagement\Exception\UnknownObjectException;
 use Neos\Flow\ObjectManagement\ObjectManager;
+use Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException;
+use Neos\Flow\Reflection\Exception\InvalidClassException;
 use Neos\Flow\Reflection\ReflectionService;
 use Neos\Flow\ResourceManagement\PersistentResource as FlowResource;
 use Neos\Media\Domain\Model\Asset;
-use Neos\Media\Domain\Model\AssetCollection;
 use Neos\Media\Domain\Model\ImageVariant;
-use Neos\Media\Domain\Model\Tag;
-use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use Neos\MetaData\Domain\Dto;
+use Neos\MetaData\Domain\Dto\MetaDataAssetReference;
+use Neos\MetaData\Domain\Dto\MetaDataPropertyName;
+use Neos\MetaData\Extractor\Domain\Dto\ExtractedMetaData;
 use Neos\MetaData\Extractor\Domain\Extractor\ExtractorInterface;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\MetaDataManager;
 
-/**
- * @Flow\Scope("singleton")
- */
+#[Flow\Scope('singleton')]
 class ExtractionManager
 {
-    /**
-     * @Flow\Inject
-     * @var ObjectManager
-     */
-    protected $objectManager;
+    #[Flow\Inject]
+    protected ObjectManager $objectManager;
+
+    #[Flow\Inject]
+    protected ReflectionService $reflectionService;
+
+    #[Flow\Inject]
+    protected MetaDataManager $metaDataManager;
 
     /**
-     * @Flow\Inject
-     * @var ReflectionService
-     */
-    protected $reflectionService;
-
-    /**
-     * @Flow\Inject
-     * @var MetaDataManager
-     */
-    protected $metaDataManager;
-
-    /**
-     * @param Asset $asset
-     * @param MetaDataCollection $metaDataCollection
-     * @return void
-     */
-    protected function buildAssetMetaData(Asset $asset, MetaDataCollection $metaDataCollection)
-    {
-        $tags = [];
-        foreach ($asset->getTags() as $tagObject) {
-            /** @var Tag $tagObject */
-            $tags[] = $tagObject->getLabel();
-        }
-
-        $collections = [];
-        foreach ($asset->getAssetCollections() as $collectionObject) {
-            /** @var AssetCollection $collectionObject */
-            $collections[] = $collectionObject->getTitle();
-        }
-
-        $properties = [
-            'Caption' => $asset->getCaption(),
-            'Identifier' => $asset->getIdentifier(),
-            'Title' => $asset->getTitle(),
-            'FileName' => $asset->getResource()->getFilename(),
-            'Collections' => $collections,
-            'Tags' => $tags,
-            'AssetObject' => $asset,
-        ];
-        if (method_exists($asset, 'getCopyrightNotice')) {
-            $properties['CopyrightNotice'] = $asset->getCopyrightNotice();
-        }
-        $assetDto = new Dto\Asset($properties);
-        $metaDataCollection->set('asset', $assetDto);
-    }
-
-    /**
-     * @param FlowResource $flowResource
      * @return string[] Class names
+     * @throws \ReflectionException
+     * @throws ClassLoadingForReflectionFailedException
+     * @throws InvalidClassException
      */
     protected function findSuitableExtractorAdaptersForResource(FlowResource $flowResource) : array
     {
@@ -95,36 +53,33 @@ class ExtractionManager
             ExtractorInterface::class
         );
 
-        $suitableAdapterClasses = \array_filter(
+        return \array_filter(
             $extractorAdapters,
-            function ($extractorAdapterClass) use ($flowResource) {
+            static function ($extractorAdapterClass) use ($flowResource) {
                 /** @var ExtractorInterface $extractorAdapterClass */
                 return $extractorAdapterClass::isSuitableFor($flowResource);
             }
         );
-
-        return $suitableAdapterClasses;
     }
 
     /**
-     * @param Asset $asset
-     * @return MetaDataCollection
-     * @throws ExtractorException
-     * @throws UnknownObjectException
+     * Extracts all metadata of the given asset and returns it as a collection of named, scalar values
+     * (e.g. {@code exif.Model}, {@code iptc.Title}).
+     *
+     * The extracted values are additionally persisted for every property that is defined in the meta data
+     * configuration, see {@see self::persistExtractedValues()}.
+     *
+     * Extractors that throw an {@see ExtractorException} are skipped, all others are processed.
      */
-    public function extractMetaData(Asset $asset) : MetaDataCollection
+    public function extractMetaData(Asset $asset) : ExtractedMetaData
     {
         if ($asset instanceof ImageVariant) {
             $asset = $asset->getOriginalAsset();
         }
 
         $flowResource = $asset->getResource();
-        if ($flowResource === null) {
-            throw new ExtractorException('Resource of Asset "' . $asset->getTitle() . '"" not found.', 1484060541);
-        }
 
-        $metaDataCollection = new MetaDataCollection();
-        $this->buildAssetMetaData($asset, $metaDataCollection);
+        $metaData = new ExtractedMetaData();
 
         $suitableAdapterClasses = $this->findSuitableExtractorAdaptersForResource($flowResource);
         foreach ($suitableAdapterClasses as $suitableAdapterClass) {
@@ -132,15 +87,38 @@ class ExtractionManager
             /** @noinspection PhpUnhandledExceptionInspection */
             $suitableAdapter = $this->objectManager->get($suitableAdapterClass);
             try {
-                $suitableAdapter->extractMetaData($flowResource, $metaDataCollection);
-            } catch (ExtractorException $exception) {
-                //Extractor is theoretically suitable but failed to extract meta data
+                $adapterData = $suitableAdapter->extractMetaData($flowResource);
+                foreach ($adapterData as $propertyName => $propertyValue) {
+                    $metaData->set($propertyName, $propertyValue);
+                }
+            } catch (ExtractorException) {
+                // Extractor is theoretically suitable but failed to extract metadata
                 continue;
             }
         }
 
-        $this->metaDataManager->updateMetaDataForAsset($asset, $metaDataCollection);
+        $this->persistExtractedValues($asset, $metaData);
 
-        return $metaDataCollection;
+        return $metaData;
+    }
+
+    /**
+     * Persists the extracted values for all properties that are defined in the metadata configuration.
+     *
+     * Values for properties that are not defined are ignored, so that extraction stays flexible without
+     * writing arbitrary data.
+     */
+    protected function persistExtractedValues(Asset $asset, ExtractedMetaData $metaData): void
+    {
+        $assetReference = MetaDataAssetReference::create($asset->getAssetSourceIdentifier(), $asset->getIdentifier());
+        $propertyDefinitions = $this->metaDataManager->getPropertyDefinitions();
+
+        foreach ($metaData as $propertyName => $propertyValue) {
+            $metaDataPropertyName = MetaDataPropertyName::fromString($propertyName);
+            if (!$propertyDefinitions->include($metaDataPropertyName)) {
+                continue;
+            }
+            $this->metaDataManager->setMetaDataPropertyValue($assetReference, $metaDataPropertyName, $propertyValue);
+        }
     }
 }
