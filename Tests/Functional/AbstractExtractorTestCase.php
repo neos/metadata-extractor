@@ -1,4 +1,5 @@
 <?php
+
 namespace Neos\MetaData\Extractor\Tests\Functional;
 
 /*
@@ -14,15 +15,15 @@ namespace Neos\MetaData\Extractor\Tests\Functional;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Neos\Flow\ResourceManagement\ResourceManager;
+use Neos\Flow\Tests\FunctionalTestCase;
 use Neos\Media\Domain\Model\Asset;
-use Neos\Media\Tests\Functional\AbstractTest;
 use Neos\MetaData\Domain\Dto\MetaDataAssetReference;
 use Neos\MetaData\Domain\Dto\MetaDataPropertyName;
 use Neos\MetaData\Extractor\Domain\Dto\ExtractedMetaData;
 use Neos\MetaData\MetaDataManager;
 use Neos\Utility\Files;
 
-abstract class AbstractExtractorTestCase extends AbstractTest
+abstract class AbstractExtractorTestCase extends FunctionalTestCase
 {
     /**
      * @inheritDoc
@@ -70,11 +71,13 @@ abstract class AbstractExtractorTestCase extends AbstractTest
      *
      * The table is not mapped as an entity, so the functional test schema, which is derived from entity
      * metadata only, does not contain it. As with the MetaData storage adapter tests, the foreign key of
-     * the Doctrine migration is omitted on purpose.
+     * the Doctrine migration is omitted on purpose - the migration cannot be run here.
      *
-     * @return void
+     * TODO: This should be solved in a better way in the metadata package so we can either mock the metadatamanager or can rely on the tables to exist
+     *
+     * @see \Neos\Flow\Persistence\Doctrine\Migrations\Version20260415145934
      */
-    protected function createMetaDataValueTable()
+    protected function createMetaDataValueTable(): void
     {
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->objectManager->get(EntityManagerInterface::class);
@@ -86,16 +89,13 @@ abstract class AbstractExtractorTestCase extends AbstractTest
             `asset_source_id` VARCHAR(255) DEFAULT NULL,
             `asset_id` VARCHAR(40) DEFAULT NULL,
             `property_name` VARCHAR(40) NOT NULL,
-            `property_value` VARCHAR(250) NOT NULL,
+            `property_value` TEXT NOT NULL,
             `dimension_hash` VARCHAR(250) NOT NULL,
             UNIQUE INDEX idx_unique (`asset_source_id`, `asset_id`, `property_name`, `dimension_hash`)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
     }
 
-    /**
-     * @return Asset
-     */
-    protected function buildTestAsset() : Asset
+    protected function buildTestAsset(): Asset
     {
         $testImagePath = Files::concatenatePaths([__DIR__, 'Fixtures/Resources/Lighthouse.jpg']);
         $this->assertFileExists($testImagePath);
@@ -127,9 +127,6 @@ abstract class AbstractExtractorTestCase extends AbstractTest
 
     /**
      * The stored value of the given property of the test asset, as it is resolved by the MetaDataManager.
-     *
-     * @param string $propertyName
-     * @return string|int|bool|null
      */
     protected function getStoredMetaDataPropertyValue(string $propertyName): string|int|bool|null
     {
@@ -139,10 +136,7 @@ abstract class AbstractExtractorTestCase extends AbstractTest
         )->value;
     }
 
-    /**
-     * @return MetaDataAssetReference
-     */
-    protected function testAssetMetaDataReference() : MetaDataAssetReference
+    protected function testAssetMetaDataReference(): MetaDataAssetReference
     {
         return MetaDataAssetReference::create(
             $this->testAsset->getAssetSourceIdentifier(),
