@@ -128,6 +128,11 @@ abstract class AbstractExtractorTestCase extends FunctionalTestCase
                 unset($this->storageState[$assetReference->assetSourceId][$assetReference->assetId][$propertyName->value][($this->dimensionHashOf)($scope)]);
             }
 
+            public function unsetMetaDataPropertyValues(MetaDataAssetReference $assetReference): void
+            {
+                unset($this->storageState[$assetReference->assetSourceId][$assetReference->assetId]);
+            }
+
             public function getMetaDataPropertyValues(MetaDataAssetReference $assetReference, MetaDataPropertyName $propertyName, MetaDataDimensionSpacePoints|MetaDataGlobalScope $scope): array
             {
                 $dimensionHashes = $scope instanceof MetaDataGlobalScope
