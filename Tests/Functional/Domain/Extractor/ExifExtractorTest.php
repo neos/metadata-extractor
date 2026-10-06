@@ -11,12 +11,10 @@ namespace Neos\MetaData\Extractor\Tests\Functional\Domain\Extractor;
  * source code.
  */
 
-use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Domain\Extractor\ExifExtractor;
-use Neos\MetaData\Extractor\Tests\Functional\AbstractExtractorTest;
+use Neos\MetaData\Extractor\Tests\Functional\AbstractExtractorTestCase;
 
-class ExifExtractorTest extends AbstractExtractorTest
+class ExifExtractorTest extends AbstractExtractorTestCase
 {
     /**
      * @var ExifExtractor
@@ -26,7 +24,7 @@ class ExifExtractorTest extends AbstractExtractorTest
     /**
      * @inheritDoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -36,149 +34,56 @@ class ExifExtractorTest extends AbstractExtractorTest
     /**
      * @test
      */
-    public function extractMetaData()
+    public function extractMetaData(): void
     {
-        $metaDataCollection = new MetaDataCollection();
-
-        $this->exifExtractor->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
-
-        $exifDto = $metaDataCollection->get('exif');
-
-        $this->assertInstanceOf(Dto\Exif::class, $exifDto);
+        $extractedData = $this->exifExtractor->extractMetaData($this->testAsset->getResource());
 
         $expectedExifData = [
-            'ApertureValue' => 6.0,
-            'Artist' => 'Daniel Lienert',
-            'BodySerialNumber' => '1330801819',
-            'CameraOwnerName' => 'Daniel Lienert',
-            'ColorSpace' => 'sRGB',
-            'Copyright' => '© Daniel Lienert',
-            'CustomRendered' => 'Normal process',
-            'DateTime' => \DateTime::createFromFormat('YmdHis', '20160407070947'),
-            'DateTimeDigitized' => \DateTime::createFromFormat('YmdHisu', '20130917235911260000'),
-            'DateTimeOriginal' => \DateTime::createFromFormat('YmdHis', '20130918105911'),
-            'ExifVersion' => '0230',
-            'ExposureBiasValue' => 0.0,
-            'ExposureMode' => 'Manual exposure',
-            'ExposureProgram' => 'Manual',
-            'ExposureTime' => 0.0015625,
-            'Flash' => 'Flash did not fire. No strobe return detection function. Compulsory flash suppression.'
+            'exif.ApertureValue' => 6.0,
+            'exif.Artist' => 'Daniel Lienert',
+            'exif.BodySerialNumber' => '1330801819',
+            'exif.CameraOwnerName' => 'Daniel Lienert',
+            'exif.ColorSpace' => 'sRGB',
+            'exif.Copyright' => '© Daniel Lienert',
+            'exif.CustomRendered' => 'Normal process',
+            'exif.DateTime' => '2016-04-07 07:09:47',
+            'exif.DateTimeDigitized' => '2013-09-17 23:59:11',
+            'exif.DateTimeOriginal' => '2013-09-18 10:59:11',
+            'exif.ExifVersion' => '0230',
+            'exif.ExposureBiasValue' => 0.0,
+            'exif.ExposureMode' => 'Manual exposure',
+            'exif.ExposureProgram' => 'Manual',
+            'exif.ExposureTime' => 0.0015625,
+            'exif.Flash' => 'Flash did not fire. No strobe return detection function. Compulsory flash suppression.'
                 . ' Flash function present. No red-eye reduction mode or unknown.',
-            'FNumber' => 8.0,
-            'FocalLength' => 24,
-            'FocalPlaneResolutionUnit' => 'inches',
-            'FocalPlaneXResolution' => 3849.2117888965,
-            'FocalPlaneYResolution' => 3908.1419624217,
-            'GPSAltitude' => 17.8953,
-            'GPSImgDirection' => 180.0,
-            'GPSLatitude' => -46.659787,
-            'GPSLongitude' => 168.84703,
-            'GPSVersionID' => '2.2.0.0',
-            'ImageDescription' => 'Waipapa Point Lighthouse with the sea in the background and bush in the foreground.',
-            'LensModel' => 'EF24-105mm f/4L IS USM',
-            'LensSpecification' => [24.0, 105.0, 0.0, 0.0],
-            'Make' => 'Canon',
-            'MaxApertureValue' => 4.0,
-            'MeteringMode' => 'Pattern',
-            'Model' => 'Canon EOS 5D Mark II',
-            'PhotographicSensitivity' => 100,
-            'ResolutionUnit' => 'inches',
-            'SceneCaptureType' => 'Standard',
-            'ShutterSpeedValue' => 9.321928,
-            'Software' => 'Adobe Photoshop Lightroom 6.3 (Macintosh)',
-            'UserComment' => 'Great weather',
-            'WhiteBalance' => 'Auto white balance',
-            'XResolution' => 240,
-            'YResolution' => 240,
-            // no data present for the following
-            'ImageWidth' => 0,
-            'ImageLength' => 0,
-            'BitsPerSample' => [0, 0, 0],
-            'Compression' => '',
-            'PhotometricInterpretation' => '',
-            'Orientation' => '',
-            'SamplesPerPixel' => 0,
-            'PlanarConfiguration' => '',
-            'YCbCrSubSampling' => '',
-            'YCbCrPositioning' => '',
-            'StripOffsets' => [],
-            'RowsPerStrip' => 0,
-            'StripByteCounts' => [],
-            'JPEGInterchangeFormat' => 0,
-            'JPEGInterchangeFormatLength' => 0,
-            'TransferFunction' => [],
-            'WhitePoint' => [],
-            'PrimaryChromaticities' => [],
-            'YCbCrCoefficients' => [],
-            'ReferenceBlackWhite' => [],
-            'FlashpixVersion' => '',
-            'Gamma' => 0.0,
-            'ComponentsConfiguration' => '',
-            'CompressedBitsPerPixel' => 0.0,
-            'PixelXDimension' => 0,
-            'PixelYDimension' => 0,
-            'MakerNote' => '',
-            'RelatedSoundFile' => '',
-            'SpectralSensitivity' => '',
-            'OECF' => [],
-            'SensitivityType' => '',
-            'StandardOutputSensitivity' => 0,
-            'RecommendedExposureIndex' => 0,
-            'ISOSpeed' => 0,
-            'ISOSpeedLatitudeyyy' => 0,
-            'ISOSpeedLatitudezzz' => 0,
-            'BrightnessValue' => 0.0,
-            'SubjectDistance' => 0,
-            'LightSource' => '',
-            'SubjectArea' => [0, 0],
-            'FlashEnergy' => 0.0,
-            'SpatialFrequencyResponse' => [],
-            'SubjectLocation' => [0, 0],
-            'ExposureIndex' => 0.0,
-            'SensingMethod' => '',
-            'FileSource' => '',
-            'SceneType' => '',
-            'CFAPattern' => [],
-            'DigitalZoomRatio' => 0.0,
-            'FocalLengthIn35mmFilm' => 0,
-            'GainControl' => '',
-            'Contrast' => '',
-            'Saturation' => '',
-            'Sharpness' => '',
-            'DeviceSettingDescription' => [],
-            'SubjectDistanceRange' => '',
-            'Temperature' => 0.0,
-            'Humidity' => 0.0,
-            'Pressure' => 0.0,
-            'WaterDepth' => 0.0,
-            'Acceleration' => 0.0,
-            'CameraElevationAngle' => 0.0,
-            'ImageUniqueID' => '',
-            'LensMake' => '',
-            'LensSerialNumber' => '',
-            'GPSSatellites' => '',
-            'GPSStatus' => '',
-            'GPSMeasureMode' => '',
-            'GPSDOP' => 0.0,
-            'GPSSpeedRef' => '',
-            'GPSSpeed' => 0.0,
-            'GPSTrackRef' => '',
-            'GPSTrack' => 0.0,
-            'GPSImgDirectionRef' => '',
-            'GPSMapDatum' => '',
-            'GPSDestLatitude' => 0.0,
-            'GPSDestLongitude' => 0.0,
-            'GPSDestBearingRef' => '',
-            'GPSDestBearing' => 0.0,
-            'GPSDestDistanceRef' => '',
-            'GPSDestDistance' => 0.0,
-            'GPSProcessingMethod' => '',
-            'GPSAreaInformation' => '',
-            'GPSDateTimeStamp' => null,
-            'GPSDifferential' => '',
-            'GPSHPositioningError' => 0.0,
+            'exif.FNumber' => 8.0,
+            'exif.FocalLength' => 24,
+            'exif.FocalPlaneResolutionUnit' => 'inches',
+            'exif.FocalPlaneXResolution' => 3849.2117888965,
+            'exif.FocalPlaneYResolution' => 3908.1419624217,
+            'exif.GPSAltitude' => 17.8953,
+            'exif.GPSImgDirection' => 180.0,
+            'exif.GPSLatitude' => -46.659787,
+            'exif.GPSLongitude' => 168.84703,
+            'exif.GPSVersionID' => '2.2.0.0',
+            'exif.ImageDescription' => 'Waipapa Point Lighthouse with the sea in the background and bush in the foreground.',
+            'exif.LensModel' => 'EF24-105mm f/4L IS USM',
+            'exif.LensSpecification' => '[24,105,0,0]',
+            'exif.Make' => 'Canon',
+            'exif.MaxApertureValue' => 4.0,
+            'exif.MeteringMode' => 'Pattern',
+            'exif.Model' => 'Canon EOS 5D Mark II',
+            'exif.PhotographicSensitivity' => 100,
+            'exif.ResolutionUnit' => 'inches',
+            'exif.SceneCaptureType' => 'Standard',
+            'exif.ShutterSpeedValue' => 9.321928,
+            'exif.Software' => 'Adobe Photoshop Lightroom 6.3 (Macintosh)',
+            'exif.UserComment' => 'Great weather',
+            'exif.WhiteBalance' => 'Auto white balance',
+            'exif.XResolution' => 240,
+            'exif.YResolution' => 240,
         ];
 
-        $this->assertDtoGettersReturnData($exifDto, $expectedExifData);
+        $this->assertExtractedData($expectedExifData, $extractedData);
     }
 }

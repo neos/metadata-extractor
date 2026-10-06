@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace Neos\MetaData\Extractor\Specifications;
 
 /**
@@ -12,7 +14,7 @@ class Exif
     /**
      * @var string[]
      */
-    public static $exifIfd = [
+    public static array $exifIfd = [
         // TIFF Rev. 6.0 Attribute Information
         0x100 => 'ImageWidth',
         0x101 => 'ImageLength',
@@ -128,7 +130,7 @@ class Exif
     /**
      * @var string[]
      */
-    public static $gpsIfd = [
+    public static array $gpsIfd = [
         // GPS Attribute Information
         0x0 => 'GPSVersionID',
         0x1 => 'GPSLatitudeRef',
@@ -167,7 +169,7 @@ class Exif
     /**
      * @var string[][]
      */
-    public static $valueInterpretationMap = [
+    public static array $valueInterpretationMap = [
         'Compression' => [
             1 => 'uncompressed',
             6 => 'JPEG compression (thumbnails only)',
@@ -455,20 +457,15 @@ class Exif
         ],
     ];
 
-    /**
-     * @param string $property
-     * @param mixed $value
-     * @return string|mixed
-     */
-    public static function interpretValue(string $property, $value)
+    public static function interpretValue(string $property, mixed $value): mixed
     {
         switch ($property) {
             case 'DateTime':
             case 'DateTimeOriginal':
             case 'DateTimeDigitized':
-                return \DateTime::createFromFormat('Y:m:d H:i:s', $value);
+                return \is_string($value) ? \DateTime::createFromFormat('Y:m:d H:i:s', $value) : $value;
             case 'YCbCrSubSampling':
-                if (isset($value[0], $value[1]) && $value[0] === 2) {
+                if (\is_array($value) && isset($value[0], $value[1]) && $value[0] === 2) {
                     switch ($value[1]) {
                         case 1:
                             return 'YCbCr4:2:2';
@@ -489,14 +486,22 @@ class Exif
                     5 => 'G',
                     6 => 'B',
                 ];
-                foreach (\unpack('C*', $value) as $singleValue) {
-                    if (isset($componentsConfigurationInterpretations[$singleValue])) {
-                        $interpretedValue .= $componentsConfigurationInterpretations[$singleValue];
+                if (\is_string($value)) {
+                    $unpackedValues = \unpack('C*', $value);
+                    if ($unpackedValues !== false) {
+                        foreach ($unpackedValues as $singleValue) {
+                            if (isset($componentsConfigurationInterpretations[$singleValue])) {
+                                $interpretedValue .= $componentsConfigurationInterpretations[$singleValue];
+                            }
+                        }
                     }
                 }
 
                 return $interpretedValue;
             case 'Flash':
+                if (!\is_int($value)) {
+                    return $value;
+                }
                 $interpretedValue = '';
                 $flashFired = $value & 0b1;
                 $flashReturn = ($value >> 1) & 0b11;

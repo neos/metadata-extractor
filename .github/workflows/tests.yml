@@ -1,0 +1,154 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  FLOW_FOLDER: ../flow-base-distribution
+  # The neos/metadata 3.x API this package targets is not released yet, so both jobs pull the
+  # `feature/extensible-metadata-properties` branch and alias it to the version the package requires.
+  NEOS_METADATA_PACKAGE_BRANCH: 'dev-feature/extensible-metadata-properties'
+  PACKAGE_FOLDER: metadata-extractor
+
+jobs:
+  codestyle:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['8.4']
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: exif, mbstring
+
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.composer/cache
+          key: dependencies-composer-${{ hashFiles('composer.json') }}
+
+      - name: Install dependencies
+        run: composer require --no-interaction --no-progress "neos/metadata:${NEOS_METADATA_PACKAGE_BRANCH} as 3.0.0"
+
+      - name: PHPStan
+        run: php vendor/bin/phpstan analyse -c phpstan.ci.neon --no-progress --memory-limit=1G
+
+  php-unit-tests:
+    env:
+      FLOW_CONTEXT: Testing
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['8.4']
+        flow-versions: ['8.4']
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set package branch name
+        run: echo "PACKAGE_TARGET_VERSION=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+        working-directory: .
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: exif, mbstring, xml, json, zlib, iconv, intl, pdo_sqlite, mysql
+          coverage: xdebug #optional
+          ini-values: opcache.fast_shutdown=0
+
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.composer/cache
+          key: dependencies-composer-${{ hashFiles('composer.json') }}
+
+      - name: Prepare Flow distribution
+        run: |
+          git clone https://github.com/neos/flow-base-distribution.git -b ${{ matrix.flow-versions }} ${FLOW_FOLDER}
+          cd ${FLOW_FOLDER}
+          composer require --no-update --dev --no-interaction phpunit/phpunit:"^11.0"
+
+          git -C ../${{ env.PACKAGE_FOLDER }} checkout -b build
+          composer config repositories.package '{ "type": "path", "url": "../${{ env.PACKAGE_FOLDER }}", "options": { "symlink": false } }'
+          composer require --no-update --no-interaction neos/metadata-extractor:"dev-build as dev-${PACKAGE_TARGET_VERSION}"
+          # required for the resolution of the not yet released neos/metadata 3.x
+          composer require --no-update --no-interaction neos/metadata:"${NEOS_METADATA_PACKAGE_BRANCH} as 3.0.0"
+
+      - name: Composer Install
+        run: |
+          cd ${FLOW_FOLDER}
+          composer install --no-interaction --no-progress
+
+      - name: Run Unit tests
+        run: |
+          cd ${FLOW_FOLDER}
+          bin/phpunit --colors -c Build/BuildEssentials/PhpUnit/UnitTests.xml Packages/Application/Neos.MetaData.Extractor/Tests/Unit/
+
+  php-functional-tests:
+    env:
+      FLOW_CONTEXT: Testing
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['8.4']
+        flow-versions: ['8.4']
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set package branch name
+        run: echo "PACKAGE_TARGET_VERSION=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+        working-directory: .
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: exif, mbstring, xml, json, zlib, iconv, intl, pdo_sqlite, mysql
+          coverage: xdebug #optional
+          ini-values: opcache.fast_shutdown=0
+
+      - name: Cache dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.composer/cache
+          key: dependencies-composer-${{ hashFiles('composer.json') }}
+
+      - name: Prepare Flow distribution
+        run: |
+          git clone https://github.com/neos/flow-base-distribution.git -b ${{ matrix.flow-versions }} ${FLOW_FOLDER}
+          cd ${FLOW_FOLDER}
+          composer require --no-update --dev --no-interaction phpunit/phpunit:"^11.0"
+
+          git -C ../${{ env.PACKAGE_FOLDER }} checkout -b build
+          composer config repositories.package '{ "type": "path", "url": "../${{ env.PACKAGE_FOLDER }}", "options": { "symlink": false } }'
+          composer require --no-update --no-interaction neos/metadata-extractor:"dev-build as dev-${PACKAGE_TARGET_VERSION}"
+          # required for the resolution of the not yet released neos/metadata 3.x
+          composer require --no-update --no-interaction neos/metadata:"${NEOS_METADATA_PACKAGE_BRANCH} as 3.0.0"
+
+      - name: Composer Install
+        run: |
+          cd ${FLOW_FOLDER}
+          composer install --no-interaction --no-progress
+
+      - name: Run Functional tests
+        run: |
+          cd ${FLOW_FOLDER}
+          bin/phpunit --colors -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml Packages/Application/Neos.MetaData.Extractor/Tests/Functional/

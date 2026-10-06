@@ -19,7 +19,7 @@ class NumberConverterTest extends UnitTestCase
     /**
      * @return mixed[][]
      */
-    public function rationalDataProvider() : array
+    public static function rationalDataProvider() : array
     {
         return [
             'correctRational' => [

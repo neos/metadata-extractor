@@ -11,12 +11,10 @@ namespace Neos\MetaData\Extractor\Tests\Functional\Domain\Extractor;
  * source code.
  */
 
-use Neos\MetaData\Domain\Collection\MetaDataCollection;
-use Neos\MetaData\Domain\Dto;
 use Neos\MetaData\Extractor\Domain\Extractor\IptcIimExtractor;
-use Neos\MetaData\Extractor\Tests\Functional\AbstractExtractorTest;
+use Neos\MetaData\Extractor\Tests\Functional\AbstractExtractorTestCase;
 
-class IptcIimExtractorTest extends AbstractExtractorTest
+class IptcIimExtractorTest extends AbstractExtractorTestCase
 {
     /**
      * @var IptcIimExtractor
@@ -26,7 +24,7 @@ class IptcIimExtractorTest extends AbstractExtractorTest
     /**
      * @inheritDoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -36,47 +34,33 @@ class IptcIimExtractorTest extends AbstractExtractorTest
     /**
      * @test
      */
-    public function extractMetaData()
+    public function extractMetaData(): void
     {
-        $metaDataCollection = new MetaDataCollection();
-
-        $this->iptcIimExtractor->extractMetaData($this->testAsset->getResource(), $metaDataCollection);
-        $iptcDto = $metaDataCollection->get('iptc');
-
-        $this->assertInstanceOf(Dto\Iptc::class, $iptcDto);
+        $extractedData = $this->iptcIimExtractor->extractMetaData($this->testAsset->getResource());
 
         $expectedIptcData = [
-            'City' => 'Otara',
-            'Contact' => [],
-            'CopyrightNotice' => '© Daniel Lienert',
-            'Country' => 'Newzealand',
-            'CountryCode' => 'NZ',
-            'CreationDate' => \DateTime::createFromFormat('YmdHisO', '20130918105911+0000'),
-            'Creator' => ['Daniel Lienert'],
-            'CreatorTitle' => ['Informatiker'],
-            'CreditLine' => 'by-nc',
-            'DeprecatedCategories' => ['Nature', 'Lig'],
-            'Description' => 'Waipapa Point Lighthouse with the sea in the background and bush in the foreground.',
-            'DescriptionWriter' => ['Daniel Lienert'],
-            'DigitalCreationDate' => \DateTime::createFromFormat('YmdHisO', '20130917235911+0000'),
-            'Headline' => 'Waipapa Point Lighthouse',
-            'Instructions' => 'None - it knows what to do',
-            'IntellectualGenres' => [],
-            'JobId' => 'Shines in the night',
-            'Keywords' => [
-                'Beste',
-                'Leuchtturm',
-                'Neu Seeland',
-                'Neuseeland',
-                'New Zealand',
-            ],
-            'Source' => 'Camera',
-            'State' => 'Southland',
-            'SubjectCodes' => [],
-            'Sublocation' => 'Waipapa Point Lighthouse',
-            'Title' => 'Waipapa Point Leuchtturm',
+            'iptc.City' => 'Otara',
+            'iptc.CopyrightNotice' => '© Daniel Lienert',
+            'iptc.Country' => 'Newzealand',
+            'iptc.CountryCode' => 'NZ',
+            'iptc.CreationDate' => '2013-09-18 10:59:11',
+            'iptc.Creator' => '["Daniel Lienert"]',
+            'iptc.CreatorTitle' => '["Informatiker"]',
+            'iptc.CreditLine' => 'by-nc',
+            'iptc.DeprecatedCategories' => '["Nature","Lig"]',
+            'iptc.Description' => 'Waipapa Point Lighthouse with the sea in the background and bush in the foreground.',
+            'iptc.DescriptionWriter' => '["Daniel Lienert"]',
+            'iptc.DigitalCreationDate' => '2013-09-17 23:59:11',
+            'iptc.Headline' => 'Waipapa Point Lighthouse',
+            'iptc.Instructions' => 'None - it knows what to do',
+            'iptc.JobId' => 'Shines in the night',
+            'iptc.Keywords' => '["Beste","Leuchtturm","Neu Seeland","Neuseeland","New Zealand"]',
+            'iptc.Source' => 'Camera',
+            'iptc.State' => 'Southland',
+            'iptc.Sublocation' => 'Waipapa Point Lighthouse',
+            'iptc.Title' => 'Waipapa Point Leuchtturm',
         ];
 
-        $this->assertDtoGettersReturnData($iptcDto, $expectedIptcData);
+        $this->assertExtractedData($expectedIptcData, $extractedData);
     }
 }

@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file original="" product-name="Neos.MetaData" source-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="properties.exif.Acceleration">
+        <source>Acceleration</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ApertureValue">
+        <source>Aperture Value</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Artist">
+        <source>Artist</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.BodySerialNumber">
+        <source>Body Serial Number</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.CameraElevationAngle">
+        <source>Camera Elevation Angle</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.CameraOwnerName">
+        <source>Camera Owner Name</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ColorSpace">
+        <source>Color Space</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ComponentsConfiguration">
+        <source>Components Configuration</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Compression">
+        <source>Compression</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Copyright">
+        <source>Copyright</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.CustomRendered">
+        <source>Custom Rendered</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.DateTime">
+        <source>Date Time</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.DateTimeDigitized">
+        <source>Date Time Digitized</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.DateTimeOriginal">
+        <source>Date Time Original</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.DigitalZoomRatio">
+        <source>Digital Zoom Ratio</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExifVersion">
+        <source>Exif Version</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExposureBiasValue">
+        <source>Exposure Bias Value</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExposureIndex">
+        <source>Exposure Index</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExposureMode">
+        <source>Exposure Mode</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExposureProgram">
+        <source>Exposure Program</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ExposureTime">
+        <source>Exposure Time</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.FNumber">
+        <source>F-Number</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Flash">
+        <source>Flash</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.FlashpixVersion">
+        <source>FlashPix Version</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.FocalLength">
+        <source>Focal Length</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.FocalLengthIn35mmFilm">
+        <source>Focal Length in 35mm Film</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.FocalPlaneResolutionUnit">
+        <source>Focal Plane Resolution Unit</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.FocalPlaneXResolution">
+        <source>Focal Plane X Resolution</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.FocalPlaneYResolution">
+        <source>Focal Plane Y Resolution</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GainControl">
+        <source>Gain Control</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Gamma">
+        <source>Gamma</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSAltitude">
+        <source>GPS Altitude</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSDestBearing">
+        <source>GPS Destination Bearing</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSDestDistance">
+        <source>GPS Destination Distance</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSDestLatitude">
+        <source>GPS Destination Latitude</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSDestLongitude">
+        <source>GPS Destination Longitude</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSDOP">
+        <source>GPS Degree of Precision</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSHPositioningError">
+        <source>GPS Horizontal Positioning Error</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSImgDirection">
+        <source>GPS Image Direction</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSLatitude">
+        <source>GPS Latitude</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSLongitude">
+        <source>GPS Longitude</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSSpeed">
+        <source>GPS Speed</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSTrack">
+        <source>GPS Track</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.GPSVersionID">
+        <source>GPS Version ID</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Humidity">
+        <source>Humidity</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ImageDescription">
+        <source>Image Description</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ImageUniqueID">
+        <source>Image Unique ID</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.LensMake">
+        <source>Lens Manufacturer</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.LensModel">
+        <source>Lens Model</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.LensSerialNumber">
+        <source>Lens Serial Number</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.LensSpecification">
+        <source>Lens Specification</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.LightSource">
+        <source>Light Source</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Make">
+        <source>Camera Manufacturer</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.MaxApertureValue">
+        <source>Maximum Aperture Value</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.MeteringMode">
+        <source>Metering Mode</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Model">
+        <source>Camera Model</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.OffsetTime">
+        <source>Offset Time</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.OffsetTimeDigitized">
+        <source>Offset Time Digitized</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.OffsetTimeOriginal">
+        <source>Offset Time Original</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Orientation">
+        <source>Orientation</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.PhotometricInterpretation">
+        <source>Photometric Interpretation</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.PhotographicSensitivity">
+        <source>ISO Speed</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.PixelXDimension">
+        <source>Image Width</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.PixelYDimension">
+        <source>Image Height</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Pressure">
+        <source>Pressure</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.RecommendedExposureIndex">
+        <source>Recommended Exposure Index</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ResolutionUnit">
+        <source>Resolution Unit</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.SceneCaptureType">
+        <source>Scene Capture Type</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.SensingMethod">
+        <source>Sensing Method</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.SensitivityType">
+        <source>Sensitivity Type</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.ShutterSpeedValue">
+        <source>Shutter Speed Value</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Software">
+        <source>Software</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.StandardOutputSensitivity">
+        <source>Standard Output Sensitivity</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.SubjectDistance">
+        <source>Subject Distance</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.Temperature">
+        <source>Temperature</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.UserComment">
+        <source>User Comment</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.WaterDepth">
+        <source>Water Depth</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.WhiteBalance">
+        <source>White Balance</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.XResolution">
+        <source>X Resolution</source>
+      </trans-unit>
+      <trans-unit id="properties.exif.YResolution">
+        <source>Y Resolution</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.City">
+        <source>City</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Contact">
+        <source>Contact</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.CopyrightNotice">
+        <source>Copyright Notice</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Country">
+        <source>Country</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.CountryCode">
+        <source>Country Code</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.CreationDate">
+        <source>Creation Date</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Creator">
+        <source>Creator</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.CreatorTitle">
+        <source>Creator Title</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.CreditLine">
+        <source>Credit Line</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.DeprecatedCategories">
+        <source>Categories</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Description">
+        <source>Description</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.DescriptionWriter">
+        <source>Description Writer</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.DigitalCreationDate">
+        <source>Digital Creation Date</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Headline">
+        <source>Headline</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Instructions">
+        <source>Instructions</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.IntellectualGenres">
+        <source>Intellectual Genres</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.JobId">
+        <source>Job ID</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Keywords">
+        <source>Keywords</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Source">
+        <source>Source</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.State">
+        <source>State</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.SubjectCodes">
+        <source>Subject Codes</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Sublocation">
+        <source>Sublocation</source>
+      </trans-unit>
+      <trans-unit id="properties.iptc.Title">
+        <source>Title</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

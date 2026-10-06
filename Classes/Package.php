@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace Neos\MetaData\Extractor;
 
 /*
@@ -26,7 +28,7 @@ class Package extends BasePackage
     /**
      * @inheritDoc
      */
-    public function boot(Bootstrap $bootstrap)
+    public function boot(Bootstrap $bootstrap): void
     {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
         $packageKey = $this->getPackageKey();
@@ -34,7 +36,10 @@ class Package extends BasePackage
             ConfigurationManager::class,
             'configurationManagerReady',
             function (ConfigurationManager $configurationManager) use ($packageKey, $dispatcher) {
-                $extractionEnabled = $configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, $packageKey . '.realtimeExtraction.enabled');
+                $extractionEnabled = $configurationManager->getConfiguration(
+                    ConfigurationManager::CONFIGURATION_TYPE_SETTINGS,
+                    $packageKey . '.realtimeExtraction.enabled'
+                );
                 if ($extractionEnabled === true) {
                     static::connectMetaDataExtraction($dispatcher);
                 }
@@ -42,15 +47,9 @@ class Package extends BasePackage
         );
     }
 
-    /**
-     * @param SignalSlotDispatcher $dispatcher
-     *
-     * @return void
-     */
-    protected static function connectMetaDataExtraction(SignalSlotDispatcher $dispatcher)
+    protected static function connectMetaDataExtraction(SignalSlotDispatcher $dispatcher): void
     {
         $dispatcher->connect(AssetService::class, 'assetCreated', ExtractionManager::class, 'extractMetaData');
         $dispatcher->connect(AssetService::class, 'assetUpdated', ExtractionManager::class, 'extractMetaData');
-        $dispatcher->connect(AssetService::class, 'assetRemoved', ExtractionManager::class, 'extractMetaData');
     }
 }

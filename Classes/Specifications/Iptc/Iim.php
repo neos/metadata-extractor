@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace Neos\MetaData\Extractor\Specifications\Iptc;
 
 /**
@@ -18,7 +20,7 @@ class Iim
      * A binary number identifying the version of the Information Interchange Model, Part I, utilised by the provider.
      * Version numbers are assigned by IPTC and NAA.
      */
-    const MODEL_VERSION = '1#000';
+    const string MODEL_VERSION = '1#000';
 
     /**
      * Destination
@@ -27,7 +29,7 @@ class Iim
      *
      * This DataSet is to accommodate some providers who require routing information above the appropriate OSI layers.
      */
-    const DESTINATION = '1#005';
+    const string DESTINATION = '1#005';
 
     /**
      * File Format
@@ -38,7 +40,7 @@ class Iim
      * number assigned to it (see Appendix A). The information is used to route the data to the appropriate system and
      * to allow the receiving system to perform the appropriate actions thereto.
      */
-    const FILE_FORMAT = '1#020';
+    const string FILE_FORMAT = '1#020';
 
     /**
      * File Format Version
@@ -48,7 +50,7 @@ class Iim
      * A binary number representing the particular version of the File Format specified in 1:20.
      * A list of File Formats, including version cross references, is included as Appendix A.
      */
-    const FILE_FORMAT_VERSION = '1#022';
+    const string FILE_FORMAT_VERSION = '1#022';
 
     /**
      * Service Identifier
@@ -57,7 +59,7 @@ class Iim
      *
      * Identifies the provider and product.
      */
-    const SERVICE_IDENTIFIER = '1#030';
+    const string SERVICE_IDENTIFIER = '1#030';
 
     /**
      * Envelope Number
@@ -69,7 +71,7 @@ class Iim
      * If identical envelope numbers appear with the same date and with the same Service Identifier, records 2-9 must
      * be unchanged from the original. This is not intended to be a sequential serial number reception check.
      */
-    const ENVELOPE_NUMBER = '1#040';
+    const string ENVELOPE_NUMBER = '1#040';
 
     /**
      * Product I.D.
@@ -79,7 +81,7 @@ class Iim
      * Allows a provider to identify subsets of its overall service. Used to provide receiving organisation data on
      * which to select, route, or otherwise handle data.
      */
-    const PRODUCT_ID = '1#050';
+    const string PRODUCT_ID = '1#050';
 
     /**
      * Envelope Priority
@@ -90,7 +92,7 @@ class Iim
      * '1' indicates the most urgent, '5' the normal urgency, and '8' the least urgent copy.
      * The numeral '9' indicates a User Defined Priority. The numeral '0' is reserved for future use.
      */
-    const ENVELOPE_PRIORITY = '1#060';
+    const string ENVELOPE_PRIORITY = '1#060';
 
     /**
      * Date Sent
@@ -102,7 +104,7 @@ class Iim
      *
      * *Example*: An entry of `19890412` indicates data sent on 12 April 1989.
      */
-    const DATE_SENT = '1#070';
+    const string DATE_SENT = '1#070';
 
     /**
      * Time Sent
@@ -117,7 +119,7 @@ class Iim
      * behind UTC. At the same moment in Paris, the time would be expressed as `212700+0100`. In both instances the time
      * is 20:27 (8:27 p.m.) UTC. Midnight should be expressed as `240000` (with the appropriate offset from UTC).
      */
-    const TIME_SENT = '1#080';
+    const string TIME_SENT = '1#080';
 
     /**
      * Coded Character Set
@@ -147,7 +149,7 @@ class Iim
      * If 1:90 is omitted, the default for records 2-6 and 8 is ISO 646 IRV (7 bits) or ISO 4873 DV (8 bits). Record 1
      * shall always use ISO 646 IRV or ISO 4873 DV respectively.
      */
-    const CODED_CHARACTER_SET = '1#090';
+    const string CODED_CHARACTER_SET = '1#090';
 
     /**
      * #UNO#
@@ -234,7 +236,7 @@ class Iim
      * |  8 Octets  |  1  |         Maximum of 61 Octets including ES       |  1  | Maximum of 9 Octets |
      * ```
      */
-    const UNO = '1#100';
+    const string UNO = '1#100';
 
     /**
      * ARM Identifier
@@ -248,7 +250,7 @@ class Iim
      *
      * Details of the originator and a brief description of the ARM are contained in Appendix F.
      */
-    const ARM_IDENTIFIER = '1#120';
+    const string ARM_IDENTIFIER = '1#120';
 
     /**
      * ARM Version
@@ -258,7 +260,7 @@ class Iim
      *
      * A list of ARM Identifiers, including version cross references, is included as Appendix F.
      */
-    const ARM_VERSION = '1#122';
+    const string ARM_VERSION = '1#122';
 
     // Application Record
     /**
@@ -269,7 +271,7 @@ class Iim
      * A binary number identifying the version of the Information Interchange Model, Part II (Record 2:xx), utilised by
      * the provider. Version numbers are assigned by IPTC and NAA.
      */
-    const RECORD_VERSION = '2#000';
+    const string RECORD_VERSION = '2#000';
 
     /**
      * Object Type Reference
@@ -301,7 +303,7 @@ class Iim
      * |                               Minimum of 3, maximum of 67                                    |
      * ```
      */
-    const OBJECT_TYPE_REFERENCE = '2#003';
+    const string OBJECT_TYPE_REFERENCE = '2#003';
 
     /**
      * Object Attribute Reference
@@ -333,7 +335,7 @@ class Iim
      * |                               Minimum of 4, maximum of 68                                    |
      * ```
      */
-    const OBJECT_ATTRIBUTE_REFERENCE = '2#004';
+    const string OBJECT_ATTRIBUTE_REFERENCE = '2#004';
 
     /**
      * Object Name
@@ -345,7 +347,7 @@ class Iim
      *
      * Examples: "Wall St.", "Ferry Sinks"
      */
-    const OBJECT_NAME = '2#005';
+    const string OBJECT_NAME = '2#005';
 
     /**
      * Edit Status
@@ -356,7 +358,7 @@ class Iim
      *
      * Examples: "Lead", "CORRECTION"
      */
-    const EDIT_STATUS = '2#007';
+    const string EDIT_STATUS = '2#007';
 
     /**
      * Editorial Update
@@ -373,7 +375,7 @@ class Iim
      *   Signifies that the accompanying Record 2 DataSets repeat information from another object in a different natural
      *   language (as indicated by DataSet 2:135).
      */
-    const EDITORIAL_UPDATE = '2#008';
+    const string EDITORIAL_UPDATE = '2#008';
 
     /**
      * Urgency
@@ -384,7 +386,7 @@ class Iim
      * Priority). The '1' is most urgent, '5' normal and '8' denotes the least-urgent copy. The numerals '9' and '0' are
      * reserved for future use.
      */
-    const URGENCY = '2#010';
+    const string URGENCY = '2#010';
 
     /**
      * Subject Reference
@@ -462,7 +464,7 @@ class Iim
      * |  maximum of 32  |     |                     |     |   Octets    |     |     Octets     |     |     Octets     |
      * ```
      */
-    const SUBJECT_REFERENCE = '2#012';
+    const string SUBJECT_REFERENCE = '2#012';
 
     /**
      * Category
@@ -475,7 +477,7 @@ class Iim
      *
      * @deprecated use SUBJECT_REFERENCE
      */
-    const CATEGORY = '2#015';
+    const string CATEGORY = '2#015';
 
     /**
      * Supplemental Category
@@ -490,7 +492,7 @@ class Iim
      *
      * @deprecated use SUBJECT_REFERENCE
      */
-    const SUPPLEMENTAL_CATEGORY = '2#020';
+    const string SUPPLEMENTAL_CATEGORY = '2#020';
 
     /**
      * Fixture Identifier
@@ -502,7 +504,7 @@ class Iim
      *
      * Example: "EUROWEATHER"
      */
-    const FIXTURE_IDENTIFIER = '2#022';
+    const string FIXTURE_IDENTIFIER = '2#022';
 
     /**
      * Keywords
@@ -517,7 +519,7 @@ class Iim
      *
      * Examples: "GRAND PRIX", "AUTO"
      */
-    const KEYWORDS = '2#025';
+    const string KEYWORDS = '2#025';
 
     /**
      * Content Location Code
@@ -531,7 +533,7 @@ class Iim
      * an appropriate three character code under the provisions of ISO 3166 to avoid conflicts (see Appendix D).
      * If used in the same object with DataSet 2:27, must immediately precede and correspond to it.
      */
-    const CONTENT_LOCATION_CODE = '2#026';
+    const string CONTENT_LOCATION_CODE = '2#026';
 
     /**
      * Content Location Name
@@ -543,7 +545,7 @@ class Iim
      *
      * If used in the same object with DataSet 2:26, must immediately follow and correspond to it.
      */
-    const CONTENT_LOCATION_NAME = '2#027';
+    const string CONTENT_LOCATION_NAME = '2#027';
 
     /**
      * Release Date
@@ -555,7 +557,7 @@ class Iim
      *
      * Example: "19890317" indicates data for release on 17 March 1989.
      */
-    const RELEASE_DATE = '2#030';
+    const string RELEASE_DATE = '2#030';
 
     /**
      * Release Time
@@ -567,7 +569,7 @@ class Iim
      *
      * Example: "090000-0500" indicates object for use after 0900 in New York (five hours behind UTC)
      */
-    const RELEASE_TIME = '2#035';
+    const string RELEASE_TIME = '2#035';
 
     /**
      * Expiration Date
@@ -579,7 +581,7 @@ class Iim
      *
      * Example: “19940317” indicates an objectdata that should not be used after 17 March 1994.
      */
-    const EXPIRATION_DATE = '2#037';
+    const string EXPIRATION_DATE = '2#037';
 
     /**
      * Expiration Time
@@ -592,7 +594,7 @@ class Iim
      * Example: "090000-0500" indicates an objectdata that should not be used after 0900 in New York (five hours behind
      * UTC).
      */
-    const EXPIRATION_TIME = '2#038';
+    const string EXPIRATION_TIME = '2#038';
 
     /**
      * Special Instructions
@@ -603,7 +605,7 @@ class Iim
      *
      * Examples: "SECOND OF FOUR STORIES", "3 Pictures follow", "Argentina OUT"
      */
-    const SPECIAL_INSTRUCTIONS = '2#040';
+    const string SPECIAL_INSTRUCTIONS = '2#040';
 
     /**
      * Action Advised
@@ -634,7 +636,7 @@ class Iim
      *
      *   Signifies that the provider wants to make reference to objectdata in a different envelope.
      */
-    const ACTION_ADVISED = '2#042';
+    const string ACTION_ADVISED = '2#042';
 
     /**
      * Reference Service
@@ -646,7 +648,7 @@ class Iim
      * Must be followed by 2:47 and 2:50 with repetition occurring in sequential triplets. Used together, 2:45, 2:47 and
      * 2:50 indicate that the current object refers to the content of a prior envelope.
      */
-    const REFERENCE_SERVICE = '2#045';
+    const string REFERENCE_SERVICE = '2#045';
 
     /**
      * Reference Date
@@ -655,7 +657,7 @@ class Iim
      *
      * Identifies the date of a prior envelope to which the current object refers.
      */
-    const REFERENCE_DATE = '2#047';
+    const string REFERENCE_DATE = '2#047';
 
     /**
      * Reference Number
@@ -664,7 +666,7 @@ class Iim
      *
      * Identifies the Envelope Number of a prior envelope to which the current object refers.
      */
-    const REFERENCE_NUMBER = '2#050';
+    const string REFERENCE_NUMBER = '2#050';
 
     /**
      * Date Created
@@ -681,7 +683,7 @@ class Iim
      *
      * Example: "19900127" indicates the intellectual content created on 27th January 1990.
      */
-    const DATE_CREATED = '2#055';
+    const string DATE_CREATED = '2#055';
 
     /**
      * Time Created
@@ -696,7 +698,7 @@ class Iim
      * Example: "133015+0100" indicates that the object intellectual content was created at 1:30 p.m. and 15 seconds
      * Frankfurt time, one hour ahead of UTC.
      */
-    const TIME_CREATED = '2#060';
+    const string TIME_CREATED = '2#060';
 
     /**
      * Digital Creation Date
@@ -710,7 +712,7 @@ class Iim
      *
      * Example: "19900127" indicates digital form of the objectdata was created on 27th January 1990.
      */
-    const DIGITAL_CREATION_DATE = '2#062';
+    const string DIGITAL_CREATION_DATE = '2#062';
 
     /**
      * Digital Creation Time
@@ -723,7 +725,7 @@ class Iim
      * Example: "133015+0100" indicates that the digital form of the objectdata was created at 1:30 p.m. and 15 seconds
      * Frankfurt time, one hour ahead of UTC.
      */
-    const DIGITAL_CREATION_TIME = '2#063';
+    const string DIGITAL_CREATION_TIME = '2#063';
 
     /**
      * Originating Program
@@ -734,7 +736,7 @@ class Iim
      *
      * Examples: "Word Perfect", "SCITEX", "MacDraw"
      */
-    const ORIGINATING_PROGRAM = '2#065';
+    const string ORIGINATING_PROGRAM = '2#065';
 
     /**
      * Program Version
@@ -743,7 +745,7 @@ class Iim
      *
      * Used to identify the version of the program mentioned in 2:65. DataSet 2:70 is invalid if 2:65 is not present.
      */
-    const PROGRAM_VERSION = '2#070';
+    const string PROGRAM_VERSION = '2#070';
 
     /**
      * Object Cycle
@@ -760,7 +762,7 @@ class Iim
      *
      * Virtually only used in North America.
      */
-    const OBJECT_CYCLE = '2#075';
+    const string OBJECT_CYCLE = '2#075';
 
     /**
      * By-line
@@ -771,7 +773,7 @@ class Iim
      *
      * Examples: "Robert Capa", "Ernest Hemingway", "Pablo Picasso"
      */
-    const BYLINE = '2#080';
+    const string BYLINE = '2#080';
 
     /**
      * By-line Title
@@ -783,7 +785,7 @@ class Iim
      *
      * Examples: "Staff Photographer", "Corresponsal", "Envoyé Spécial"
      */
-    const BYLINE_TITLE = '2#085';
+    const string BYLINE_TITLE = '2#085';
 
     /**
      * City
@@ -794,7 +796,7 @@ class Iim
      *
      * Examples: "Zürich", "Milano", "New York"
      */
-    const CITY = '2#090';
+    const string CITY = '2#090';
 
     /**
      * Sublocation
@@ -806,7 +808,7 @@ class Iim
      *
      * Examples: "Capitol Hill", "Maple Leaf Gardens", "Strandgateparken"
      */
-    const SUBLOCATION = '2#092';
+    const string SUBLOCATION = '2#092';
 
     /**
      * Province/State
@@ -817,7 +819,7 @@ class Iim
      *
      * Examples: "WA", "Sussex", "Baden-Württenberg"
      */
-    const PROVINCE_STATE = '2#095';
+    const string PROVINCE_STATE = '2#095';
 
     /**
      * Country/Primary Location Code
@@ -833,7 +835,7 @@ class Iim
      *
      * Examples: "USA" (United States), "FRA" (France), “XUN” (United Nations)
      */
-    const COUNTRY_PRIMARY_LOCATION_CODE = '2#100';
+    const string COUNTRY_PRIMARY_LOCATION_CODE = '2#100';
 
     /**
      * Country/Primary Location Name
@@ -843,7 +845,7 @@ class Iim
      * Provides full, publishable, name of the country/primary location where the intellectual property of the
      * objectdata was created, according to guidelines of the provider.
      */
-    const COUNTRY_PRIMARY_LOCATION_NAME = '2#101';
+    const string COUNTRY_PRIMARY_LOCATION_NAME = '2#101';
 
     /**
      * Original Transmission Reference
@@ -854,7 +856,7 @@ class Iim
      *
      * Examples: BER-5, PAR-12-11-01
      */
-    const ORIGINAL_TRANSMISSION_REFERENCE = '2#103';
+    const string ORIGINAL_TRANSMISSION_REFERENCE = '2#103';
 
     /**
      * Headline
@@ -865,7 +867,7 @@ class Iim
      *
      * Example: "Lindbergh Lands In Paris"
      */
-    const HEADLINE = '2#105';
+    const string HEADLINE = '2#105';
 
     /**
      * Credit
@@ -874,7 +876,7 @@ class Iim
      *
      * Identifies the provider of the objectdata, not necessarily the owner/creator.
      */
-    const CREDIT = '2#110';
+    const string CREDIT = '2#110';
 
     /**
      * Source
@@ -885,7 +887,7 @@ class Iim
      * agency, an individual or a combination. Source could be different from Creator and from the entities in the
      * Copyright Notice.
      */
-    const SOURCE = '2#115';
+    const string SOURCE = '2#115';
 
     /**
      * Copyright Notice
@@ -894,7 +896,7 @@ class Iim
      *
      * Contains any necessary copyright notice.
      */
-    const COPYRIGHT_NOTICE = '2#116';
+    const string COPYRIGHT_NOTICE = '2#116';
 
     /**
      * Contact
@@ -903,7 +905,7 @@ class Iim
      *
      * Identifies the person or organisation which can provide further background information on the objectdata.
      */
-    const CONTACT = '2#118';
+    const string CONTACT = '2#118';
 
     /**
      * Caption/Abstract
@@ -913,7 +915,7 @@ class Iim
      *
      * A textual description of the objectdata, particularly used where the object is not text.
      */
-    const CAPTION_ABSTRACT = '2#120';
+    const string CAPTION_ABSTRACT = '2#120';
 
     /**
      * Writer/Editor
@@ -923,7 +925,7 @@ class Iim
      * Identification of the name of the person involved in the writing, editing or correcting the objectdata or
      * caption/abstract.
      */
-    const WRITER_EDITOR = '2#122';
+    const string WRITER_EDITOR = '2#122';
 
     /**
      * Rasterized Caption
@@ -936,7 +938,7 @@ class Iim
      * Contains the rasterized objectdata description and is used where characters that have not been coded are required
      * for the caption.
      */
-    const RASTERIZED_CAPTION = '2#125';
+    const string RASTERIZED_CAPTION = '2#125';
 
     /**
      * Image Type
@@ -996,7 +998,7 @@ class Iim
      *
      * Note: When `0` or `T` are used, the only authorised combination is: `0T`
      */
-    const IMAGE_TYPE = '2#130';
+    const string IMAGE_TYPE = '2#130';
 
     /**
      * Image Orientation
@@ -1006,7 +1008,7 @@ class Iim
      *
      * Indicates the layout of the image area.
      */
-    const IMAGE_ORIENTATION = '2#131';
+    const string IMAGE_ORIENTATION = '2#131';
 
     /**
      * Language Identifier
@@ -1019,7 +1021,7 @@ class Iim
      * Implementation note: Programmers should provide for three octets for Language Identifier because the ISO is
      * expected to provide for 3-letter codes in the future.
      */
-    const LANGUAGE_IDENTIFIER = '2#135';
+    const string LANGUAGE_IDENTIFIER = '2#135';
 
     /**
      * Audio Type
@@ -1072,7 +1074,7 @@ class Iim
      * caption either to supplement an audio cut sent previously without a caption or to correct a previously sent
      * caption.
      */
-    const AUDIO_TYPE = '2#150';
+    const string AUDIO_TYPE = '2#150';
 
     /**
      * Audio Sampling Rate
@@ -1083,7 +1085,7 @@ class Iim
      * Examples: "011025" for a sample rate of 11025 Hz, "022050" for a sample rate of 22050 Hz, "044100" for a sample
      * rate of 44100 Hz
      */
-    const AUDIO_SAMPLING_RATE = '2#151';
+    const string AUDIO_SAMPLING_RATE = '2#151';
 
     /**
      * Audio Sampling Resolution
@@ -1093,7 +1095,7 @@ class Iim
      *
      * Examples: "08" for a sample size of 8 bits, "16" for a sample size of 16 bits, "20" for a sample size of 20 bits
      */
-    const AUDIO_SAMPLING_RESOLUTION = '2#152';
+    const string AUDIO_SAMPLING_RESOLUTION = '2#152';
 
     /**
      * Audio Duration
@@ -1105,7 +1107,7 @@ class Iim
      *
      * Example: "000105" for a cut lasting one minute, five seconds
      */
-    const AUDIO_DURATION = '2#153';
+    const string AUDIO_DURATION = '2#153';
 
     /**
      * Audio Outcue
@@ -1118,7 +1120,7 @@ class Iim
      *
      * The outcue generally consists of the final words spoken within an audio objectdata or the final sounds heard.
      */
-    const AUDIO_OUTCUE = '2#154';
+    const string AUDIO_OUTCUE = '2#154';
 
     /**
      * ObjectData Preview File Format
@@ -1131,7 +1133,7 @@ class Iim
      * The values allowed are taken from the approved list of file formats registered for DataSet 1:20 and presented in
      * Appendix A.
      */
-    const OBJECTDATA_PREVIEW_FILE_FORMAT = '2#200';
+    const string OBJECTDATA_PREVIEW_FILE_FORMAT = '2#200';
 
     /**
      * ObjectData Preview File Format Version
@@ -1142,14 +1144,14 @@ class Iim
      *
      * The File Format Version is taken from the list included in Appendix A for DataSet 1:20 and 1:22.
      */
-    const OBJECTDATA_PREVIEW_FILE_FORMAT_VERSION = '2#201';
+    const string OBJECTDATA_PREVIEW_FILE_FORMAT_VERSION = '2#201';
 
     /**
      * ObjectData Preview Data
      *
      * Optional, not repeatable; maximum size of 256000 octets consisting of binary data.
      */
-    const OBJECTDATA_PREVIEW_DATA = '2#202';
+    const string OBJECTDATA_PREVIEW_DATA = '2#202';
 
     // Pre-ObjectData Descriptor Record
     /**
@@ -1160,7 +1162,7 @@ class Iim
      * The octet is set to the binary value of '0' if the size of the objectdata is not known and is set to '1' if the
      * size of the objectdata is known at the beginning of transfer.
      */
-    const SIZE_MODE = '7#010';
+    const string SIZE_MODE = '7#010';
 
     /**
      * Max Subfile Size
@@ -1173,7 +1175,7 @@ class Iim
      * contained in four octets taken together. If the entire object is to be transferred together within a single
      * DataSet 8:10, the number equals the size of the object.
      */
-    const MAX_SUBFILE_SIZE = '7#020';
+    const string MAX_SUBFILE_SIZE = '7#020';
 
     /**
      * ObjectData Size Announced
@@ -1183,7 +1185,7 @@ class Iim
      * A binary number representing the overall size of the objectdata, expressed in octets, not including tags, if that
      * size is known when transfer commences.
      */
-    const OBJECTDATA_SIZE_ANNOUNCED = '7#090';
+    const string OBJECTDATA_SIZE_ANNOUNCED = '7#090';
 
     /**
      * Maximum ObjectData Size
@@ -1193,7 +1195,7 @@ class Iim
      * A binary number used when objectdata size is not known, indicating the largest size, expressed in octets, that
      * the objectdata can possibly have, not including tags.
      */
-    const MAXIMUM_OBJECTDATA_SIZE = '7#095';
+    const string MAXIMUM_OBJECTDATA_SIZE = '7#095';
 
     // ObjectData Record
     /**
@@ -1204,7 +1206,7 @@ class Iim
      * Subfile DataSet containing the objectdata itself. Subfiles must be sequential so that the subfiles may be
      * reassembled.
      */
-    const SUBFILE = '8#010';
+    const string SUBFILE = '8#010';
 
     // Post-ObjectData Descriptor Record
     /**
@@ -1217,7 +1219,7 @@ class Iim
      * Total size of the objectdata, in octets, without tags. This number should equal the number in DataSet 7:90 if the
      * size of the objectdata is known and has been provided.
      */
-    const CONFIRMED_OBJECTDATA_SIZE = '9#010';
+    const string CONFIRMED_OBJECTDATA_SIZE = '9#010';
 
     /**
      * @var string[] Properties allowed to repeat themselves
@@ -1242,14 +1244,15 @@ class Iim
     ];
 
     /**
-     * @var mixed[]
+     * The raw IPTC data as returned by {@see \iptcparse()}, keyed by property tag with the values
+     * as an array (even for single-valued properties).
+     *
+     * @var array<string, list<string>>
      */
-    protected $properties;
+    protected array $properties;
 
     /**
-     * IptcIim constructor.
-     *
-     * @param mixed[] $properties
+     * @param array<string, array<int, string>> $properties
      */
     public function __construct(array $properties)
     {
@@ -1257,7 +1260,7 @@ class Iim
         if (!\array_key_exists(self::CODED_CHARACTER_SET, $properties)) {
             \array_walk_recursive(
                 $properties,
-                function (&$element) {
+                static function (&$element) {
                     if (\is_string($element) && \mb_detect_encoding($element, 'UTF-8', true) === false) {
                         $element = \mb_convert_encoding($element, 'UTF-8', 'ISO-8859-1');
                     }
@@ -1267,11 +1270,7 @@ class Iim
         $this->properties = $properties;
     }
 
-    /**
-     * @param string $category
-     * @return bool|string
-     */
-    public static function convertCategoryToSubjectCode(string $category)
+    public static function convertCategoryToSubjectCode(string $category): string|bool
     {
         $mapping = [
             'ACE' => '01000000',
@@ -1297,10 +1296,9 @@ class Iim
     }
 
     /**
-     * @param string $property
-     * @return string|string[]
+     * @return string|list<string>
      */
-    public function getProperty(string $property)
+    public function getProperty(string $property): string|array
     {
         if (\array_key_exists($property, $this->properties)) {
             return \in_array($property, self::$repeatable, false)

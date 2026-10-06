@@ -19,7 +19,7 @@ class DateConverterTest extends UnitTestCase
     /**
      * @return mixed[][]
      */
-    public function gpsTimeStampDataProvider() : array
+    public static function gpsTimeStampDataProvider() : array
     {
         return [
             [
@@ -52,7 +52,7 @@ class DateConverterTest extends UnitTestCase
     /**
      * @return mixed[][]
      */
-    public function iso8601DateAndTimeDataProvider() : array
+    public static function iso8601DateAndTimeDataProvider() : array
     {
         return [
             'dateStringOnly' => [
@@ -78,7 +78,7 @@ class DateConverterTest extends UnitTestCase
      * @dataProvider iso8601DateAndTimeDataProvider
      *
      * @param string $dateString
-     * @param string|null $timeString
+     * @param string $timeString
      * @param \DateTime $expected
      * @return void
      */

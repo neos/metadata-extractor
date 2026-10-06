@@ -19,7 +19,7 @@ class CoordinatesConverterTest extends UnitTestCase
     /**
      * @return mixed[][]
      */
-    public function gpsDataProvider()
+    public static function gpsDataProvider()
     {
         return [
             'latitude' => [
