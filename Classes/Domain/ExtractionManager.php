@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Neos\MetaData\Extractor\Domain;
 
 /*
@@ -27,6 +28,7 @@ use Neos\MetaData\Extractor\Domain\Dto\ExtractedMetaData;
 use Neos\MetaData\Extractor\Domain\Extractor\ExtractorInterface;
 use Neos\MetaData\Extractor\Exception\ExtractorException;
 use Neos\MetaData\MetaDataManager;
+use Psr\Log\LoggerInterface;
 
 #[Flow\Scope('singleton')]
 class ExtractionManager
@@ -41,12 +43,20 @@ class ExtractionManager
     protected MetaDataManager $metaDataManager;
 
     /**
+     * @param LoggerInterface $logger
+     */
+    public function __construct(
+        private readonly LoggerInterface $logger,
+    ) {
+    }
+
+    /**
      * @return string[] Class names
      * @throws \ReflectionException
      * @throws ClassLoadingForReflectionFailedException
      * @throws InvalidClassException
      */
-    protected function findSuitableExtractorAdaptersForResource(FlowResource $flowResource) : array
+    protected function findSuitableExtractorAdaptersForResource(FlowResource $flowResource): array
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $extractorAdapters = $this->reflectionService->getAllImplementationClassNamesForInterface(
@@ -71,7 +81,7 @@ class ExtractionManager
      *
      * Extractors that throw an {@see ExtractorException} are skipped, all others are processed.
      */
-    public function extractMetaData(Asset $asset) : ExtractedMetaData
+    public function extractMetaData(Asset $asset): ExtractedMetaData
     {
         if ($asset instanceof ImageVariant) {
             $asset = $asset->getOriginalAsset();
@@ -101,7 +111,7 @@ class ExtractionManager
             $this->persistExtractedValues($asset, $metaData);
         } catch (\Exception $e) {
             // Ignore exceptions, as a failed extraction shouldn't cause asset import failures
-            // TODO: Log the exception instead
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
         }
 
         return $metaData;
