@@ -97,7 +97,12 @@ class ExtractionManager
             }
         }
 
-        $this->persistExtractedValues($asset, $metaData);
+        try {
+            $this->persistExtractedValues($asset, $metaData);
+        } catch (\Exception $e) {
+            // Ignore exceptions, as a failed extraction shouldn't cause asset import failures
+            // TODO: Log the exception instead
+        }
 
         return $metaData;
     }
